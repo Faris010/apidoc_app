@@ -19,9 +19,15 @@ public class ProjectService : IProjectService
         _mapper = mapper;
     }
 
+    private static string GenerateSlug(string projectName)
+    {
+        return projectName.ToLower().Replace(" ", "-");
+    }
+
     public async Task<List<GetProjectDto>> AddProject(AddProjectDto newProject)
     {
         var project = new List<GetProjectDto>();
+        newProject.Slug = GenerateSlug(newProject.ProjectName);
         await _contex.AddAsync(_mapper.Map<Project>(newProject));
         await _contex.SaveChangesAsync();
         project = await _contex.Projects.Select(proj => _mapper.Map<GetProjectDto>(proj)).ToListAsync();
@@ -61,13 +67,13 @@ public class ProjectService : IProjectService
 
     public async Task<GetProjectDto> UpdateProject(UpdateProjectDto updatedProject)
     {
-        var project =await _contex.Projects.FirstOrDefaultAsync(proj => proj.Id == updatedProject.Id);
-        if(project is null)
+        var project = await _contex.Projects.FirstOrDefaultAsync(proj => proj.Id == updatedProject.Id);
+        if (project is null)
         {
             throw new Exception($"Project with Id '{updatedProject.Id}' not found");
         }
         project.ProjectName = updatedProject.ProjectName;
-        project.Slug = updatedProject.Slug;
+        project.Slug = GenerateSlug(updatedProject.ProjectName);
         project.Logo = updatedProject.Logo;
 
         var projects = _mapper.Map<GetProjectDto>(project);
