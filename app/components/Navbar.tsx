@@ -20,7 +20,7 @@ export default function Navbar() {
         <input
           id='search'
           type='text'
-          placeholder='Search...'
+          placeholder='Search Projects...'
           className='w-full outline-none'
         />
       </div>
