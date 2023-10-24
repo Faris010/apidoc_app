@@ -50,3 +50,5 @@ C:\Users\xy\Desktop\Imperea\apidoc_app\server\bin\Debug\net7.0\Npgsql.dll
 C:\Users\xy\Desktop\Imperea\apidoc_app\server\bin\Debug\net7.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
 C:\Users\xy\Desktop\Imperea\apidoc_app\server\bin\Debug\net7.0\System.CodeDom.dll
 C:\Users\xy\Desktop\Imperea\apidoc_app\server\bin\Debug\net7.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\xy\Desktop\Imperea\apidoc_app\server\bin\Debug\net7.0\AutoMapper.dll
+C:\Users\xy\Desktop\Imperea\apidoc_app\server\bin\Debug\net7.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
