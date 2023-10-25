@@ -1,15 +1,15 @@
 'use client';
 
 interface Props {
-  setModal: () => void;
+  setIsFormOpen: () => void;
 }
 
-export default function FormActionButtons({ setModal }: Props) {
+export default function FormActionButtons({ setIsFormOpen }: Props) {
   return (
     <div className='w-full flex items-center justify-between space-x-4'>
       <button
         type='reset'
-        onClick={setModal}
+        onClick={setIsFormOpen}
         className='w-1/2 py-2 border-[1px] border-[#B4B4B3] rounded-md font-medium'
       >
         Cancel

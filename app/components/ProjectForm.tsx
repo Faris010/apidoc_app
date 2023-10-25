@@ -4,6 +4,7 @@ import { useRef, useState } from 'react';
 import ProjectImageUploader from './ProjectImageUploader';
 import FormActionButtons from './FormActionButtons';
 import Image from 'next/image';
+import { TProject } from '@/const/ProjectConst';
 
 export type TImage = {
   imageUrl: string | ArrayBuffer | null;
@@ -13,11 +14,16 @@ export type TImage = {
 };
 
 interface Props {
-  setModal: () => void;
+  currentProject: TProject | null;
+  setIsFormOpen: () => void;
   title: string;
 }
 
-export default function ProjectForm({ setModal, title }: Props) {
+export default function ProjectForm({
+  currentProject,
+  setIsFormOpen,
+  title,
+}: Props) {
   const ref = useRef<HTMLInputElement | null>(null);
   const [uploadedImage, setUploadedImage] = useState<TImage>({
     imageUrl: '',
@@ -58,7 +64,7 @@ export default function ProjectForm({ setModal, title }: Props) {
         <div className='flex items-center justify-between'>
           <p className='text-xl font-semibold'>{title} project</p>
           <div
-            onClick={setModal}
+            onClick={setIsFormOpen}
             className='hover:bg-slate-200 rounded-full p-2 cursor-pointer'
           >
             <Image
@@ -76,6 +82,7 @@ export default function ProjectForm({ setModal, title }: Props) {
           <input
             id='project-name'
             type='text'
+            value={currentProject != null ? currentProject.projectName : ''}
             placeholder='Project Name...'
             className='w-full p-2 border-[1px] border-[#B4B4B3] rounded-md outline-none'
           />
@@ -85,51 +92,54 @@ export default function ProjectForm({ setModal, title }: Props) {
           setUploadedImage={setUploadedImage}
           ref={ref}
         />
-        {uploadedImage.imageUrl != '' && (
-          <div className='space-y-2'>
-            <p className='px-1 text-sm font-semibold'>Image Preview</p>
-            <div className='p-2 flex items-start justify-between space-x-2 bg-slate-300 bg-opacity-50 rounded-md'>
-              <div className='w-full h-28 flex items-center space-x-2 overflow-hidden'>
-                <Image
-                  src={
-                    (uploadedImage.imageUrl as string) ||
-                    '/assets/placeholder.png'
-                  }
-                  alt='uploaded image'
-                  style={{ width: 'auto', height: '100%' }}
-                  height={112}
-                  width={112}
-                />
-                {uploadedImage.name != '' && (
-                  <div className='w-full truncate'>
-                    <p className='truncate font-semibold'>
-                      {uploadedImage.name}
-                    </p>
-                    <div className='flex items-center space-x-1 text-sm text-[#444444]'>
-                      <p className='uppercase'>{uploadedImage.extension}</p>
-                      <p>&#x2022;</p>
-                      <p>{uploadedImage.size}</p>
+        {uploadedImage.imageUrl != '' ||
+          (currentProject != null && (
+            <div className='space-y-2'>
+              <p className='px-1 text-sm font-semibold'>Image Preview</p>
+              <div className='p-2 flex items-start justify-between space-x-2 bg-slate-300 bg-opacity-50 rounded-md'>
+                <div className='w-full h-28 flex items-center space-x-2 overflow-hidden'>
+                  <Image
+                    src={
+                      currentProject != null
+                        ? currentProject.logoUrl
+                        : (uploadedImage.imageUrl as string) ||
+                          '/assets/placeholder.png'
+                    }
+                    alt='uploaded image'
+                    style={{ width: 'auto', height: '100%' }}
+                    height={112}
+                    width={112}
+                  />
+                  {uploadedImage.name != '' && (
+                    <div className='w-full truncate'>
+                      <p className='truncate font-semibold'>
+                        {uploadedImage.name}
+                      </p>
+                      <div className='flex items-center space-x-1 text-sm text-[#444444]'>
+                        <p className='uppercase'>{uploadedImage.extension}</p>
+                        <p>&#x2022;</p>
+                        <p>{uploadedImage.size}</p>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </div>
-              <div
-                onClick={() =>
-                  setUploadedImage({ ...uploadedImage, imageUrl: '' })
-                }
-                className='p-1 flex items-center justify-center hover:bg-white rounded-full cursor-pointer'
-              >
-                <Image
-                  src='/assets/reject.png'
-                  alt='close icon'
-                  height={16}
-                  width={16}
-                />
+                  )}
+                </div>
+                <div
+                  onClick={() =>
+                    setUploadedImage({ ...uploadedImage, imageUrl: '' })
+                  }
+                  className='p-1 flex items-center justify-center hover:bg-white rounded-full cursor-pointer'
+                >
+                  <Image
+                    src='/assets/reject.png'
+                    alt='close icon'
+                    height={16}
+                    width={16}
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        )}
-        <FormActionButtons setModal={setModal} />
+          ))}
+        <FormActionButtons setIsFormOpen={setIsFormOpen} />
       </form>
     </div>
   );
