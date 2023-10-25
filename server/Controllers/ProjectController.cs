@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using server.Dtos.ProjectDtos;
 using server.Services.ProjectService;
 
@@ -35,18 +29,16 @@ namespace server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddProject(AddProjectDto newProject)
+        public async Task AddProject(AddProjectDto newProject)
         {
             await _projectService.AddProject(newProject);
-            return NoContent();
         }
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<ActionResult> DeleteProject(int id)
+        public async Task DeleteProject(int id)
         {
             await _projectService.DeleteProject(id);
-            return NoContent();
         }
 
         [HttpPut]

@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Services.ProjectService;
+using server.Services.SectionService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +26,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<ISectionService, SectionService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

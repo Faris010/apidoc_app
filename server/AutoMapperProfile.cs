@@ -1,5 +1,6 @@
 using AutoMapper;
 using server.Dtos.ProjectDtos;
+using server.Dtos.SectionDtos;
 using server.Models;
 
 namespace server;
@@ -11,5 +12,8 @@ public class AutoMapperProfile : Profile
         CreateMap<Project, GetProjectDto>();
         CreateMap<AddProjectDto, Project>();
         CreateMap<UpdateProjectDto, Project>();
+        CreateMap<AddSectionDto, Section>();
+        CreateMap<Section, GetSectionDto>();
+        CreateMap<UpdateSectionDto, Section>();
     }
 }
