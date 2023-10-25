@@ -11,7 +11,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin", builder =>
+    options.AddPolicy("corspolicy", builder =>
     {
         builder.WithOrigins("http://localhost:3000/")
         .AllowAnyMethod()
