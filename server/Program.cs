@@ -9,12 +9,13 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase")));
 builder.Services.AddControllers();
 
-builder.Services.AddCors(options =>{
-    options.AddPolicy("AllowSpecificOrigin",builder => 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin", builder =>
     {
         builder.WithOrigins("http://localhost:3000/")
         .AllowAnyMethod()
-        .AllowAnyOrigin();
+        .AllowAnyHeader();
     });
 });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
