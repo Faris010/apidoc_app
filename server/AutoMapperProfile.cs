@@ -10,5 +10,6 @@ public class AutoMapperProfile : Profile
     {
         CreateMap<Project, GetProjectDto>();
         CreateMap<AddProjectDto, Project>();
+        CreateMap<UpdateProjectDto, Project>();
     }
 }
