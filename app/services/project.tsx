@@ -16,7 +16,7 @@ export async function addNewProject(projectData: TNewProject) {
   return response;
 }
 
-export async function editProject(updatedProject: TProject) {
+export async function editProject(updatedProject: TProject | null) {
   axios.put('http://localhost:5287/api/projects/', updatedProject);
 }
 

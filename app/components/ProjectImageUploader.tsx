@@ -1,12 +1,17 @@
 'use client';
 
+import { TImage, TNewProject, TProject } from '@/types/types';
 import Image from 'next/image';
-import React, { forwardRef, useState } from 'react';
-import { TImage } from './ProjectForm';
+import { forwardRef, useState } from 'react';
 
 interface Props {
   handleImageFileUpload: () => void;
   setUploadedImage: React.Dispatch<React.SetStateAction<TImage>>;
+  setNewProjectData: React.Dispatch<React.SetStateAction<TNewProject>>;
+  newProjectData: TNewProject;
+  error: boolean;
+  setCurrentProject: React.Dispatch<React.SetStateAction<TProject | null>>;
+  currentProject: TProject | null;
 }
 
 const ProjectImageUploader = forwardRef<HTMLInputElement, Props>(
@@ -15,6 +20,9 @@ const ProjectImageUploader = forwardRef<HTMLInputElement, Props>(
 
     const handleImageUrlInput = (e: React.MouseEvent<HTMLButtonElement>) => {
       e.preventDefault();
+      props.setNewProjectData({ ...props.newProjectData, logo: imageUrl });
+      props.currentProject &&
+        props.setCurrentProject({ ...props.currentProject, logo: imageUrl });
       props.setUploadedImage({
         imageUrl: imageUrl,
         name: '',
@@ -32,7 +40,11 @@ const ProjectImageUploader = forwardRef<HTMLInputElement, Props>(
           </p>
         </div>
         <label htmlFor='project-logo' className='cursor-pointer'>
-          <div className='flex flex-col items-center justify-center py-5 px-4 space-y-6 border-[1px] border-dashed border-[#B4B4B3] rounded-md'>
+          <div
+            className={`flex flex-col items-center justify-center py-5 px-4 space-y-6 border-[1px] border-dashed ${
+              props.error ? 'border-red-600' : 'border-[#B4B4B3]'
+            }  rounded-md`}
+          >
             <div>
               <Image
                 src='/assets/upload.png'
@@ -45,7 +57,6 @@ const ProjectImageUploader = forwardRef<HTMLInputElement, Props>(
               <p>
                 <span className='text-blue-600 font-semibold'>Choose file</span>{' '}
                 to upload
-                {/* or drag and drop */}
               </p>
               <p className='text-sm text-[#a5a5a5]'>PNG, JPG, SVG or GIF</p>
             </div>
@@ -68,7 +79,11 @@ const ProjectImageUploader = forwardRef<HTMLInputElement, Props>(
           <label htmlFor='image-url' className='text-sm font-semibold'>
             Import from URL
           </label>
-          <div className='flex items-center border-[1px] border-[#B4B4B3] rounded-md overflow-hidden'>
+          <div
+            className={`flex items-center border-[1px] ${
+              props.error ? 'border-red-600' : 'border-[#B4B4B3]'
+            } rounded-md overflow-hidden`}
+          >
             <input
               id='image-url'
               type='text'
