@@ -4,7 +4,7 @@ import { forwardRef } from 'react';
 
 interface Props {
   project: TProject;
-  setIsFormOpen: () => void;
+  setIsProjectFormOpen: () => void;
   setFormTitle: React.Dispatch<React.SetStateAction<string>>;
   setCurrentProject: React.Dispatch<React.SetStateAction<TProject | null>>;
   setIsMenuOpen: () => void;
@@ -15,7 +15,7 @@ const OptionsMenu = forwardRef<HTMLDivElement, Props>(
   (
     {
       project,
-      setIsFormOpen,
+      setIsProjectFormOpen,
       setFormTitle,
       setCurrentProject,
       setIsMenuOpen,
@@ -30,7 +30,7 @@ const OptionsMenu = forwardRef<HTMLDivElement, Props>(
       >
         <div
           onClick={() => {
-            setIsFormOpen();
+            setIsProjectFormOpen();
             setFormTitle('Edit');
             setCurrentProject(project);
             setIsMenuOpen();

@@ -10,7 +10,7 @@ import useOnClickOutside from '@/hooks/useOnClickOutside';
 
 interface Props {
   project: TProject;
-  setIsFormOpen: () => void;
+  setIsProjectFormOpen: () => void;
   setFormTitle: React.Dispatch<React.SetStateAction<string>>;
   setCurrentProject: React.Dispatch<React.SetStateAction<TProject | null>>;
   setIsDeleteModalOpen: () => void;
@@ -18,7 +18,7 @@ interface Props {
 
 export default function ProjectCard({
   project,
-  setIsFormOpen,
+  setIsProjectFormOpen,
   setFormTitle,
   setCurrentProject,
   setIsDeleteModalOpen,
@@ -81,7 +81,7 @@ export default function ProjectCard({
         <OptionsMenu
           ref={ref}
           project={project}
-          setIsFormOpen={setIsFormOpen}
+          setIsProjectFormOpen={setIsProjectFormOpen}
           setFormTitle={setFormTitle}
           setCurrentProject={setCurrentProject}
           setIsMenuOpen={setIsMenuOpen}

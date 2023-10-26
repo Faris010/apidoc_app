@@ -8,7 +8,7 @@ import { useState } from 'react';
 import DeleteConfirmationModal from './DeleteConfirmationModal';
 
 export default function ProjectListing({ projects }: { projects: TProject[] }) {
-  const [isFormOpen, setIsFormOpen] = useToggle(false);
+  const [isProjectFormOpen, setIsProjectFormOpen] = useToggle(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useToggle(false);
   const [formTitle, setFormTitle] = useState<string>('Create');
   const [currentProject, setCurrentProject] = useState<TProject | null>(null);
@@ -20,7 +20,7 @@ export default function ProjectListing({ projects }: { projects: TProject[] }) {
           <p className='font-bold text-lg'>All projects</p>
           <div
             onClick={() => {
-              setIsFormOpen();
+              setIsProjectFormOpen();
               setFormTitle('Create');
             }}
             className='bg-blue-600 text-white text-sm px-4 py-2 rounded-3xl cursor-pointer hover:bg-blue-700'
@@ -34,7 +34,7 @@ export default function ProjectListing({ projects }: { projects: TProject[] }) {
             <ProjectCard
               key={project.id}
               project={project}
-              setIsFormOpen={setIsFormOpen}
+              setIsProjectFormOpen={setIsProjectFormOpen}
               setFormTitle={setFormTitle}
               setCurrentProject={setCurrentProject}
               setIsDeleteModalOpen={setIsDeleteModalOpen}
@@ -48,12 +48,12 @@ export default function ProjectListing({ projects }: { projects: TProject[] }) {
           currentProject={currentProject}
         />
       )}
-      {isFormOpen && (
+      {isProjectFormOpen && (
         <ProjectForm
           currentProject={currentProject}
-          setIsFormOpen={setIsFormOpen}
+          setIsProjectFormOpen={setIsProjectFormOpen}
           title={formTitle}
-          projects={projects}
+          setCurrentProject={setCurrentProject}
         />
       )}
     </>
