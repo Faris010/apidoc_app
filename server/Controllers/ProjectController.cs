@@ -42,10 +42,9 @@ namespace server.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateProject(UpdateProjectDto updatedProject)
+        public async Task UpdateProject(UpdateProjectDto updatedProject)
         {
             await _projectService.UpdateProject(updatedProject);
-            return NoContent();
         }
 
     }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using server.Data;
+using server.Services.BlockService;
 using server.Services.ProjectService;
 using server.Services.SectionService;
 
@@ -25,6 +26,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ISectionService, SectionService>();
+builder.Services.AddScoped<IBlockService, BlockService>();
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

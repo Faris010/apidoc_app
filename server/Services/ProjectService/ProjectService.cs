@@ -38,8 +38,6 @@ public class ProjectService : IProjectService
 
     public async Task<List<GetProjectDto>> GetAllProjects()
     {
-        // return await _contex.Projects.Select(project =>
-        // _mapper.Map<GetProjectDto>(project)).ToListAsync();
         return await _contex.Projects
         .Include(project => project.Sections)
         .Select(project => _mapper.Map<GetProjectDto>(project))

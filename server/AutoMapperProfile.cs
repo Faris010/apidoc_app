@@ -1,4 +1,5 @@
 using AutoMapper;
+using server.Dtos.BlockDtos;
 using server.Dtos.ProjectDtos;
 using server.Dtos.SectionDtos;
 using server.Models;
@@ -15,6 +16,8 @@ public class AutoMapperProfile : Profile
         CreateMap<AddSectionDto, Section>();
         CreateMap<Section, GetSectionDto>();
         CreateMap<UpdateSectionDto, Section>();
-        CreateMap<Section, AddSectionDto>();
+        CreateMap<Block, GetBlockDto>();
+        CreateMap<AddBlockDto, Block>();
+        CreateMap<UpdateBlockDto, Block>();
     }
 }

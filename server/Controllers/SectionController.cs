@@ -5,7 +5,7 @@ using server.Services.SectionService;
 namespace server.Controllers;
 
 [Route("/api/section/")]
-public class SectionController : Controller
+public class SectionController : ControllerBase
 {
     private readonly ISectionService _sectionService;
 
