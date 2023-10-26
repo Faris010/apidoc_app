@@ -31,9 +31,7 @@ public class BlockService : IBlockService
 
     public async Task<List<GetBlockDto>> GetAllBlocks()
     {
-        // return await _context.Blocks.Select(block =>
-        // _mapper.Map<GetBlockDto>(block)).OrderBy(block => block.SortOrder).ToListAsync();
-        var blocks = await _context.Blocks.ToListAsync(); // Materialize the query
+        var blocks = await _context.Blocks.ToListAsync(); 
         return blocks.Select(block => _mapper.Map<GetBlockDto>(block))
                 .OrderBy(b => b.SortOrder).ToList();
     }
