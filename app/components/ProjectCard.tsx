@@ -13,6 +13,7 @@ interface Props {
   setIsFormOpen: () => void;
   setFormTitle: React.Dispatch<React.SetStateAction<string>>;
   setCurrentProject: React.Dispatch<React.SetStateAction<TProject | null>>;
+  setIsDeleteModalOpen: () => void;
 }
 
 export default function ProjectCard({
@@ -20,6 +21,7 @@ export default function ProjectCard({
   setIsFormOpen,
   setFormTitle,
   setCurrentProject,
+  setIsDeleteModalOpen,
 }: Props) {
   const ref = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useToggle(false);
@@ -83,6 +85,7 @@ export default function ProjectCard({
           setFormTitle={setFormTitle}
           setCurrentProject={setCurrentProject}
           setIsMenuOpen={setIsMenuOpen}
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
         />
       )}
     </div>

@@ -1,16 +1,18 @@
 'use client';
 
-import { TProject, projects } from '@/const/ProjectConst';
+import { TProject } from '@/types/types';
 import ProjectCard from './ProjectCard';
 import ProjectForm from './ProjectForm';
 import { useToggle } from '@/hooks/useToggle';
 import { useState } from 'react';
+import DeleteConfirmationModal from './DeleteConfirmationModal';
 
-export default function ProjectListing() {
+export default function ProjectListing({ projects }: { projects: TProject[] }) {
   const [isFormOpen, setIsFormOpen] = useToggle(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useToggle(false);
   const [formTitle, setFormTitle] = useState<string>('Create');
   const [currentProject, setCurrentProject] = useState<TProject | null>(null);
-  //TODO: Disable scroll on form open
+
   return (
     <>
       <div className='w-3/4 my-10 space-y-6'>
@@ -35,15 +37,23 @@ export default function ProjectListing() {
               setIsFormOpen={setIsFormOpen}
               setFormTitle={setFormTitle}
               setCurrentProject={setCurrentProject}
+              setIsDeleteModalOpen={setIsDeleteModalOpen}
             />
           ))}
         </div>
       </div>
+      {isDeleteModalOpen && (
+        <DeleteConfirmationModal
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          currentProject={currentProject}
+        />
+      )}
       {isFormOpen && (
         <ProjectForm
           currentProject={currentProject}
           setIsFormOpen={setIsFormOpen}
           title={formTitle}
+          projects={projects}
         />
       )}
     </>
