@@ -5,6 +5,8 @@ import Link from 'next/link';
 import OptionsMenu from './OptionsMenu';
 import { useToggle } from '@/hooks/useToggle';
 import { TProject } from '@/types/types';
+import { useRef } from 'react';
+import useOnClickOutside from '@/hooks/useOnClickOutside';
 
 interface Props {
   project: TProject;
@@ -19,7 +21,9 @@ export default function ProjectCard({
   setFormTitle,
   setCurrentProject,
 }: Props) {
+  const ref = useRef(null);
   const [isMenuOpen, setIsMenuOpen] = useToggle(false);
+  useOnClickOutside(ref, setIsMenuOpen);
   return (
     <div className='relative'>
       <div className='w-full p-8 bg-white rounded-md space-y-6 drop-shadow-md flex flex-col'>
@@ -73,10 +77,12 @@ export default function ProjectCard({
       </div>
       {isMenuOpen && (
         <OptionsMenu
+          ref={ref}
           project={project}
           setIsFormOpen={setIsFormOpen}
           setFormTitle={setFormTitle}
           setCurrentProject={setCurrentProject}
+          setIsMenuOpen={setIsMenuOpen}
         />
       )}
     </div>
