@@ -10,5 +10,5 @@ public class Section
     public string Title { get; set; } = string.Empty;
     [ForeignKey("Project")]
     public int ProjectId { get; set; }
-    public ICollection<Section>? Children { get; set; } 
+    public int? ParedntId { get; set; }
 }
