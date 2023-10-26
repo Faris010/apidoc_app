@@ -23,7 +23,7 @@ namespace server.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<ActionResult<GetProjectDto>> GetById(int id)
+        public async Task<ActionResult<GetProjectDto>> GetById(string id)
         {
             return Ok(await _projectService.GetProjectById(id));
         }
@@ -37,7 +37,7 @@ namespace server.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<ActionResult> DeleteProject(int id)
+        public async Task<ActionResult> DeleteProject(string id)
         {
             await _projectService.DeleteProject(id);
             return NoContent();
