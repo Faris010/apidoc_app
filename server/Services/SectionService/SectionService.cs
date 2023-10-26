@@ -27,12 +27,12 @@ public class SectionService : ISectionService
 
     public async Task DeleteSection(int id)
     {
-        await _contex.Sections.Where(section => section.Id == id).ExecuteDeleteAsync();
+        await _contex.Sections.Include(section => section.Blocks).Where(section => section.Id == id).ExecuteDeleteAsync();
     }
 
     public async Task<List<GetSectionDto>> GetAllSections()
     {
-        return await _contex.Sections.Select(section =>
+        return await _contex.Sections.Include(section => section.Blocks).Select(section =>
         _mapper.Map<GetSectionDto>(section)).ToListAsync();
     }
 

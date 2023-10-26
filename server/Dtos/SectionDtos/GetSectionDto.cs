@@ -12,4 +12,5 @@ public class GetSectionDto
     [ForeignKey("Project")]
     public int ProjectId { get; set; }
     public int? ParedntId { get; set; }
+    public ICollection<Block>? Blocks { get; set; }
 }

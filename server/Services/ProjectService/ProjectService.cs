@@ -46,7 +46,7 @@ public class ProjectService : IProjectService
 
     public async Task<GetProjectDto> GetProjectById(int id)
     {
-        var dbProject = await _contex.Projects.FirstOrDefaultAsync(proj => proj.Id == id);
+        var dbProject = await _contex.Projects.Include(project => project.Sections).FirstOrDefaultAsync(proj => proj.Id == id);
         var project = _mapper.Map<GetProjectDto>(dbProject);
         return project;
     }
