@@ -1,4 +1,4 @@
-import { TProject } from '@/const/ProjectConst';
+import { TProject } from '@/types/types';
 import Image from 'next/image';
 
 interface Props {
@@ -16,7 +16,7 @@ export default function OptionsMenu({
 }: Props) {
   return (
     <>
-      <div className='fixed top-10 -right-10 z-10 w-1/2 overflow-hidden bg-white rounded-lg drop-shadow-lg'>
+      <div className='absolute top-16 -right-8 flex flex-col items-center z-10 overflow-hidden cursor-pointer bg-white rounded-lg drop-shadow-lg shadow-lg'>
         <div
           onClick={() => {
             setIsFormOpen();
@@ -33,6 +33,7 @@ export default function OptionsMenu({
           />
           <p>Edit</p>
         </div>
+        <div className='w-full h-[1px] mx-3 bg-slate-200'></div>
         <div className='w-full p-3 flex items-center space-x-2 hover:bg-slate-200'>
           <Image
             src='/assets/delete.png'
