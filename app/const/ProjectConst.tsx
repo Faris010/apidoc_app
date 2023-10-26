@@ -1,11 +1,4 @@
-export type TProject = {
-  id: number;
-  projectName: string;
-  slug: string;
-  logoUrl: string;
-};
-
-export const projects: TProject[] = [
+export const projects = [
   {
     id: 1,
     projectName: 'Chime Solutions',
