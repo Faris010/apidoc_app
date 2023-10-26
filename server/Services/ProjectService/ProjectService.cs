@@ -56,7 +56,7 @@ public class ProjectService : IProjectService
         {
             throw new Exception($"Project with Id '{updatedProject.Id}' not found");
         }
-
+        project.Slug = GenerateSlug(updatedProject.ProjectName);
         _contex.Update(project);
         await _contex.SaveChangesAsync();
     }
