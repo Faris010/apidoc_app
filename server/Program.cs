@@ -23,12 +23,7 @@ builder.Services.AddCors(options =>
         .AllowAnyHeader();
     });
 });
-<<<<<<< HEAD
 
-
-=======
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
->>>>>>> 9e373a9bd25e8b1d8fe6ee9bb6bb75cb6879095e
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
@@ -58,11 +53,8 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowSpecificOrigin");
 
-<<<<<<< HEAD
 app.UseAuthentication();
 
-=======
->>>>>>> 9e373a9bd25e8b1d8fe6ee9bb6bb75cb6879095e
 app.UseAuthorization();
 
 app.MapControllers();
