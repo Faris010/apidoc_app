@@ -31,7 +31,7 @@ public class ProjectService : IProjectService
         await _contex.SaveChangesAsync();
     }
 
-    public async Task DeleteProject(string id)
+    public async Task DeleteProject(int id)
     {
         await _contex.Projects.Where(p => p.Id == id).ExecuteDeleteAsync();
     }
@@ -42,7 +42,7 @@ public class ProjectService : IProjectService
         _mapper.Map<GetProjectDto>(project)).ToListAsync();
     }
 
-    public async Task<GetProjectDto> GetProjectById(string id)
+    public async Task<GetProjectDto> GetProjectById(int id)
     {
         var dbProject = await _contex.Projects.FirstOrDefaultAsync(proj => proj.Id == id);
         var project = _mapper.Map<GetProjectDto>(dbProject);

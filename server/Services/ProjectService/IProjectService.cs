@@ -5,8 +5,8 @@ namespace server.Services.ProjectService;
 public interface IProjectService
 {
     Task<List<GetProjectDto>> GetAllProjects();
-    Task<GetProjectDto> GetProjectById(string id);
+    Task<GetProjectDto> GetProjectById(int id);
     Task AddProject(AddProjectDto newProject);
     Task UpdateProject(UpdateProjectDto updatedProject);
-    Task DeleteProject(string id);
+    Task DeleteProject(int id);
 }
