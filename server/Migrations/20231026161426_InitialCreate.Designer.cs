@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using server.Data;
@@ -11,9 +12,11 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231026161426_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,10 +36,16 @@ namespace server.Migrations
                     b.Property<int>("BlockTypeId")
                         .HasColumnType("integer");
 
+                    b.Property<string>("CodeBlock")
+                        .HasColumnType("text");
+
                     b.Property<string>("Content")
                         .HasColumnType("text");
 
                     b.Property<string>("Image")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Paragraph")
                         .HasColumnType("text");
 
                     b.Property<int>("SectionId")
@@ -45,17 +54,18 @@ namespace server.Migrations
                     b.Property<int>("SortOrder")
                         .HasColumnType("integer");
 
-                    b.HasKey("Id");
+                    b.Property<string>("Subheading")
+                        .HasColumnType("text");
 
-                    b.HasIndex("SectionId");
+                    b.HasKey("Id");
 
                     b.ToTable("Blocks");
                 });
 
             modelBuilder.Entity("server.Models.Project", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Logo")
                         .IsRequired()
@@ -103,7 +113,10 @@ namespace server.Migrations
             modelBuilder.Entity("server.Models.User", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -118,15 +131,6 @@ namespace server.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("server.Models.Block", b =>
-                {
-                    b.HasOne("server.Models.Section", null)
-                        .WithMany("Blocks")
-                        .HasForeignKey("SectionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("server.Models.Section", b =>
                 {
                     b.HasOne("server.Models.Project", null)
@@ -139,11 +143,6 @@ namespace server.Migrations
             modelBuilder.Entity("server.Models.Project", b =>
                 {
                     b.Navigation("Sections");
-                });
-
-            modelBuilder.Entity("server.Models.Section", b =>
-                {
-                    b.Navigation("Blocks");
                 });
 #pragma warning restore 612, 618
         }
