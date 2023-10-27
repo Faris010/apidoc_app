@@ -1,13 +1,16 @@
 {
   "version": 2,
-  "dgSpecHash": "iD81jfajgBQnezd8cCHezR5yed2P12vn8rfBdwsR9Ts5gjWHbQRvL+H1ock7/nFxHS0P2hllFUot0y05X/qfSw==",
+  "dgSpecHash": "Uk77/h43un0vqgqwliJtVEA8YW7XyVmAIeteZ+wkUPvDFCLbYJ2VXfU04fuW2IzGK3qmBy39vfwYRkQmicUnIQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\xy\\Desktop\\Imperea\\apidoc_app\\server\\server.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\xy\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\xy\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
     "C:\\Users\\xy\\.nuget\\packages\\bcrypt.net\\0.1.0\\bcrypt.net.0.1.0.nupkg.sha512",
     "C:\\Users\\xy\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\xy\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\7.0.12\\microsoft.aspnetcore.authentication.jwtbearer.7.0.12.nupkg.sha512",
     "C:\\Users\\xy\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.12\\microsoft.aspnetcore.openapi.7.0.12.nupkg.sha512",
+    "C:\\Users\\xy\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
     "C:\\Users\\xy\\.nuget\\packages\\microsoft.entityframeworkcore\\7.0.12\\microsoft.entityframeworkcore.7.0.12.nupkg.sha512",
     "C:\\Users\\xy\\.nuget\\packages\\microsoft.entityframeworkcore.abstractions\\7.0.12\\microsoft.entityframeworkcore.abstractions.7.0.12.nupkg.sha512",
     "C:\\Users\\xy\\.nuget\\packages\\microsoft.entityframeworkcore.analyzers\\7.0.12\\microsoft.entityframeworkcore.analyzers.7.0.12.nupkg.sha512",
