@@ -1,3 +1,5 @@
+import { type } from 'os';
+
 export type TImage = {
   imageUrl: string | ArrayBuffer | null;
   name: string;
@@ -6,14 +8,23 @@ export type TImage = {
 };
 
 export type TProject = {
-  id: string;
+  id: number;
   projectName: string;
   slug?: string;
   logo: string;
+  sections?: TSection[];
 };
 
 export type TNewProject = {
-  id: string;
+  id: number;
   projectName: string;
   logo: string;
+};
+
+export type TSection = {
+  id?: number;
+  name: string;
+  title?: string;
+  projectId?: number;
+  parentId?: number | null;
 };
