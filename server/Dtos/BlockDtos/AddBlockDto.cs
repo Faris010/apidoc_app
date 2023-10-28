@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations.Schema;
+using server.Models;
 
 namespace server.Dtos.BlockDtos;
 
@@ -10,5 +11,6 @@ public class AddBlockDto
     public int SortOrder { get; set; }
     [ForeignKey("Section")]
     public int SectionId { get; set; }
+    [ForeignKey("BlockType")]
     public int BlockTypeId { get; set; }
 }

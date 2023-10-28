@@ -13,5 +13,6 @@ public class DataContext : DbContext
     public DbSet<Project> Projects => Set<Project>();
     public DbSet<Section> Sections => Set<Section>();
     public DbSet<Block> Blocks => Set<Block>();
+    public DbSet<BlockType> BlockTypes => Set<BlockType>();
 
 }

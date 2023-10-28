@@ -38,7 +38,9 @@ public class SectionService : ISectionService
 
     public async Task<GetSectionDto> GetSectionById(int id)
     {
-        var dbSection = await _contex.Sections.FirstOrDefaultAsync(section => section.Id == id);
+        var dbSection = await _contex.Sections
+        .Include(section => section.Blocks)
+        .FirstOrDefaultAsync(section => section.Id == id);
         var section = _mapper.Map<GetSectionDto>(dbSection);
         return section;
     }

@@ -12,7 +12,7 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231027133205_InitialCreate")]
+    [Migration("20231028110933_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -50,9 +50,27 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("BlockTypeId");
+
                     b.HasIndex("SectionId");
 
                     b.ToTable("Blocks");
+                });
+
+            modelBuilder.Entity("server.Models.BlockType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BlockTypes");
                 });
 
             modelBuilder.Entity("server.Models.Project", b =>
@@ -126,11 +144,19 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Block", b =>
                 {
+                    b.HasOne("server.Models.BlockType", "BlockTypes")
+                        .WithMany()
+                        .HasForeignKey("BlockTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("server.Models.Section", null)
                         .WithMany("Blocks")
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("BlockTypes");
                 });
 
             modelBuilder.Entity("server.Models.Section", b =>

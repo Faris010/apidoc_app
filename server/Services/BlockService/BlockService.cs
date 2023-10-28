@@ -31,14 +31,15 @@ public class BlockService : IBlockService
 
     public async Task<List<GetBlockDto>> GetAllBlocks()
     {
-        var blocks = await _context.Blocks.ToListAsync(); 
+        var blocks = await _context.Blocks.Include(block => block.BlockTypes).ToListAsync();
         return blocks.Select(block => _mapper.Map<GetBlockDto>(block))
                 .OrderBy(b => b.SortOrder).ToList();
     }
 
     public async Task<GetBlockDto> GetBlockById(int id)
     {
-        var dbBlock = await _context.Blocks.FindAsync(id);
+        var dbBlock = await _context.Blocks.Include(block => block.BlockTypes)
+            .FirstOrDefaultAsync(block => block.Id == id);
         var block = _mapper.Map<GetBlockDto>(dbBlock);
         return block;
     }

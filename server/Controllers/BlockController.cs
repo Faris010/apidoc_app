@@ -34,6 +34,7 @@ public class BlockController : ControllerBase
     }
 
     [HttpDelete]
+    [Route("{id}")]
     public async Task DeleteBlock(int id)
     {
         await _blockService.DeleteBlock(id);
