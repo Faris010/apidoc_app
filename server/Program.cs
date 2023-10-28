@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using server.Data;
 using server.Services.BlockService;
+using server.Services.BlockTypeService;
 using server.Services.ProjectService;
 using server.Services.SectionService;
 
@@ -30,6 +31,7 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ISectionService, SectionService>();
 builder.Services.AddScoped<IBlockService, BlockService>();
+builder.Services.AddScoped<IBlockTypeService, BlockTypeService>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>{
         options.TokenValidationParameters = new TokenValidationParameters
