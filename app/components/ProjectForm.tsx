@@ -28,7 +28,7 @@ export default function ProjectForm({
   const router = useRouter();
   const [error, setError] = useState<boolean>(false);
   const [newProjectData, setNewProjectData] = useState<TProject>({
-    id: uuidv4(),
+    id: Math.floor(Math.random() * 1000) + 1,
     projectName: '',
     logo: '',
   });
@@ -77,6 +77,7 @@ export default function ProjectForm({
       setIsProjectFormOpen();
       router.refresh();
     } catch (error) {
+      console.log(error);
       setError(true);
     }
   };
@@ -110,7 +111,11 @@ export default function ProjectForm({
             type='text'
             name='projectName'
             required
-            value={currentProject?.projectName ?? newProjectData.projectName}
+            value={
+              title == 'Create'
+                ? newProjectData.projectName
+                : currentProject?.projectName
+            }
             placeholder='Project Name...'
             className={`w-full p-2 border-[1px] ${
               error ? 'border-red-600' : 'border-[#B4B4B3]'
@@ -176,7 +181,7 @@ export default function ProjectForm({
             </div>
           </div>
         )}
-        <FormActionButtons setIsProjectFormOpen={setIsProjectFormOpen} />
+        <FormActionButtons setIsFormOpen={setIsProjectFormOpen} />
       </form>
       {error && <ErrorNotification />}
     </div>
