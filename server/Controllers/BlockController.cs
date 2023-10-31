@@ -28,9 +28,10 @@ public class BlockController : ControllerBase
     }
 
     [HttpPost]
-    public async Task AddBlock(AddBlockDto newBlock)
+    [Route("{sectionId}")]
+    public async Task AddBlock([FromBody]AddBlockDto newBlock, int sectionId)
     {
-        await _blockService.AddBlock(newBlock);
+        await _blockService.AddBlock(newBlock,sectionId);
     }
 
     [HttpDelete]

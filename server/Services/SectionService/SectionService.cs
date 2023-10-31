@@ -1,4 +1,6 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Dtos.SectionDtos;
@@ -18,11 +20,17 @@ public class SectionService : ISectionService
         _contex = context;
         _mapper = mapper;
     }
-    public async Task AddSection(AddSectionDto newSection)
+    public async Task AddSection(AddSectionDto newSection, int projectId)
     {
         var section = _mapper.Map<Section>(newSection);
-        await _contex.AddAsync(section);
-        await _contex.SaveChangesAsync();
+        var project = await _contex.Projects.Where(p => p.Id == projectId).Include(p => p.Sections).FirstOrDefaultAsync();
+        if (project is not null)
+        {
+            section.ProjectId = projectId;
+            await _contex.Sections.AddAsync(section);
+            project.Sections?.Add(section);
+            await _contex.SaveChangesAsync();
+        }
     }
 
     public async Task DeleteSection(int id)
