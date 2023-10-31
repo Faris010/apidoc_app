@@ -17,11 +17,17 @@ public class BlockService : IBlockService
         _mapper = mapper;
     }
 
-    public async Task AddBlock(AddBlockDto newBlock)
+    public async Task AddBlock(AddBlockDto newBlock, int sectionId)
     {
         var block = _mapper.Map<Block>(newBlock);
-        await _context.Blocks.AddAsync(block);
-        await _context.SaveChangesAsync();
+        var section = await _context.Sections.Where(s => s.Id == sectionId).Include(s => s.Blocks).FirstOrDefaultAsync();
+        if (section is not null)
+        {
+            block.SectionId = sectionId;
+            await _context.Blocks.AddAsync(block);
+            section.Blocks?.Add(block);
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task DeleteBlock(int id)

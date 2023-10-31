@@ -47,7 +47,8 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BlockTypeId");
+                    b.HasIndex("BlockTypeId")
+                        .IsUnique();
 
                     b.HasIndex("SectionId");
 
@@ -73,7 +74,10 @@ namespace server.Migrations
             modelBuilder.Entity("server.Models.Project", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Logo")
                         .IsRequired()
@@ -95,7 +99,10 @@ namespace server.Migrations
             modelBuilder.Entity("server.Models.Section", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -142,18 +149,20 @@ namespace server.Migrations
             modelBuilder.Entity("server.Models.Block", b =>
                 {
                     b.HasOne("server.Models.BlockType", "BlockTypes")
-                        .WithMany()
-                        .HasForeignKey("BlockTypeId")
+                        .WithOne("Block")
+                        .HasForeignKey("server.Models.Block", "BlockTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("server.Models.Section", null)
+                    b.HasOne("server.Models.Section", "Section")
                         .WithMany("Blocks")
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("BlockTypes");
+
+                    b.Navigation("Section");
                 });
 
             modelBuilder.Entity("server.Models.Section", b =>
@@ -163,6 +172,11 @@ namespace server.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("server.Models.BlockType", b =>
+                {
+                    b.Navigation("Block");
                 });
 
             modelBuilder.Entity("server.Models.Project", b =>

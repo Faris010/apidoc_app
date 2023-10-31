@@ -1,10 +1,11 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
 namespace server.Models;
 
 public class Project
 {
-    [DatabaseGenerated(DatabaseGeneratedOption.None)]
+    [Key]
     public int Id { get; set; }
     public string ProjectName { get; set; } = string.Empty;
     public string Slug { get; set; } = string.Empty;

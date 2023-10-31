@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using server.Data;
 using server.Services.BlockService;
@@ -9,6 +10,11 @@ using server.Services.ProjectService;
 using server.Services.SectionService;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
 
 
 builder.Services.AddDbContext<DataContext>(options =>

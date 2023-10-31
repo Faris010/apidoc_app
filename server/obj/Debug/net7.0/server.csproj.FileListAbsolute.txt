@@ -106,3 +106,7 @@ C:\Users\Muhammed\Desktop\apidoc_app\server\obj\Debug\net7.0\refint\server.dll
 C:\Users\Muhammed\Desktop\apidoc_app\server\obj\Debug\net7.0\server.pdb
 C:\Users\Muhammed\Desktop\apidoc_app\server\obj\Debug\net7.0\server.genruntimeconfig.cache
 C:\Users\Muhammed\Desktop\apidoc_app\server\obj\Debug\net7.0\ref\server.dll
+C:\Users\xy\Desktop\Imperea\apidoc_app\server\bin\Debug\net7.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\xy\Desktop\Imperea\apidoc_app\server\bin\Debug\net7.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\xy\Desktop\Imperea\apidoc_app\server\bin\Debug\net7.0\Newtonsoft.Json.dll
+C:\Users\xy\Desktop\Imperea\apidoc_app\server\bin\Debug\net7.0\Newtonsoft.Json.Bson.dll

@@ -28,7 +28,8 @@ namespace server.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     ProjectName = table.Column<string>(type: "text", nullable: false),
                     Slug = table.Column<string>(type: "text", nullable: false),
                     Logo = table.Column<string>(type: "text", nullable: false)
@@ -56,7 +57,8 @@ namespace server.Migrations
                 name: "Sections",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     ProjectId = table.Column<int>(type: "integer", nullable: false),
@@ -105,7 +107,8 @@ namespace server.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Blocks_BlockTypeId",
                 table: "Blocks",
-                column: "BlockTypeId");
+                column: "BlockTypeId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blocks_SectionId",

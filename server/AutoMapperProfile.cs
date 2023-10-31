@@ -15,6 +15,7 @@ public class AutoMapperProfile : Profile
         CreateMap<AddProjectDto, Project>();
         CreateMap<UpdateProjectDto, Project>();
         CreateMap<AddSectionDto, Section>();
+        CreateMap<Section, AddSectionDto>();
         CreateMap<Section, GetSectionDto>();
         CreateMap<UpdateSectionDto, Section>();
         CreateMap<Block, GetBlockDto>();

@@ -28,9 +28,10 @@ public class SectionController : ControllerBase
     }
 
     [HttpPost]
-    public async Task AddSection(AddSectionDto newSection)
+    [Route("{projectId}")]
+    public async Task AddSection([FromBody] AddSectionDto newSection, int projectId)
     {
-        await _sectionService.AddSection(newSection);
+        await _sectionService.AddSection(newSection, projectId);
     }
 
     [HttpDelete]
