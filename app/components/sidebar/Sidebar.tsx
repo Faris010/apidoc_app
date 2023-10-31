@@ -19,7 +19,6 @@ export default function Sidebar() {
     id: Math.floor(Math.random() * 1000) + 1,
     name: '',
     title: '',
-    projectId: id,
     paredntId: null,
   });
   const [sectionList, setSectionList] = useState<TSection[]>();
@@ -50,9 +49,15 @@ export default function Sidebar() {
   const handleAddSection = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await addSection(section);
-      console.log(section);
+      await addSection(section, id);
       setIsSectionFormOpen();
+      getSections();
+      setSection({
+        id: 0,
+        name: '',
+        title: '',
+        paredntId: null,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -103,6 +108,7 @@ export default function Sidebar() {
                   <SectionItem
                     key={section.id}
                     section={section}
+                    setSection={setSection}
                     sectionList={sectionList}
                     depth={1}
                     setIsSectionFormOpen={setIsSectionFormOpen}

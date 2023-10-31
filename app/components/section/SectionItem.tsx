@@ -12,6 +12,7 @@ interface Props {
   sectionList: TSection[];
   depth: number;
   setIsSectionFormOpen: () => void;
+  setSection: React.Dispatch<React.SetStateAction<TSection>>;
 }
 
 export default function SectionItem({
@@ -19,6 +20,7 @@ export default function SectionItem({
   sectionList,
   depth,
   setIsSectionFormOpen,
+  setSection,
 }: Props) {
   const ref = useRef(null);
   const [isExpanded, setIsExpanded] = useToggle(false);
@@ -92,7 +94,10 @@ export default function SectionItem({
               />
             </div>
             <div
-              onClick={setIsSectionFormOpen}
+              onClick={() => {
+                setIsSectionFormOpen();
+                setSection((prev) => ({ ...prev, paredntId: section.id }));
+              }}
               className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'
             >
               <Image
@@ -112,6 +117,7 @@ export default function SectionItem({
             <div key={sec.id} className={`pl-2`}>
               <SectionItem
                 section={sec}
+                setSection={setSection}
                 sectionList={sectionList}
                 depth={depth + 1}
                 setIsSectionFormOpen={setIsSectionFormOpen}

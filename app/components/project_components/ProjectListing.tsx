@@ -30,7 +30,7 @@ export default function ProjectListing({ projects }: { projects: TProject[] }) {
         </div>
         <div className='h-[1px] bg-[#B4B4B3] w-full'></div>
         <div className='grid grid-cols-4 gap-6'>
-          {projects.map((project) => (
+          {projects?.map((project) => (
             <ProjectCard
               key={project.id}
               project={project}

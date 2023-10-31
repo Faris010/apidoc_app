@@ -25,6 +25,6 @@ export type TSection = {
   id: number;
   name: string;
   title: string;
-  projectId: number;
+  projectId?: number;
   paredntId: number | null;
 };
