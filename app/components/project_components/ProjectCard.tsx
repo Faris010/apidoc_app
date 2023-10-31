@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import OptionsMenu from './OptionsMenu';
+import OptionsMenu from '../modals/OptionsMenu';
 import { useToggle } from '@/hooks/useToggle';
 import { TProject } from '@/types/types';
 import { useRef } from 'react';

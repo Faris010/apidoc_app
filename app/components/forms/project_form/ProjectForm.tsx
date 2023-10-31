@@ -1,15 +1,14 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import ProjectImageUploader from './ProjectImageUploader';
-import FormActionButtons from './FormActionButtons';
+import ProjectImageUploader from './project_form_components/ProjectImageUploader';
+import FormActionButtons from '../forms_action_buttons/FormActionButtons';
 import Image from 'next/image';
 import { formatFileSize } from '@/utils/FormatFileSize';
 import { TImage, TProject } from '@/types/types';
 import { addNewProject, editProject } from '@/services/project';
-import { v4 as uuidv4 } from 'uuid';
 import { useRouter } from 'next/navigation';
-import ErrorNotification from './ErrorNotification';
+import ErrorNotification from './project_form_components/ErrorNotification';
 
 interface Props {
   currentProject: TProject | null;

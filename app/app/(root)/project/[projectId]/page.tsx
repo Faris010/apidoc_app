@@ -1,5 +1,5 @@
-import DocumentEditor from '@/components/DocumentEditor';
-import Sidebar from '@/components/Sidebar';
+import DocumentEditor from '@/components/document_editor/DocumentEditor';
+import Sidebar from '@/components/sidebar/Sidebar';
 
 export default async function ProjectPage() {
   return (

@@ -2,10 +2,10 @@
 
 import { TProject } from '@/types/types';
 import ProjectCard from './ProjectCard';
-import ProjectForm from './ProjectForm';
+import ProjectForm from '../forms/project_form/ProjectForm';
 import { useToggle } from '@/hooks/useToggle';
 import { useState } from 'react';
-import DeleteConfirmationModal from './DeleteConfirmationModal';
+import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
 
 export default function ProjectListing({ projects }: { projects: TProject[] }) {
   const [isProjectFormOpen, setIsProjectFormOpen] = useToggle(false);
