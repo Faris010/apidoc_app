@@ -45,6 +45,14 @@ public class SectionService : ISectionService
         return section;
     }
 
+    public async Task<List<GetSectionDto>> GetSectionByProjectId(int projectId)
+    {
+        return await _contex.Sections
+        .Where(s => s.ProjectId == projectId).Include(section => section.Blocks).Select(section =>
+        _mapper.Map<GetSectionDto>(section))
+        .ToListAsync();
+    }
+
     public async Task UpdateSection(UpdateSectionDto updatedSection)
     {
         var section = _mapper.Map<Section>(updatedSection);

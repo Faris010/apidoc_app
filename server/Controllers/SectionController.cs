@@ -27,6 +27,13 @@ public class SectionController : ControllerBase
         return Ok(await _sectionService.GetSectionById(id));
     }
 
+    [HttpGet]
+    [Route("projectId/{projectId}")]
+    public async Task<ActionResult<GetSectionDto>> GetByProjectId(int projectId)
+    {
+        return Ok(await _sectionService.GetSectionByProjectId(projectId));
+    }
+
     [HttpPost]
     public async Task AddSection(AddSectionDto newSection)
     {
