@@ -5,7 +5,7 @@ export async function getAllProjects() {
   const response = await fetch(`http://localhost:5287/api/projects/`, {
     cache: 'no-cache',
   });
-  return await response.json();
+  return response.json();
 }
 
 export async function addNewProject(projectData: TNewProject) {
@@ -23,5 +23,5 @@ export async function deleteProject(id: string | undefined) {
 
 export async function getProjectById(id: number) {
   const response = await fetch(`http://localhost:5287/api/projects/${id}`);
-  return await response.json();
+  return response.json();
 }
