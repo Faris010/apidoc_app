@@ -8,7 +8,7 @@ export default function Navbar() {
   };
 
   return (
-    <div className='w-full px-10 py-4 flex items-center justify-between bg-white'>
+    <div className='w-full px-10 py-4 flex items-center justify-between bg-[#FBFBFA]'>
       <div className='font-bold text-xl'>API Doc</div>
       <div className='w-1/3 px-4 py-2 flex items-center space-x-3 border-[1px] border-[#B4B4B3] rounded-3xl'>
         <Image

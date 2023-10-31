@@ -69,7 +69,7 @@ export default function ProjectCard({
           </div>
           <div className='text-center'>
             <Link
-              href={`/project/${project.slug}`}
+              href={`/project/${project.id}`}
               className='py-2 px-4 bg-blue-600 rounded-3xl text-white text-sm'
             >
               Open project
