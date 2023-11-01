@@ -3,23 +3,23 @@
 import { getProjectById } from '@/services/project';
 import { TProject, TSection } from '@/types/types';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import SectionItem from '../section/SectionItem';
 import { useToggle } from '@/hooks/useToggle';
 import SectionForm from '../forms/section_form/SectionForm';
 import { addSection, getSectionByProjectId } from '@/services/section';
+import { GenerateSlug } from '@/utils/GenerateSlug';
 
 export default function Sidebar() {
   const params = useParams();
+  const router = useRouter();
   let id: number = parseInt(params.projectId);
   const [project, setProject] = useState<TProject>();
   const [isSectionFormOpen, setIsSectionFormOpen] = useToggle(false);
   const [section, setSection] = useState<TSection>({
-    id: Math.floor(Math.random() * 1000) + 1,
     name: '',
     title: '',
-    paredntId: null,
   });
   const [sectionList, setSectionList] = useState<TSection[]>();
 
@@ -45,6 +45,17 @@ export default function Sidebar() {
     getCurrentProject();
     getSections();
   }, [id]);
+
+  useEffect(() => {
+    if (sectionList != undefined && sectionList.length > 0) {
+      router.push(
+        `?section=${GenerateSlug(sectionList[0]?.name)}&sectionId=${
+          sectionList[0]?.id
+        }`
+      );
+    }
+    console.log(sectionList);
+  }, [sectionList]);
 
   const handleAddSection = async (e: React.FormEvent) => {
     e.preventDefault();
