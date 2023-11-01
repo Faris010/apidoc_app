@@ -33,13 +33,13 @@ export default function SectionItem({
   );
 
   return (
-    <>
+    <div className='relative'>
       <div
         onMouseEnter={setIsMouseOver}
         onMouseLeave={setIsMouseOver}
-        className={`relative ${
+        className={`${
           section.paredntId != null && depth == 1 && 'hidden'
-        } px-2 py-1 flex items-center cursor-pointer rounded hover:bg-[#EBEBEA]`}
+        } w-full px-2 py-1 flex items-center cursor-pointer rounded hover:bg-[#EBEBEA]`}
       >
         <div>
           <div
@@ -109,8 +109,8 @@ export default function SectionItem({
             </div>
           </div>
         )}
-        {isSectionMenuOpen && <SectionMenuModal ref={ref} />}
       </div>
+      {isSectionMenuOpen && <SectionMenuModal ref={ref} />}
       {isExpanded &&
         (childrenSection.length > 0 ? (
           childrenSection.map((sec) => (
@@ -131,6 +131,6 @@ export default function SectionItem({
             No sections inside
           </div>
         ))}
-    </>
+    </div>
   );
 }
