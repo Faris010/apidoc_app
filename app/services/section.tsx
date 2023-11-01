@@ -22,7 +22,9 @@ export async function getSectionByProjectId(projectId: number) {
   return response.json();
 }
 
-export async function getSectionById(id: number | null) {
+export async function getSectionById(id: number) {
   const response = await fetch(`http://localhost:5287/api/section/${id}`);
-  return response.json();
+  if (response.ok) {
+    return await response.json();
+  }
 }
