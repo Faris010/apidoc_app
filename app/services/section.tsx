@@ -28,3 +28,7 @@ export async function getSectionById(id: number) {
     return await response.json();
   }
 }
+
+export async function deleteSection(id: number) {
+  await api.delete(`/api/section/${id}`);
+}

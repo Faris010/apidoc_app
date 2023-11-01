@@ -123,6 +123,7 @@ export default function Sidebar() {
                     sectionList={sectionList}
                     depth={1}
                     setIsSectionFormOpen={setIsSectionFormOpen}
+                    setSectionList={setSectionList}
                   />
                 ))}
           </div>

@@ -13,6 +13,7 @@ interface Props {
   depth: number;
   setIsSectionFormOpen: () => void;
   setSection: React.Dispatch<React.SetStateAction<TSection>>;
+  setSectionList: React.Dispatch<React.SetStateAction<TSection[] | undefined>>;
 }
 
 export default function SectionItem({
@@ -21,6 +22,7 @@ export default function SectionItem({
   depth,
   setIsSectionFormOpen,
   setSection,
+  setSectionList,
 }: Props) {
   const ref = useRef(null);
   const [isExpanded, setIsExpanded] = useToggle(false);
@@ -110,7 +112,14 @@ export default function SectionItem({
           </div>
         )}
       </div>
-      {isSectionMenuOpen && <SectionMenuModal ref={ref} />}
+      {isSectionMenuOpen && (
+        <SectionMenuModal
+          section={section}
+          sectionList={sectionList}
+          setSectionList={setSectionList}
+          ref={ref}
+        />
+      )}
       {isExpanded &&
         (childrenSection.length > 0 ? (
           childrenSection.map((sec) => (
@@ -121,6 +130,7 @@ export default function SectionItem({
                 sectionList={sectionList}
                 depth={depth + 1}
                 setIsSectionFormOpen={setIsSectionFormOpen}
+                setSectionList={setSectionList}
               />
             </div>
           ))
