@@ -18,7 +18,7 @@ export default function LoginForm() {
         localStorage.setItem('accesToken', response.data);
         router.push('/');
       } catch (error: any) {
-        if (error.response.status == 400) {
+        if (error.response?.status == 400) {
           setStatus('Incorrect credentials');
         } else {
           setStatus('Something went wrong');
@@ -38,7 +38,7 @@ export default function LoginForm() {
           Username
         </label>
         <div
-          className={`flex px-3 py-2 items-center space-x-2 rounded-lg border-[1px] ${
+          className={`flex px-3 py-2 items-center space-x-2 rounded-md border-[1px] ${
             formik.status ? 'border-red-600' : 'border-[#B4B4B3]'
           }`}
         >
@@ -59,7 +59,7 @@ export default function LoginForm() {
           Password
         </label>
         <div
-          className={`flex px-3 py-2 items-center space-x-2 rounded-lg border-[1px] ${
+          className={`flex px-3 py-2 items-center space-x-2 rounded-md border-[1px] ${
             formik.status ? 'border-red-600' : 'border-[#B4B4B3]'
           }`}
         >
@@ -87,7 +87,7 @@ export default function LoginForm() {
       </div>
       <button
         type='submit'
-        className='w-full py-2 flex items-center justify-center bg-black rounded-md text-white uppercase hover:bg-blue-700'
+        className='w-full py-2 flex items-center justify-center bg-gray-900 rounded-md text-white font-semibold uppercase transition hover:bg-gray-800'
       >
         Login
       </button>
