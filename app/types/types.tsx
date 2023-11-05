@@ -1,4 +1,7 @@
-import { type } from 'os';
+export type TUserLoginData = {
+  username: string;
+  password: string;
+};
 
 export type TImage = {
   imageUrl: string | ArrayBuffer | null;
