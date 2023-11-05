@@ -11,4 +11,5 @@ public class UpdateSectionDto
     public string Title { get; set; } = string.Empty;
     public int ProjectId { get; set; }
     public int? ParedntId { get; set; }
+    public ICollection<Block>? Blocks { get; set; }
 }
