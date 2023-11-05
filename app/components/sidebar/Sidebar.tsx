@@ -54,7 +54,6 @@ export default function Sidebar() {
         }`
       );
     }
-    console.log(sectionList);
   }, [sectionList]);
 
   const handleAddSection = async (e: React.FormEvent) => {
