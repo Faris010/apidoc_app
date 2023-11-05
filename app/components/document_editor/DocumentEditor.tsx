@@ -2,6 +2,7 @@
 
 import {
   addSection,
+  editSection,
   getSectionById,
   getSectionByProjectId,
 } from '@/services/section';
@@ -10,7 +11,10 @@ import { GenerateSlug } from '@/utils/GenerateSlug';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import BlockTypeModal from '../modals/BlockTypeModal';
+import { useToggle } from '@/hooks/useToggle';
+import useDebounce from '@/hooks/useDebounce';
 
 export default function DocumentEditor({ projectId }: { projectId: number }) {
   const router = useRouter();
@@ -18,6 +22,8 @@ export default function DocumentEditor({ projectId }: { projectId: number }) {
   const searchParams = useSearchParams();
   const params = searchParams.get('sectionId');
   const sectionId = parseInt(params);
+
+  const [isBlockTypeModalOpen, setIsBlockTypeModalOpen] = useToggle(false);
 
   const [section, setSection] = useState<TSection>({
     name: 'Untitled',
@@ -47,6 +53,42 @@ export default function DocumentEditor({ projectId }: { projectId: number }) {
   const createEmptySection = async () => {
     await addSection(section, projectId);
     router.refresh();
+  };
+
+  const titleRef = useRef<HTMLTextAreaElement>(null);
+  const blockRef = useRef<HTMLTextAreaElement>(null);
+  const debouncedValue = useDebounce<string>(section.title, 1000);
+
+  useEffect(() => {
+    //Fix: Send API only when you make title change not on mounting
+    if (debouncedValue !== 'Untitled') {
+      console.log(section);
+      const updateSectionTitle = async () => {
+        //await editSection(section);
+        console.log('This made call');
+      };
+      updateSectionTitle();
+    }
+  }, [debouncedValue]);
+
+  const handleTitleTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (titleRef.current) {
+      titleRef.current.style.height = 'auto';
+      titleRef.current.style.height = `${e.target.scrollHeight}px`;
+      setSection((prev) => ({ ...prev, title: e.target.value }));
+    }
+  };
+
+  const blockTypeSearchFilter = () => {};
+
+  const handleBlockTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    if (blockRef.current) {
+      blockRef.current.style.height = 'auto';
+      blockRef.current.style.height = `${e.target.scrollHeight}px`;
+      if (blockRef.current.value.includes('/')) {
+        setIsBlockTypeModalOpen();
+      }
+    }
   };
 
   useEffect(() => {
@@ -90,25 +132,54 @@ export default function DocumentEditor({ projectId }: { projectId: number }) {
       <div className='w-full p-3 flex justify-center overflow-hidden'>
         <div className='w-2/3 pt-20 flex-col'>
           <div className='pb-4 text-4xl font-bold'>
-            <input
-              type='text'
-              value={section?.title || ''}
+            <textarea
+              rows={1}
+              ref={titleRef}
+              name='title'
+              value={section.title || ''}
               placeholder='Untitled'
-              onChange={(e) =>
-                setSection((prev) => ({
-                  ...prev,
-                  title: e.target.value as string,
-                }))
-              }
-              className='outline-none'
+              onChange={handleTitleTextarea}
+              className='w-full resize-none overflow-hidden outline-none '
             />
           </div>
           <div>
             {sectionId ? (
-              <textarea
-                className='w-full p-0 rounded  outline-none resize-none overflow-hidden'
-                placeholder="Type '/' for commands"
-              ></textarea>
+              <>
+                <div className='flex items-start group'>
+                  <div className='hidden pr-2 group-hover:flex items-center group-hover:-ml-12'>
+                    <div
+                      onClick={setIsBlockTypeModalOpen}
+                      className='p-0.5 hover:bg-[#EBEBEA] rounded'
+                    >
+                      <Image
+                        src='/assets/add.png'
+                        alt='add icon'
+                        height={16}
+                        width={16}
+                        className='cursor-pointer'
+                      />
+                    </div>
+                    <div className='p-0.5 hover:bg-[#EBEBEA] rounded'>
+                      <Image
+                        src='/assets/drag.png'
+                        alt='add icon'
+                        height={16}
+                        width={16}
+                        className='cursor-grab'
+                      />
+                    </div>
+                  </div>
+                  <textarea
+                    rows={1}
+                    ref={blockRef}
+                    name='block'
+                    onChange={handleBlockTextarea}
+                    className='w-full rounded outline-none resize-none overflow-hidden text-[#3E4248]'
+                    placeholder="Type '/' for commands"
+                  />
+                </div>
+                {isBlockTypeModalOpen && <BlockTypeModal />}
+              </>
             ) : (
               <div
                 onClick={createEmptySection}

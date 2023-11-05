@@ -32,3 +32,7 @@ export async function getSectionById(id: number) {
 export async function deleteSection(id: number) {
   await api.delete(`/api/section/${id}`);
 }
+
+export async function editSection(section: TSection) {
+  await api.put('/api/section', section);
+}
