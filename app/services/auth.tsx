@@ -1,4 +1,4 @@
-import { TUserLoginData } from '@/components/LoginForm';
+import { TUserLoginData } from '@/components/forms/login_form/LoginForm';
 import api from '@/utils/api';
 
 export async function login(userLoginData: TUserLoginData) {

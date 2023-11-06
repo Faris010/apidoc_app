@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import FormActionButtons from './FormActionButtons';
+import FormActionButtons from '../forms_action_buttons/FormActionButtons';
 import { TSection } from '@/types/types';
 
 interface Props {

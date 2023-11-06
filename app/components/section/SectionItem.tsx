@@ -3,22 +3,41 @@ import { TSection } from '@/types/types';
 import { GenerateSlug } from '@/utils/GenerateSlug';
 import Image from 'next/image';
 import Link from 'next/link';
+import SectionMenuModal from '../modals/SectionMenuModal';
+import { useRef } from 'react';
+import useOnClickOutside from '@/hooks/useOnClickOutside';
 
 interface Props {
   section: TSection;
-  projectId: number;
+  sectionList: TSection[];
+  depth: number;
+  setIsSectionFormOpen: () => void;
 }
 
-export default function SectionItem({ section, projectId }: Props) {
+export default function SectionItem({
+  section,
+  sectionList,
+  depth,
+  setIsSectionFormOpen,
+}: Props) {
+  const ref = useRef(null);
   const [isExpanded, setIsExpanded] = useToggle(false);
   const [isMouseOver, setIsMouseOver] = useToggle(false);
+  const [isSectionMenuOpen, setIsSectionMenuOpen] = useToggle(false);
+  useOnClickOutside(ref, setIsSectionMenuOpen);
+
+  let childrenSection = sectionList.filter(
+    (sec) => sec.paredntId == section.id
+  );
 
   return (
     <>
       <div
         onMouseEnter={setIsMouseOver}
         onMouseLeave={setIsMouseOver}
-        className='px-2 py-1 flex items-center cursor-pointer rounded hover:bg-[#EBEBEA]'
+        className={`relative ${
+          section.paredntId != null && depth == 1 && 'hidden'
+        } px-2 py-1 flex items-center cursor-pointer rounded hover:bg-[#EBEBEA]`}
       >
         <div>
           <div
@@ -36,7 +55,6 @@ export default function SectionItem({ section, projectId }: Props) {
         </div>
         <Link
           href={{
-            pathname: `/project/${projectId}`,
             query: {
               section: GenerateSlug(section.name.toLowerCase()),
               sectionId: section.id,
@@ -62,7 +80,10 @@ export default function SectionItem({ section, projectId }: Props) {
         </Link>
         {isMouseOver && (
           <div className='flex items-center space-x-1'>
-            <div className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'>
+            <div
+              onClick={setIsSectionMenuOpen}
+              className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'
+            >
               <Image
                 src='/assets/more.png'
                 alt='more icon'
@@ -70,17 +91,40 @@ export default function SectionItem({ section, projectId }: Props) {
                 width={16}
               />
             </div>
-            <div className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'>
+            <div
+              onClick={setIsSectionFormOpen}
+              className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'
+            >
               <Image
                 src='/assets/plus.png'
-                alt='more icon'
+                alt='add icon'
                 height={16}
                 width={16}
               />
             </div>
           </div>
         )}
+        {isSectionMenuOpen && <SectionMenuModal ref={ref} />}
       </div>
+      {isExpanded &&
+        (childrenSection.length > 0 ? (
+          childrenSection.map((sec) => (
+            <div key={sec.id} className={`pl-2`}>
+              <SectionItem
+                section={sec}
+                sectionList={sectionList}
+                depth={depth + 1}
+                setIsSectionFormOpen={setIsSectionFormOpen}
+              />
+            </div>
+          ))
+        ) : (
+          <div
+            className={`py-1 pl-8 text-sm text-[#B4B4B3] font-medium truncate`}
+          >
+            No sections inside
+          </div>
+        ))}
     </>
   );
 }

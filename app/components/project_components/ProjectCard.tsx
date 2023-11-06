@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import OptionsMenu from './OptionsMenu';
+import OptionsMenu from '../modals/OptionsMenu';
 import { useToggle } from '@/hooks/useToggle';
 import { TProject } from '@/types/types';
 import { useRef } from 'react';
@@ -28,11 +28,12 @@ export default function ProjectCard({
   useOnClickOutside(ref, setIsMenuOpen);
   return (
     <div className='relative'>
-      <div className='w-full p-8 bg-white rounded-md space-y-6 drop-shadow-md flex flex-col'>
+      <div className='p-8 bg-white rounded-md space-y-6 drop-shadow-md'>
+        {/* Card Header */}
         <div className='flex items-center justify-between'>
-          <div className='bg-blue-300 bg-opacity-50 p-2 rounded-full'>
+          <div className='bg-gray-300 bg-opacity-50 p-2 rounded-full'>
             <Image
-              src='/assets/document.png'
+              src='/assets/document-grey.png'
               alt='document icon'
               height={16}
               width={16}
@@ -51,40 +52,44 @@ export default function ProjectCard({
             />
           </div>
         </div>
-        <div className='space-y-6'>
-          <div className='space-y-3 w-full'>
-            <div className='h-20 flex justify-center items-center'>
-              <Image
-                src={project.logo || '/assets/placeholder.png'}
-                alt='company logo'
-                height={72}
-                width={72}
-                style={{ width: 'auto' }}
-                className='drop-shadow-lg'
-              />
-            </div>
-            <p className='truncate text-center font-semibold'>
-              {project.projectName}
-            </p>
+
+        {/* Card Body */}
+        <div className='space-y-3'>
+          <div className='h-20 flex justify-center items-center'>
+            <Image
+              src={project.logo || '/assets/placeholder.png'}
+              alt='company logo'
+              height={72}
+              width={72}
+              style={{ height: 'auto' }}
+              className='drop-shadow-lg'
+            />
           </div>
-          <div className='text-center'>
-            <Link
-              href={`/project/${project.id}`}
-              className='py-2 px-4 bg-blue-600 rounded-3xl text-white text-sm'
-            >
-              Open project
-            </Link>
-          </div>
+          <p className='text-center truncate font-semibold'>
+            {project.projectName}
+          </p>
+        </div>
+
+        {/* Card Action */}
+        <div className='text-center'>
+          <Link
+            href={`/project/${project.id}`}
+            className='py-2 px-4 bg-gray-900 rounded-md text-white text-sm'
+          >
+            Open project
+          </Link>
         </div>
       </div>
+
+      {/* Card menu */}
       {isMenuOpen && (
         <OptionsMenu
           ref={ref}
           project={project}
-          setIsProjectFormOpen={setIsProjectFormOpen}
           setFormTitle={setFormTitle}
-          setCurrentProject={setCurrentProject}
           setIsMenuOpen={setIsMenuOpen}
+          setCurrentProject={setCurrentProject}
+          setIsProjectFormOpen={setIsProjectFormOpen}
           setIsDeleteModalOpen={setIsDeleteModalOpen}
         />
       )}

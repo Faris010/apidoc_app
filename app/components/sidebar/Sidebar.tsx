@@ -5,10 +5,10 @@ import { TProject, TSection } from '@/types/types';
 import Image from 'next/image';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import SectionItem from './SectionItem';
+import SectionItem from '../section/SectionItem';
 import { useToggle } from '@/hooks/useToggle';
-import SectionForm from './SectionForm';
-import { addSection } from '@/services/section';
+import SectionForm from '../forms/section_form/SectionForm';
+import { addSection, getSectionByProjectId } from '@/services/section';
 
 export default function Sidebar() {
   const params = useParams();
@@ -16,19 +16,36 @@ export default function Sidebar() {
   const [project, setProject] = useState<TProject>();
   const [isSectionFormOpen, setIsSectionFormOpen] = useToggle(false);
   const [section, setSection] = useState<TSection>({
+    id: Math.floor(Math.random() * 1000) + 1,
     name: '',
     title: '',
     projectId: id,
-    parentId: null,
+    paredntId: null,
   });
+  const [sectionList, setSectionList] = useState<TSection[]>();
 
-  useEffect(() => {
-    const getCurrentProject = async () => {
+  const getCurrentProject = async () => {
+    try {
       const response = await getProjectById(id);
       setProject(response);
-    };
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const getSections = async () => {
+    try {
+      const response = await getSectionByProjectId(id);
+      setSectionList(response);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
     getCurrentProject();
-  }, []);
+    getSections();
+  }, [id]);
 
   const handleAddSection = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,16 +58,9 @@ export default function Sidebar() {
     }
   };
 
-  let arr = [
-    { id: 1, name: 'Introduction' },
-    { id: 2, name: 'Typography Lorem ipsum dolor sit' },
-    { id: 3, name: 'API Request' },
-    { id: 4, name: 'API Response' },
-    { id: 5, name: 'Get Started' },
-  ];
   return (
     <>
-      <div className='w-1/5 p-1 space-y-2 bg-[#FBFBFA] border-r-[2px] border-[#E1E1E1] shadow-lg'>
+      <div className='w-1/5 p-1 space-y-4 bg-[#FBFBFA] border-r-[2px] border-[#E1E1E1] '>
         {/* Project logo and name */}
         <div className='flex items-center px-2 py-1 space-x-2 hover:bg-[#EBEBEA] rounded cursor-pointer'>
           <div className='flex items-center justify-center'>
@@ -66,7 +76,7 @@ export default function Sidebar() {
         </div>
 
         {/* Search bar */}
-        <div className='mx-2 px-2 py-1 flex items-center space-x-2 bg-[#EBEBEA] rounded'>
+        <div className='mx-2 px-2.5 py-1.5 flex items-center space-x-2 bg-[#EBEBEA] rounded'>
           <div>
             <Image
               src='/assets/search.png'
@@ -82,24 +92,23 @@ export default function Sidebar() {
           />
         </div>
 
-        {/* Project name */}
-        {/* <div className='flex items-center px-2 cursor-pointer space-x-2'>
-          <div>
-            <Image
-              src='/assets/document-grey.png'
-              alt='document icon'
-              height={18}
-              width={18}
-            />
-          </div>
-          <p className='truncate'>{project?.projectName}</p>
-        </div> */}
-
         {/* Section list */}
-        <div>
-          {arr.map((section) => (
-            <SectionItem key={section.id} section={section} projectId={id} />
-          ))}
+        <div className='pt-2'>
+          <div>
+            {sectionList &&
+              sectionList?.length > 0 &&
+              sectionList
+                .filter((s) => s.id != null)
+                .map((section: TSection) => (
+                  <SectionItem
+                    key={section.id}
+                    section={section}
+                    sectionList={sectionList}
+                    depth={1}
+                    setIsSectionFormOpen={setIsSectionFormOpen}
+                  />
+                ))}
+          </div>
           <div
             onClick={setIsSectionFormOpen}
             className='pl-3 pr-2 py-1 flex items-center space-x-3 cursor-pointer hover:bg-[#EBEBEA] rounded'

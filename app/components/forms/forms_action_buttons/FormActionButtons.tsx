@@ -16,7 +16,7 @@ export default function FormActionButtons({ setIsFormOpen }: Props) {
       </button>
       <button
         type='submit'
-        className='w-1/2 py-2 bg-blue-600 rounded-md text-white'
+        className='w-1/2 py-2 bg-gray-900 rounded-md text-white'
       >
         Save
       </button>
