@@ -15,7 +15,7 @@ export default function LoginForm() {
     onSubmit: async (values, { setStatus }) => {
       try {
         const response = await login(values);
-        localStorage.setItem('accesToken', response.data);
+        localStorage.setItem('accessToken', response.data);
         router.push('/');
       } catch (error: any) {
         if (error.response?.status == 400) {
