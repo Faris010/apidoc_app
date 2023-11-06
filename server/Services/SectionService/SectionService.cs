@@ -1,6 +1,4 @@
-using AutoMapper;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Dtos.SectionDtos;
@@ -13,16 +11,14 @@ public class SectionService : ISectionService
 
     private readonly DataContext _contex;
 
-    private readonly IMapper _mapper;
-
-    public SectionService(DataContext context, IMapper mapper)
+    public SectionService(DataContext context)
     {
         _contex = context;
-        _mapper = mapper;
     }
-    public async Task AddSection(AddSectionDto newSection, int projectId)
+    public async Task AddSection(AddSectionDto newSection, Guid projectId)
     {
-        var section = _mapper.Map<Section>(newSection);
+        var section = newSection.Adapt<Section>();
+        section.Id = Guid.NewGuid();
         var project = await _contex.Projects.Where(p => p.Id == projectId).Include(p => p.Sections).FirstOrDefaultAsync();
         if (project is not null)
         {
@@ -33,34 +29,29 @@ public class SectionService : ISectionService
         }
     }
 
-    public async Task DeleteSection(int id)
+    public async Task DeleteSection(Guid id)
     {
-        await _contex.Sections.Include(section => section.Blocks).Where(section => section.Id == id).ExecuteDeleteAsync();
+        await _contex.Sections.Where(section => section.Id == id).ExecuteDeleteAsync();
     }
 
     public async Task<List<GetSectionDto>> GetAllSections()
     {
         return await _contex.Sections.Include(section => section.Blocks).Select(section =>
-        _mapper.Map<GetSectionDto>(section)).ToListAsync();
+        section.Adapt<GetSectionDto>()).ToListAsync();
     }
 
-    public async Task<GetSectionDto> GetSectionById(int id)
+    public async Task<GetSectionDto> GetSectionById(Guid id)
     {
         var dbSection = await _contex.Sections
         .Include(section => section.Blocks)
         .FirstOrDefaultAsync(section => section.Id == id);
-        var section = _mapper.Map<GetSectionDto>(dbSection);
+        var section = dbSection.Adapt<GetSectionDto>();
         return section;
     }
 
     public async Task UpdateSection(UpdateSectionDto updatedSection)
     {
-        var section = _mapper.Map<Section>(updatedSection);
-        if (section is null)
-        {
-            throw new Exception($"Section with Id '{updatedSection.Id}' not found");
-        }
-
+        var section = updatedSection.Adapt<Section>();
         _contex.Update(section);
         await _contex.SaveChangesAsync();
 

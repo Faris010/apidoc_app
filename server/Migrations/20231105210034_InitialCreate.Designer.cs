@@ -12,7 +12,7 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231030204747_InitialCreate")]
+    [Migration("20231105210034_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -27,11 +27,9 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Block", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<int>("BlockTypeId")
                         .HasColumnType("integer");
@@ -42,8 +40,8 @@ namespace server.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("text");
 
-                    b.Property<int>("SectionId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("SectionId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("SortOrder")
                         .HasColumnType("integer");
@@ -72,15 +70,35 @@ namespace server.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BlockTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "subheading"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "paragraph"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "code-block"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "image"
+                        });
                 });
 
             modelBuilder.Entity("server.Models.Project", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Logo")
                         .IsRequired()
@@ -101,11 +119,9 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Section", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -114,8 +130,8 @@ namespace server.Migrations
                     b.Property<int?>("ParedntId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -130,11 +146,9 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -157,15 +171,13 @@ namespace server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("server.Models.Section", "Section")
+                    b.HasOne("server.Models.Section", null)
                         .WithMany("Blocks")
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("BlockTypes");
-
-                    b.Navigation("Section");
                 });
 
             modelBuilder.Entity("server.Models.Section", b =>

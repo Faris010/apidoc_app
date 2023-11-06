@@ -1,21 +1,11 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using server.Data;
-using server.Services.BlockService;
-using server.Services.BlockTypeService;
-using server.Services.ProjectService;
-using server.Services.SectionService;
+using server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
-{
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-});
-
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase")));
@@ -23,9 +13,9 @@ builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowSpecificOrigin", builder =>
+    options.AddPolicy("AllowSpecificOrigin", cf =>
     {
-        builder.WithOrigins("http://localhost:3000")
+        cf.WithOrigins("http://localhost:3000")
         .AllowAnyMethod()
         .AllowAnyHeader();
     });
@@ -34,19 +24,17 @@ builder.Services.AddCors(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
-builder.Services.AddScoped<IProjectService, ProjectService>();
-builder.Services.AddScoped<ISectionService, SectionService>();
-builder.Services.AddScoped<IBlockService, BlockService>();
-builder.Services.AddScoped<IBlockTypeService, BlockTypeService>();
+builder.Services.AddService();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>{
+    .AddJwtBearer(options =>
+    {
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
-                ValidateIssuer = false,
-                ValidateAudience = false
+                .GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value ?? "Error")),
+            ValidateIssuer = false,
+            ValidateAudience = false
         };
     });
 var app = builder.Build();
