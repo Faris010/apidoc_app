@@ -49,11 +49,11 @@ public class SectionService : ISectionService
         return section;
     }
 
-    public async Task<List<GetSectionDto>> GetSectionByProjectId(int projectId)
+    public async Task<List<GetSectionDto>> GetSectionByProjectId(Guid projectId)
     {
         return await _contex.Sections
         .Where(s => s.ProjectId == projectId).Include(section => section.Blocks).Select(section =>
-        _mapper.Map<GetSectionDto>(section))
+        section.Adapt<GetSectionDto>())
         .ToListAsync();
     }
 

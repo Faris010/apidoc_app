@@ -31,8 +31,8 @@ public class SectionController : ControllerBase
     }
 
     [HttpGet]
-    [Route("projectId/{projectId}")]
-    public async Task<ActionResult<GetSectionDto>> GetByProjectId(int projectId)
+    [Route("projectId/{projectId:guid}")]
+    public async Task<ActionResult<GetSectionDto>> GetByProjectId(Guid projectId)
     {
         return Ok(await _sectionService.GetSectionByProjectId(projectId));
     }
