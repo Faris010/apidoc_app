@@ -4,6 +4,7 @@ namespace server.Dtos.SectionDtos
     {
         public string Name { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
-        public int? ParedntId { get; set; }
+        public int? ParentId { get; set; }
+        public Guid ProjectId { get; set; }
     }
 }
