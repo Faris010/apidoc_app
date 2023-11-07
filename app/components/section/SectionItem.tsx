@@ -11,7 +11,7 @@ interface Props {
   section: TSection;
   sectionList: TSection[];
   depth: number;
-  setIsSectionFormOpen: () => void;
+  setIsSectionFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function SectionItem({
@@ -92,7 +92,7 @@ export default function SectionItem({
               />
             </div>
             <div
-              onClick={setIsSectionFormOpen}
+              onClick={() => setIsSectionFormOpen(true)}
               className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'
             >
               <Image
