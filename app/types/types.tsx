@@ -11,7 +11,7 @@ export type TImage = {
 };
 
 export type TProject = {
-  id?: number;
+  id?: string;
   projectName: string;
   slug?: string;
   logo?: string;
@@ -24,9 +24,9 @@ export type TNewProject = {
 };
 
 export type TSection = {
-  id: number;
+  id?: string;
   name: string;
   title: string;
-  projectId: number;
-  paredntId: number | null;
+  projectId?: string;
+  paredntId: string | null;
 };
