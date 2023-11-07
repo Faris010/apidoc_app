@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.ProjectDtos;
 using server.Services.ProjectService;
@@ -6,6 +7,7 @@ namespace server.Controllers
 {
     [Route("api/projects/")]
     [ApiController]
+    [EnableCors("AllowSpecificOrigin")]
     public class ProjectController : ControllerBase
     {
         private readonly IProjectService _projectService;
@@ -22,8 +24,8 @@ namespace server.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
-        public async Task<ActionResult<GetProjectDto>> GetById(int id)
+        [Route("{id:guid}")]
+        public async Task<ActionResult<GetProjectDto>> GetById(Guid id)
         {
             return Ok(await _projectService.GetProjectById(id));
         }
@@ -35,8 +37,8 @@ namespace server.Controllers
         }
 
         [HttpDelete]
-        [Route("{id}")]
-        public async Task DeleteProject(int id)
+        [Route("{id:guid}")]
+        public async Task DeleteProject(Guid id)
         {
             await _projectService.DeleteProject(id);
         }

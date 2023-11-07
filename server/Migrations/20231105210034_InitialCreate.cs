@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
+
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace server.Migrations
 {
@@ -28,8 +31,7 @@ namespace server.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     ProjectName = table.Column<string>(type: "text", nullable: false),
                     Slug = table.Column<string>(type: "text", nullable: false),
                     Logo = table.Column<string>(type: "text", nullable: false)
@@ -43,8 +45,7 @@ namespace server.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Username = table.Column<string>(type: "text", nullable: false),
                     Password = table.Column<string>(type: "text", nullable: false)
                 },
@@ -57,11 +58,10 @@ namespace server.Migrations
                 name: "Sections",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
-                    ProjectId = table.Column<int>(type: "integer", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
                     ParedntId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
@@ -79,12 +79,11 @@ namespace server.Migrations
                 name: "Blocks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Content = table.Column<string>(type: "text", nullable: true),
                     Image = table.Column<string>(type: "text", nullable: true),
                     SortOrder = table.Column<int>(type: "integer", nullable: false),
-                    SectionId = table.Column<int>(type: "integer", nullable: false),
+                    SectionId = table.Column<Guid>(type: "uuid", nullable: false),
                     BlockTypeId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -102,6 +101,17 @@ namespace server.Migrations
                         principalTable: "Sections",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.InsertData(
+                table: "BlockTypes",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "subheading" },
+                    { 2, "paragraph" },
+                    { 3, "code-block" },
+                    { 4, "image" }
                 });
 
             migrationBuilder.CreateIndex(

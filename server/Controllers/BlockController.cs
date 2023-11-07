@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.BlockDtos;
 using server.Services.BlockService;
@@ -5,6 +6,8 @@ using server.Services.BlockService;
 namespace server.Controllers;
 
 [Route("api/block/")]
+[ApiController]
+[EnableCors("AllowSpecificOrigin")]
 public class BlockController : ControllerBase
 {
     private readonly IBlockService _blockService;
@@ -21,22 +24,22 @@ public class BlockController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{id}")]
-    public async Task<ActionResult<GetBlockDto>> GetById(int id)
+    [Route("{id:guid}")]
+    public async Task<ActionResult<GetBlockDto>> GetById(Guid id)
     {
         return Ok(await _blockService.GetBlockById(id));
     }
 
     [HttpPost]
-    [Route("{sectionId}")]
-    public async Task AddBlock([FromBody]AddBlockDto newBlock, int sectionId)
+    [Route("{sectionId:guid}")]
+    public async Task AddBlock([FromBody]AddBlockDto newBlock, Guid sectionId)
     {
         await _blockService.AddBlock(newBlock,sectionId);
     }
 
     [HttpDelete]
-    [Route("{id}")]
-    public async Task DeleteBlock(int id)
+    [Route("{id:guid}")]
+    public async Task DeleteBlock(Guid id)
     {
         await _blockService.DeleteBlock(id);
     }

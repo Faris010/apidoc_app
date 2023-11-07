@@ -1,15 +1,14 @@
-using Microsoft.AspNetCore.Mvc;
 using server.Dtos.SectionDtos;
-using server.Models;
 
 namespace server.Services.SectionService;
 
 public interface ISectionService
 {
     Task<List<GetSectionDto>> GetAllSections();
-    Task<GetSectionDto> GetSectionById(int id);
-    Task<List<GetSectionDto>> GetSectionByProjectId(int projectId);
-    Task AddSection(AddSectionDto newSection, int projectId);
+    Task<GetSectionDto> GetSectionById(Guid id);
+    Task AddSection(AddSectionDto newSection, Guid projectId);
+    Task<List<GetSectionDto>> GetSectionByProjectId(Guid projectId);
+
     Task UpdateSection(UpdateSectionDto updatedSection);
-    Task DeleteSection(int id);
+    Task DeleteSection(Guid id);
 }
