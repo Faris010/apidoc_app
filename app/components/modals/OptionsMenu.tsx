@@ -7,15 +7,13 @@ interface Props {
   setIsMenuOpen: () => void;
   setIsProjectFormOpen: () => void;
   setIsDeleteModalOpen: () => void;
-  setFormTitle: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentProject: React.Dispatch<React.SetStateAction<TProject | null>>;
+  setCurrentProject: React.Dispatch<React.SetStateAction<TProject>>;
 }
 
 const OptionsMenu = forwardRef<HTMLDivElement, Props>(
   (
     {
       project,
-      setFormTitle,
       setIsMenuOpen,
       setCurrentProject,
       setIsProjectFormOpen,
@@ -31,7 +29,6 @@ const OptionsMenu = forwardRef<HTMLDivElement, Props>(
         <div
           onClick={() => {
             setIsProjectFormOpen();
-            setFormTitle('Edit');
             setCurrentProject(project);
             setIsMenuOpen();
           }}

@@ -76,7 +76,7 @@ export default function Sidebar() {
         </div>
 
         {/* Search bar */}
-        <div className='mx-2 px-2.5 py-1.5 flex items-center space-x-2 bg-[#EBEBEA] rounded'>
+        <div className='mx-2 px-2.5 py-1 flex items-center space-x-2 bg-[#EBEBEA] rounded'>
           <div>
             <Image
               src='/assets/search.png'

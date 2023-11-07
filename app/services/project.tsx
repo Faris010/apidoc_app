@@ -17,7 +17,7 @@ export async function editProject(updatedProject: TProject | null) {
   await api.put('/api/projects/', updatedProject);
 }
 
-export async function deleteProject(id: string | undefined) {
+export async function deleteProject(id: number) {
   await api.delete(`/api/projects/${id}`);
 }
 
