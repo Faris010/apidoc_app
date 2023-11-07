@@ -18,10 +18,9 @@ public class DataContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BlockType>().HasData(
-            new BlockType() { Id = 1, Name = "subheading" },
-            new BlockType() { Id = 2, Name = "paragraph" },
-            new BlockType() { Id = 3, Name = "code-block" },
-            new BlockType() { Id = 4, Name = "image" }
+            new BlockType() { Id = 1, Name = "Paragraph", Description = "Start with plain text" },
+            new BlockType() { Id = 2, Name = "Code-Block", Description = "Capture a code snipet" },
+            new BlockType() { Id = 3, Name = "Image", Description = "Upload or embed with a link" }
         );
         base.OnModelCreating(modelBuilder);
     }

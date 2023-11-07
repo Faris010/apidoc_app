@@ -52,7 +52,7 @@ public class SectionController : ControllerBase
     }
 
     [HttpPut]
-    public async Task UpdateSection(UpdateSectionDto updatedSecion)
+    public async Task UpdateSection([FromBody] UpdateSectionDto updatedSecion)
     {
         await _sectionService.UpdateSection(updatedSecion);
     }
