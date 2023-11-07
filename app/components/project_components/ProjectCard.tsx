@@ -11,15 +11,13 @@ import useOnClickOutside from '@/hooks/useOnClickOutside';
 interface Props {
   project: TProject;
   setIsProjectFormOpen: () => void;
-  setFormTitle: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentProject: React.Dispatch<React.SetStateAction<TProject | null>>;
+  setCurrentProject: React.Dispatch<React.SetStateAction<TProject>>;
   setIsDeleteModalOpen: () => void;
 }
 
 export default function ProjectCard({
   project,
   setIsProjectFormOpen,
-  setFormTitle,
   setCurrentProject,
   setIsDeleteModalOpen,
 }: Props) {
@@ -52,16 +50,13 @@ export default function ProjectCard({
             />
           </div>
         </div>
-
         {/* Card Body */}
-        <div className='space-y-3'>
-          <div className='h-20 flex justify-center items-center'>
+        <div className='space-y-3 flex-col items-stretch'>
+          <div className='relative h-28 flex justify-center items-center'>
             <Image
               src={project.logo || '/assets/placeholder.png'}
               alt='company logo'
-              height={72}
-              width={72}
-              style={{ height: 'auto' }}
+              fill
               className='drop-shadow-lg'
             />
           </div>
@@ -69,7 +64,6 @@ export default function ProjectCard({
             {project.projectName}
           </p>
         </div>
-
         {/* Card Action */}
         <div className='text-center'>
           <Link
@@ -80,13 +74,11 @@ export default function ProjectCard({
           </Link>
         </div>
       </div>
-
       {/* Card menu */}
       {isMenuOpen && (
         <OptionsMenu
           ref={ref}
           project={project}
-          setFormTitle={setFormTitle}
           setIsMenuOpen={setIsMenuOpen}
           setCurrentProject={setCurrentProject}
           setIsProjectFormOpen={setIsProjectFormOpen}
