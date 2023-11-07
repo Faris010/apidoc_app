@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using server.Data;
@@ -11,9 +12,11 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231107221423_BlockTypeFix")]
+    partial class BlockTypeFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -74,20 +77,22 @@ namespace server.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Start with plain text",
-                            Name = "Paragraph"
+                            Name = "subheading"
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Capture a code snipet",
-                            Name = "Code-Block"
+                            Name = "paragraph"
                         },
                         new
                         {
                             Id = 3,
-                            Description = "Upload or embed with a link",
-                            Name = "Image"
+                            Name = "code-block"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "image"
                         });
                 });
 
