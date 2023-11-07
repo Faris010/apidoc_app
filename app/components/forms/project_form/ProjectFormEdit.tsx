@@ -8,7 +8,7 @@ import { TImage, TProject } from '@/types/types';
 import { editProject } from '@/services/project';
 import ErrorNotification from './project_form_components/ErrorNotification';
 import { useFormik } from 'formik';
-import { imageFileStorageUpload } from '@/utils/ImageFileStorageUpload';
+import { UploadImageToStorage } from '@/utils/UploadImageToStorage';
 
 interface Props {
   projects: TProject[];
@@ -37,7 +37,7 @@ export default function ProjectFormEdit({
       try {
         setIsProjectEditing(true);
         if (imageFile) {
-          const imageUrl = await imageFileStorageUpload(imageFile);
+          const imageUrl = await UploadImageToStorage(imageFile);
           values.logo = imageUrl;
         }
         await editProject(values);
