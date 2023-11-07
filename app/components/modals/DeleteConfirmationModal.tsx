@@ -1,18 +1,31 @@
 import { deleteProject } from '@/services/project';
 import { TProject } from '@/types/types';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 interface Props {
-  setIsDeleteModalOpen: () => void;
+  projects: TProject[];
   currentProject: TProject | null;
+  setIsDeleteModalOpen: () => void;
+  setProjects: React.Dispatch<React.SetStateAction<TProject[]>>;
 }
 
 export default function DeleteConfirmationModal({
-  setIsDeleteModalOpen,
+  projects,
+  setProjects,
   currentProject,
+  setIsDeleteModalOpen,
 }: Props) {
-  const router = useRouter();
+  const handleDeleteProject = async () => {
+    if (currentProject && currentProject.id) {
+      await deleteProject(currentProject.id);
+      const filteredProjects = projects.filter(
+        (project) => project.id !== currentProject.id
+      );
+      setProjects(filteredProjects);
+      setIsDeleteModalOpen();
+    }
+  };
+
   return (
     <div className='fixed w-full h-full flex items-center justify-center bg-black bg-opacity-50'>
       <div className='w-1/4 p-6 space-y-6 bg-white rounded-lg'>
@@ -44,11 +57,7 @@ export default function DeleteConfirmationModal({
             Cancel
           </button>
           <button
-            onClick={() => {
-              deleteProject(currentProject?.id);
-              setIsDeleteModalOpen();
-              router.refresh();
-            }}
+            onClick={handleDeleteProject}
             className='w-1/2 py-2 bg-red-600 rounded-md text-white'
           >
             Delete
