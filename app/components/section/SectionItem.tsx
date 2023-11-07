@@ -26,9 +26,7 @@ export default function SectionItem({
   const [isSectionMenuOpen, setIsSectionMenuOpen] = useToggle(false);
   useOnClickOutside(ref, setIsSectionMenuOpen);
 
-  let childrenSection = sectionList.filter(
-    (sec) => sec.paredntId == section.id
-  );
+  let childrenSection = sectionList.filter((sec) => sec.parentId == section.id);
 
   return (
     <>
@@ -36,7 +34,7 @@ export default function SectionItem({
         onMouseEnter={setIsMouseOver}
         onMouseLeave={setIsMouseOver}
         className={`relative ${
-          section.paredntId != null && depth == 1 && 'hidden'
+          section.parentId != null && depth == 1 && 'hidden'
         } px-2 py-1 flex items-center cursor-pointer rounded hover:bg-[#EBEBEA]`}
       >
         <div>

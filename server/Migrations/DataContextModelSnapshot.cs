@@ -124,7 +124,7 @@ namespace server.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ParedntId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("ProjectId")

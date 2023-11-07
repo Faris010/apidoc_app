@@ -28,5 +28,5 @@ export type TSection = {
   name: string;
   title: string;
   projectId?: string;
-  paredntId: string | null;
+  parentId: string | null;
 };

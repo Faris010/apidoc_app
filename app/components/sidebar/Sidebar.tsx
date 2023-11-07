@@ -22,7 +22,7 @@ export default function Sidebar() {
       name: 'Untitled',
       title: 'Untitled',
       projectId: id,
-      paredntId: null,
+      parentId: null,
     },
     onSubmit: async (values) => {
       await addSection(values, id);
