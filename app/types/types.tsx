@@ -11,15 +11,14 @@ export type TImage = {
 };
 
 export type TProject = {
-  id: number;
+  id?: number;
   projectName: string;
   slug?: string;
-  logo: string;
+  logo?: string;
   sections?: TSection[];
 };
 
 export type TNewProject = {
-  id: number;
   projectName: string;
   logo: string;
 };
