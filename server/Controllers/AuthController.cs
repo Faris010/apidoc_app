@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +13,7 @@ namespace server.Controllers;
 
 [Route("api/auth/")]
 [ApiController]
+[EnableCors("AllowSpecificOrigin")]
 public class AuthController : ControllerBase
 {
 
@@ -27,7 +29,7 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("register")]
-    public async Task<ActionResult<User>> Register(UserDto request)
+    public async Task<ActionResult> Register(UserDto request)
     {
 
         var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == request.Username);
@@ -42,21 +44,14 @@ public class AuthController : ControllerBase
         user.Password = passwordHash;
 
         await _context.Users.AddAsync(user);
-
-        try
-        {
-            await _context.SaveChangesAsync();
-            return Ok(user);
-        }
-        catch (Exception)
-        {
-            return Conflict("User registration failed");
-        }
+        await _context.SaveChangesAsync();
+        return Ok("Registration successful");
+ 
     }
 
     [HttpPost]
     [Route("login")]
-    public async Task<ActionResult<User>> Login(UserDto request)
+    public async Task<ActionResult> Login(UserDto request)
     {
         var dbUser = await _context.Users.FirstOrDefaultAsync(user => user.Username == request.Username);
 

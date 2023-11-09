@@ -1,4 +1,4 @@
-using AutoMapper;
+using Mapster;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Dtos.BlockDtos;
@@ -8,18 +8,17 @@ namespace server.Services.BlockService;
 
 public class BlockService : IBlockService
 {
-    private readonly IMapper _mapper;
     private readonly DataContext _context;
 
-    public BlockService(IMapper mapper, DataContext context)
+    public BlockService(DataContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
-    public async Task AddBlock(AddBlockDto newBlock, int sectionId)
+    public async Task AddBlock(AddBlockDto newBlock, Guid sectionId)
     {
-        var block = _mapper.Map<Block>(newBlock);
+        var block = newBlock.Adapt<Block>();
+        block.Id = Guid.NewGuid();
         var section = await _context.Sections.Where(s => s.Id == sectionId).Include(s => s.Blocks).FirstOrDefaultAsync();
         if (section is not null)
         {
@@ -30,7 +29,7 @@ public class BlockService : IBlockService
         }
     }
 
-    public async Task DeleteBlock(int id)
+    public async Task DeleteBlock(Guid id)
     {
         await _context.Blocks.Where(b => b.Id == id).ExecuteDeleteAsync();
     }
@@ -38,26 +37,21 @@ public class BlockService : IBlockService
     public async Task<List<GetBlockDto>> GetAllBlocks()
     {
         var blocks = await _context.Blocks.Include(block => block.BlockTypes).ToListAsync();
-        return blocks.Select(block => _mapper.Map<GetBlockDto>(block))
+        return blocks.Select(block => block.Adapt<GetBlockDto>())
                 .OrderBy(b => b.SortOrder).ToList();
     }
 
-    public async Task<GetBlockDto> GetBlockById(int id)
+    public async Task<GetBlockDto> GetBlockById(Guid id)
     {
-        var dbBlock = await _context.Blocks.Include(block => block.BlockTypes)
-            .FirstOrDefaultAsync(block => block.Id == id);
-        var block = _mapper.Map<GetBlockDto>(dbBlock);
+        var dbBlock = await _context.Blocks.Where(block => block.Id == id).Include(block => block.BlockTypes)
+            .FirstOrDefaultAsync();
+        var block = dbBlock.Adapt<GetBlockDto>();
         return block;
     }
 
     public async Task UpdateBlock(UpdateBlockDto updatedBlock)
     {
-        var block = _mapper.Map<Block>(updatedBlock);
-        if (block is null)
-        {
-            throw new Exception($"Project with Id '{updatedBlock.Id}' not found");
-        }
-
+        var block = updatedBlock.Adapt<Block>();
         _context.Update(block);
         await _context.SaveChangesAsync();
     }

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.SectionDtos;
 using server.Services.SectionService;
@@ -5,6 +6,8 @@ using server.Services.SectionService;
 namespace server.Controllers;
 
 [Route("/api/section/")]
+[ApiController]
+[EnableCors("AllowSpecificOrigin")]
 public class SectionController : ControllerBase
 {
     private readonly ISectionService _sectionService;
@@ -21,35 +24,35 @@ public class SectionController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{id}")]
-    public async Task<ActionResult<GetSectionDto>> GetById(int id)
+    [Route("{id:guid}")]
+    public async Task<ActionResult<GetSectionDto>> GetById(Guid id)
     {
         return Ok(await _sectionService.GetSectionById(id));
     }
 
     [HttpGet]
-    [Route("projectId/{projectId}")]
-    public async Task<ActionResult<GetSectionDto>> GetByProjectId(int projectId)
+    [Route("projectId/{projectId:guid}")]
+    public async Task<ActionResult<GetSectionDto>> GetByProjectId(Guid projectId)
     {
         return Ok(await _sectionService.GetSectionByProjectId(projectId));
     }
 
     [HttpPost]
-    [Route("{projectId}")]
-    public async Task AddSection([FromBody] AddSectionDto newSection, int projectId)
+    [Route("{projectId:guid}")]
+    public async Task AddSection([FromBody] AddSectionDto newSection, Guid projectId)
     {
         await _sectionService.AddSection(newSection, projectId);
     }
 
     [HttpDelete]
-    [Route("{id}")]
-    public async Task DeleteSection(int id)
+    [Route("{id:guid}")]
+    public async Task DeleteSection(Guid id)
     {
         await _sectionService.DeleteSection(id);
     }
 
     [HttpPut]
-    public async Task UpdateSection([FromBody]UpdateSectionDto updatedSecion)
+    public async Task UpdateSection([FromBody] UpdateSectionDto updatedSecion)
     {
         await _sectionService.UpdateSection(updatedSecion);
     }

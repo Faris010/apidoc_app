@@ -1,11 +1,12 @@
-using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace server.Models;
 
-public class BlockType
+public class BlockType 
 {
-    public required int Id { get; set; }
+    public int Id { get; set; }
     public string? Name { get; set; }
+    public string? Description { get; set; }
+    [NotMapped]
     public Block? Block { get; set; }
 }

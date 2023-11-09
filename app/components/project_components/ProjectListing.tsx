@@ -2,16 +2,37 @@
 
 import { TProject } from '@/types/types';
 import ProjectCard from './ProjectCard';
-import ProjectForm from '../forms/project_form/ProjectForm';
+import ProjectFormCreate from '../forms/project_form/ProjectFormCreate';
 import { useToggle } from '@/hooks/useToggle';
-import { useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
+import ProjectFormEdit from '../forms/project_form/ProjectFormEdit';
+import { getAllProjects } from '@/services/project';
 
-export default function ProjectListing({ projects }: { projects: TProject[] }) {
+export default function ProjectListing() {
   const [isProjectFormOpen, setIsProjectFormOpen] = useToggle(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useToggle(false);
-  const [formTitle, setFormTitle] = useState<string>('Create');
-  const [currentProject, setCurrentProject] = useState<TProject | null>(null);
+  const [isProjectFormEditOpen, setIsProjectFormEditOpen] = useToggle(false);
+
+  const [currentProject, setCurrentProject] = useState<TProject>({
+    projectName: '',
+    logo: '',
+  });
+
+  const [projects, setProjects] = useState<TProject[]>([]);
+
+  const getProjects = async () => {
+    const response = await getAllProjects();
+    if (response.status == 200) {
+      setProjects(response.data);
+    }
+  };
+
+  const memoizedProjects = useMemo(() => projects, [projects]);
+
+  useEffect(() => {
+    getProjects();
+  }, []);
 
   return (
     <>
@@ -19,23 +40,19 @@ export default function ProjectListing({ projects }: { projects: TProject[] }) {
         <div className='px-1 flex items-end justify-between'>
           <p className='font-bold text-lg'>All projects</p>
           <div
-            onClick={() => {
-              setIsProjectFormOpen();
-              setFormTitle('Create');
-            }}
-            className='bg-blue-600 text-white text-sm px-4 py-2 rounded-3xl cursor-pointer hover:bg-blue-700'
+            onClick={setIsProjectFormOpen}
+            className='bg-gray-900 text-white text-sm px-4 py-2 rounded-md cursor-pointer hover:bg-gray-800'
           >
-            + Add new project
+            Add new project
           </div>
         </div>
         <div className='h-[1px] bg-[#B4B4B3] w-full'></div>
-        <div className='grid grid-cols-4 gap-6'>
-          {projects?.map((project) => (
+        <div className='grid grid-cols-4 max-sm:grid-cols-1 max-lg:grid-cols-2 max-xl:grid-cols-3 gap-6'>
+          {memoizedProjects.map((project) => (
             <ProjectCard
               key={project.id}
               project={project}
-              setIsProjectFormOpen={setIsProjectFormOpen}
-              setFormTitle={setFormTitle}
+              setIsProjectFormOpen={setIsProjectFormEditOpen}
               setCurrentProject={setCurrentProject}
               setIsDeleteModalOpen={setIsDeleteModalOpen}
             />
@@ -44,16 +61,24 @@ export default function ProjectListing({ projects }: { projects: TProject[] }) {
       </div>
       {isDeleteModalOpen && (
         <DeleteConfirmationModal
-          setIsDeleteModalOpen={setIsDeleteModalOpen}
+          projects={projects}
+          setProjects={setProjects}
           currentProject={currentProject}
+          setIsDeleteModalOpen={setIsDeleteModalOpen}
         />
       )}
       {isProjectFormOpen && (
-        <ProjectForm
-          currentProject={currentProject}
+        <ProjectFormCreate
+          setProjects={setProjects}
           setIsProjectFormOpen={setIsProjectFormOpen}
-          title={formTitle}
-          setCurrentProject={setCurrentProject}
+        />
+      )}
+      {isProjectFormEditOpen && (
+        <ProjectFormEdit
+          projects={projects}
+          setProjects={setProjects}
+          currentProject={currentProject}
+          setIsProjectFormEditOpen={setIsProjectFormEditOpen}
         />
       )}
     </>

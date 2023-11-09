@@ -11,9 +11,9 @@ interface Props {
   section: TSection;
   sectionList: TSection[];
   depth: number;
-  setIsSectionFormOpen: () => void;
   setSection: React.Dispatch<React.SetStateAction<TSection>>;
   setSectionList: React.Dispatch<React.SetStateAction<TSection[] | undefined>>;
+  setIsSectionFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function SectionItem({
@@ -30,18 +30,16 @@ export default function SectionItem({
   const [isSectionMenuOpen, setIsSectionMenuOpen] = useToggle(false);
   useOnClickOutside(ref, setIsSectionMenuOpen);
 
-  let childrenSection = sectionList.filter(
-    (sec) => sec.paredntId == section.id
-  );
+  let childrenSection = sectionList.filter((sec) => sec.parentId == section.id);
 
   return (
     <div className='relative'>
       <div
         onMouseEnter={setIsMouseOver}
         onMouseLeave={setIsMouseOver}
-        className={`${
-          section.paredntId != null && depth == 1 && 'hidden'
-        } w-full px-2 py-1 flex items-center cursor-pointer rounded hover:bg-[#EBEBEA]`}
+        className={`relative ${
+          section.parentId != null && depth == 1 && 'hidden'
+        } px-2 py-1 flex items-center cursor-pointer rounded hover:bg-[#EBEBEA]`}
       >
         <div>
           <div
@@ -97,7 +95,7 @@ export default function SectionItem({
             </div>
             <div
               onClick={() => {
-                setIsSectionFormOpen();
+                setIsSectionFormOpen(true);
                 setSection((prev) => ({ ...prev, paredntId: section.id }));
               }}
               className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'

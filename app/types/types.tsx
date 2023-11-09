@@ -1,4 +1,7 @@
-import { type } from 'os';
+export type TUserLoginData = {
+  username: string;
+  password: string;
+};
 
 export type TImage = {
   imageUrl: string | ArrayBuffer | null;
@@ -8,23 +11,22 @@ export type TImage = {
 };
 
 export type TProject = {
-  id: number;
+  id?: string;
   projectName: string;
   slug?: string;
-  logo: string;
+  logo?: string;
   sections?: TSection[];
 };
 
 export type TNewProject = {
-  id: number;
   projectName: string;
   logo: string;
 };
 
 export type TSection = {
-  id?: number;
+  id?: string;
   name: string;
-  title?: string;
-  projectId?: number;
-  paredntId?: number | null;
+  title: string;
+  projectId?: string;
+  parentId: string | null;
 };

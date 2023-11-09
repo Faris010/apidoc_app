@@ -24,11 +24,9 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Block", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<int>("BlockTypeId")
                         .HasColumnType("integer");
@@ -39,16 +37,15 @@ namespace server.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("text");
 
-                    b.Property<int>("SectionId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("SectionId")
+                        .HasColumnType("uuid");
 
                     b.Property<int>("SortOrder")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BlockTypeId")
-                        .IsUnique();
+                    b.HasIndex("BlockTypeId");
 
                     b.HasIndex("SectionId");
 
@@ -63,21 +60,42 @@ namespace server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("BlockTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Start with plain text",
+                            Name = "Paragraph"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "Capture a code snipet",
+                            Name = "Code-Block"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Upload or embed with a link",
+                            Name = "Image"
+                        });
                 });
 
             modelBuilder.Entity("server.Models.Project", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Logo")
                         .IsRequired()
@@ -98,21 +116,19 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.Section", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ParedntId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -127,11 +143,9 @@ namespace server.Migrations
 
             modelBuilder.Entity("server.Models.User", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -149,20 +163,18 @@ namespace server.Migrations
             modelBuilder.Entity("server.Models.Block", b =>
                 {
                     b.HasOne("server.Models.BlockType", "BlockTypes")
-                        .WithOne("Block")
-                        .HasForeignKey("server.Models.Block", "BlockTypeId")
+                        .WithMany()
+                        .HasForeignKey("BlockTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("server.Models.Section", "Section")
+                    b.HasOne("server.Models.Section", null)
                         .WithMany("Blocks")
                         .HasForeignKey("SectionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("BlockTypes");
-
-                    b.Navigation("Section");
                 });
 
             modelBuilder.Entity("server.Models.Section", b =>
@@ -172,11 +184,6 @@ namespace server.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("server.Models.BlockType", b =>
-                {
-                    b.Navigation("Block");
                 });
 
             modelBuilder.Entity("server.Models.Project", b =>

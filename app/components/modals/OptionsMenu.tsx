@@ -4,21 +4,19 @@ import { forwardRef } from 'react';
 
 interface Props {
   project: TProject;
-  setIsProjectFormOpen: () => void;
-  setFormTitle: React.Dispatch<React.SetStateAction<string>>;
-  setCurrentProject: React.Dispatch<React.SetStateAction<TProject | null>>;
   setIsMenuOpen: () => void;
+  setIsProjectFormOpen: () => void;
   setIsDeleteModalOpen: () => void;
+  setCurrentProject: React.Dispatch<React.SetStateAction<TProject>>;
 }
 
 const OptionsMenu = forwardRef<HTMLDivElement, Props>(
   (
     {
       project,
-      setIsProjectFormOpen,
-      setFormTitle,
-      setCurrentProject,
       setIsMenuOpen,
+      setCurrentProject,
+      setIsProjectFormOpen,
       setIsDeleteModalOpen,
     },
     ref
@@ -26,16 +24,15 @@ const OptionsMenu = forwardRef<HTMLDivElement, Props>(
     return (
       <div
         ref={ref}
-        className='absolute top-16 -right-14 flex flex-col items-center z-10 overflow-hidden cursor-pointer bg-white rounded-md drop-shadow-lg shadow-lg'
+        className='absolute w-2/3 top-16 -right-28 max-sm:right-8 p-1 flex flex-col items-center z-10 overflow-hidden bg-white rounded-md drop-shadow-lg'
       >
         <div
           onClick={() => {
             setIsProjectFormOpen();
-            setFormTitle('Edit');
             setCurrentProject(project);
             setIsMenuOpen();
           }}
-          className='w-full px-5 py-3 flex items-center space-x-4 hover:bg-slate-200'
+          className='w-full py-1 px-3 flex items-center space-x-2 rounded cursor-pointer hover:bg-slate-200'
         >
           <Image
             src='/assets/edit.png'
@@ -43,24 +40,23 @@ const OptionsMenu = forwardRef<HTMLDivElement, Props>(
             height={16}
             width={16}
           />
-          <p>Edit</p>
+          <p className='text-sm'>Edit</p>
         </div>
-        <div className='w-full h-[1px] bg-slate-200'></div>
         <div
           onClick={() => {
             setCurrentProject(project);
             setIsDeleteModalOpen();
             setIsMenuOpen();
           }}
-          className='w-full px-5 py-3 flex items-center space-x-4 hover:bg-slate-200'
+          className='w-full py-1 px-3 flex items-center space-x-2 rounded cursor-pointer hover:bg-slate-200'
         >
           <Image
-            src='/assets/delete.png'
+            src='/assets/delete-red.png'
             alt='delete icon'
             height={16}
             width={16}
           />
-          <p>Delete</p>
+          <p className='text-sm text-red-600'>Delete</p>
         </div>
       </div>
     );
