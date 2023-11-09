@@ -7,6 +7,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import SectionItem from '../section/SectionItem';
 import { addSection, getSectionByProjectId } from '@/services/section';
+import { GenerateSlug } from '@/utils/GenerateSlug';
 import { useFormik } from 'formik';
 
 export default function Sidebar() {
@@ -55,6 +56,16 @@ export default function Sidebar() {
     getCurrentProject();
     getProjectSections();
   }, [id]);
+
+  useEffect(() => {
+    if (sectionList != undefined && sectionList.length > 0) {
+      router.push(
+        `?section=${GenerateSlug(sectionList[0]?.name)}&sectionId=${
+          sectionList[0]?.id
+        }`
+      );
+    }
+  }, [sectionList]);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEnterKeyPressed, setIsEnterKeyPressed] = useState(false);
@@ -113,7 +124,6 @@ export default function Sidebar() {
           className='w-full outline-none bg-transparent text-sm '
         />
       </div>
-
       {/* Section list */}
       <div className='pt-2'>
         <div>
@@ -125,9 +135,11 @@ export default function Sidebar() {
                 <SectionItem
                   key={section.id}
                   section={section}
+                  setSection={setSection}
                   sectionList={sectionList}
                   depth={1}
                   setIsSectionFormOpen={setIsSectionFormOpen}
+                  setSectionList={setSectionList}
                 />
               ))}
         </div>
