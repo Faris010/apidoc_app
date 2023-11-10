@@ -24,6 +24,13 @@ public class BlockController : ControllerBase
     }
 
     [HttpGet]
+    [Route("sectionId/{sectionId:guid}")]
+    public async Task<ActionResult<List<GetBlockDto>>> GetBySectionId(Guid sectionId)
+    {
+        return Ok(await _blockService.GetAllBlocksBySectionId(sectionId));
+    }
+
+    [HttpGet]
     [Route("{id:guid}")]
     public async Task<ActionResult<GetBlockDto>> GetById(Guid id)
     {
