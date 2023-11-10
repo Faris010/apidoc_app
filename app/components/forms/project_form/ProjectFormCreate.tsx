@@ -43,7 +43,7 @@ export default function ProjectFormCreate({
         }
         await addNewProject(values);
         const allProjects = await getAllProjects();
-        setProjects(allProjects);
+        setProjects(allProjects.data);
         setIsProjectFormOpen();
       } catch (error) {
         setStatus('Something went wrong');

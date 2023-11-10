@@ -12,8 +12,8 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231105210034_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20231107235233_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,8 +48,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BlockTypeId")
-                        .IsUnique();
+                    b.HasIndex("BlockTypeId");
 
                     b.HasIndex("SectionId");
 
@@ -64,6 +63,9 @@ namespace server.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
@@ -75,22 +77,20 @@ namespace server.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "subheading"
+                            Description = "Start with plain text",
+                            Name = "Paragraph"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "paragraph"
+                            Description = "Capture a code snipet",
+                            Name = "Code-Block"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "code-block"
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Name = "image"
+                            Description = "Upload or embed with a link",
+                            Name = "Image"
                         });
                 });
 
@@ -127,7 +127,7 @@ namespace server.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ParedntId")
+                    b.Property<int?>("ParentId")
                         .HasColumnType("integer");
 
                     b.Property<Guid>("ProjectId")
@@ -166,8 +166,8 @@ namespace server.Migrations
             modelBuilder.Entity("server.Models.Block", b =>
                 {
                     b.HasOne("server.Models.BlockType", "BlockTypes")
-                        .WithOne("Block")
-                        .HasForeignKey("server.Models.Block", "BlockTypeId")
+                        .WithMany()
+                        .HasForeignKey("BlockTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -187,11 +187,6 @@ namespace server.Migrations
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("server.Models.BlockType", b =>
-                {
-                    b.Navigation("Block");
                 });
 
             modelBuilder.Entity("server.Models.Project", b =>
