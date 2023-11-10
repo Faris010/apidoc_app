@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -20,7 +20,8 @@ namespace server.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: true)
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -62,7 +63,7 @@ namespace server.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ParedntId = table.Column<int>(type: "integer", nullable: true)
+                    ParentId = table.Column<int>(type: "integer", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -105,20 +106,18 @@ namespace server.Migrations
 
             migrationBuilder.InsertData(
                 table: "BlockTypes",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "Description", "Name" },
                 values: new object[,]
                 {
-                    { 1, "subheading" },
-                    { 2, "paragraph" },
-                    { 3, "code-block" },
-                    { 4, "image" }
+                    { 1, "Start with plain text", "Paragraph" },
+                    { 2, "Capture a code snipet", "Code-Block" },
+                    { 3, "Upload or embed with a link", "Image" }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blocks_BlockTypeId",
                 table: "Blocks",
-                column: "BlockTypeId",
-                unique: true);
+                column: "BlockTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Blocks_SectionId",

@@ -4,11 +4,10 @@ import { TProject } from '@/types/types';
 import ProjectCard from './ProjectCard';
 import ProjectFormCreate from '../forms/project_form/ProjectFormCreate';
 import { useToggle } from '@/hooks/useToggle';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
 import ProjectFormEdit from '../forms/project_form/ProjectFormEdit';
 import { getAllProjects } from '@/services/project';
-import { useMemo } from 'react';
 
 export default function ProjectListing() {
   const [isProjectFormOpen, setIsProjectFormOpen] = useToggle(false);
@@ -24,7 +23,9 @@ export default function ProjectListing() {
 
   const getProjects = async () => {
     const response = await getAllProjects();
-    setProjects(response);
+    if (response.status == 200) {
+      setProjects(response.data);
+    }
   };
 
   const memoizedProjects = useMemo(() => projects, [projects]);
