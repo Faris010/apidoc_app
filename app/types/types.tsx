@@ -28,5 +28,14 @@ export type TSection = {
   name: string;
   title: string;
   projectId?: string;
-  parentId: string | null;
+  parentId?: string | null;
+};
+
+export type TBLock = {
+  id?: string;
+  content?: string | null;
+  image?: string | null;
+  sortOrder: number;
+  sectionId: string;
+  blockTypeId: number;
 };
