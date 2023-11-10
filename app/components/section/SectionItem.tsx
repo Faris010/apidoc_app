@@ -11,7 +11,7 @@ interface Props {
   section: TSection;
   sectionList: TSection[];
   depth: number;
-  setSection: React.Dispatch<React.SetStateAction<TSection>>;
+  // setSection: React.Dispatch<React.SetStateAction<TSection>>;
   setSectionList: React.Dispatch<React.SetStateAction<TSection[] | undefined>>;
   setIsSectionFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -21,7 +21,7 @@ export default function SectionItem({
   sectionList,
   depth,
   setIsSectionFormOpen,
-  setSection,
+  // setSection,
   setSectionList,
 }: Props) {
   const ref = useRef(null);
@@ -96,7 +96,7 @@ export default function SectionItem({
             <div
               onClick={() => {
                 setIsSectionFormOpen(true);
-                setSection((prev) => ({ ...prev, paredntId: section.id }));
+                // setSection((prev) => ({ ...prev, parentId: section.id }));
               }}
               className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'
             >
@@ -124,7 +124,7 @@ export default function SectionItem({
             <div key={sec.id} className={`pl-2`}>
               <SectionItem
                 section={sec}
-                setSection={setSection}
+                // setSection={setSection}
                 sectionList={sectionList}
                 depth={depth + 1}
                 setIsSectionFormOpen={setIsSectionFormOpen}

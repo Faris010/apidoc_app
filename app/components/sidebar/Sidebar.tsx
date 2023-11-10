@@ -135,7 +135,7 @@ export default function Sidebar() {
                 <SectionItem
                   key={section.id}
                   section={section}
-                  setSection={setSection}
+                  // setSection={setSection}
                   sectionList={sectionList}
                   depth={1}
                   setIsSectionFormOpen={setIsSectionFormOpen}
