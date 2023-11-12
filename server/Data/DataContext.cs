@@ -19,7 +19,7 @@ public class DataContext : DbContext
     {
         modelBuilder.Entity<BlockType>().HasData(
             new BlockType() { Id = 1, Name = "Paragraph", Description = "Start with plain text" },
-            new BlockType() { Id = 2, Name = "Code-Block", Description = "Capture a code snipet" },
+            new BlockType() { Id = 2, Name = "Code", Description = "Capture a code snipet" },
             new BlockType() { Id = 3, Name = "Image", Description = "Upload or embed with a link" }
         );
         base.OnModelCreating(modelBuilder);

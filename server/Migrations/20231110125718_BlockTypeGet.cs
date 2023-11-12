@@ -11,7 +11,7 @@ namespace server.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.RenameColumn(
-                name: "ParedntId",
+                name: "ParentId",
                 table: "Sections",
                 newName: "ParentId");
         }
@@ -22,7 +22,7 @@ namespace server.Migrations
             migrationBuilder.RenameColumn(
                 name: "ParentId",
                 table: "Sections",
-                newName: "ParedntId");
+                newName: "ParentId");
         }
     }
 }
