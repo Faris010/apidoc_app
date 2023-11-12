@@ -3,7 +3,7 @@ import Sidebar from '@/components/sidebar/Sidebar';
 
 interface RootProps {
   params: {
-    projectId: number;
+    projectId: string;
   };
 }
 
