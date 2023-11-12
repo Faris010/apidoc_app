@@ -9,6 +9,7 @@ import SectionItem from '../section/SectionItem';
 import { addSection, getSectionByProjectId } from '@/services/section';
 import { GenerateSlug } from '@/utils/GenerateSlug';
 import { useFormik } from 'formik';
+import CreateSectionInput from '../section/CreateSectionInput';
 
 export default function Sidebar() {
   const router = useRouter();
@@ -16,7 +17,7 @@ export default function Sidebar() {
   let id: string = params.projectId.toString();
 
   const [project, setProject] = useState<TProject>();
-  const [isSectionFormOpen, setIsSectionFormOpen] = useState(false);
+  const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
   const [sectionList, setSectionList] = useState<TSection[]>();
   const formik = useFormik({
     initialValues: {
@@ -29,7 +30,7 @@ export default function Sidebar() {
       await addSection(values, id);
       const response = await getSectionByProjectId(id);
       setSectionList(response.data);
-      setIsSectionFormOpen(false);
+      setIsAddSectionOpen(false);
       formik.resetForm();
     },
   });
@@ -71,8 +72,8 @@ export default function Sidebar() {
   const [isEnterKeyPressed, setIsEnterKeyPressed] = useState(false);
 
   useEffect(() => {
-    if (isSectionFormOpen && inputRef.current) inputRef.current.focus();
-  }, [isSectionFormOpen]);
+    if (isAddSectionOpen && inputRef.current) inputRef.current.focus();
+  }, [isAddSectionOpen]);
 
   const handleInputBlur = async () => {
     if (!isEnterKeyPressed) {
@@ -94,6 +95,7 @@ export default function Sidebar() {
 
   return (
     <div className='w-1/5 max-sm:w-2/3 p-1 space-y-4 bg-[#FBFBFA] border-r-[2px] border-[#E1E1E1] '>
+      {/* {console.log(formik.values)} */}
       {/* Project logo and name */}
       <div className='flex items-center px-2 py-1 space-x-2 hover:bg-[#EBEBEA] rounded cursor-pointer'>
         <div className='flex items-center justify-center'>
@@ -135,43 +137,54 @@ export default function Sidebar() {
                 <SectionItem
                   key={section.id}
                   section={section}
-                  // setSection={setSection}
+                  formik={formik}
                   sectionList={sectionList}
                   depth={1}
-                  setIsSectionFormOpen={setIsSectionFormOpen}
+                  setIsAddSectionOpen={setIsAddSectionOpen}
+                  isAddSectionOpen={isAddSectionOpen}
                   setSectionList={setSectionList}
+                  handleInputBlur={handleInputBlur}
+                  handleInputKeyPress={handleInputKeyPress}
                 />
               ))}
         </div>
-        {isSectionFormOpen && (
-          <div className='px-2 py-1 flex items-center space-x-1 cursor-pointer rounded hover:bg-[#EBEBEA]'>
-            <div>
-              <div className='w-5 h-5 p-1.5 hover:bg-[#DDDDDC] rounded'>
-                <Image
-                  src='/assets/right-arrow.png'
-                  alt='arrow icon'
-                  height={14}
-                  width={14}
-                />
-              </div>
-            </div>
-            <div className='w-full flex overflow-hidden'>
-              <input
-                ref={inputRef}
-                type='text'
-                name='name'
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={handleInputBlur}
-                onKeyDown={handleInputKeyPress}
-                className='w-full px-1 h-5 rounded outline-none text-sm'
-              />
-            </div>
-          </div>
+        {/* Add new section input */}
+        {isAddSectionOpen && formik.values.parentId == null && (
+          // <div className='px-2 py-1 flex items-center space-x-1 cursor-pointer rounded hover:bg-[#EBEBEA]'>
+          //   <div>
+          //     <div className='w-5 h-5 p-1.5 hover:bg-[#DDDDDC] rounded'>
+          //       <Image
+          //         src='/assets/right-arrow.png'
+          //         alt='arrow icon'
+          //         height={14}
+          //         width={14}
+          //       />
+          //     </div>
+          //   </div>
+          //   <div className='w-full flex overflow-hidden'>
+          //     <input
+          //       ref={inputRef}
+          //       type='text'
+          //       name='name'
+          //       value={formik.values.name}
+          //       onChange={formik.handleChange}
+          //       onBlur={handleInputBlur}
+          //       onKeyDown={handleInputKeyPress}
+          //       className='w-full px-1 h-5 rounded outline-none text-sm'
+          //     />
+          //   </div>
+          // </div>
+          <CreateSectionInput
+            isAddSectionOpen={isAddSectionOpen}
+            formik={formik}
+            section={null}
+            handleInputBlur={handleInputBlur}
+            handleInputKeyPress={handleInputKeyPress}
+          />
         )}
         {/* Add section button */}
         <div
-          onClick={() => setIsSectionFormOpen(true)}
+          onClick={() => setIsAddSectionOpen(true)}
           className='pl-3 pr-2 py-1 flex items-center space-x-3 cursor-pointer hover:bg-[#EBEBEA] rounded'
         >
           <div>
