@@ -1,10 +1,14 @@
 import Image from 'next/image';
 
-const ImageBlock = () => {
+interface Props {
+  blockImage: string | null;
+}
+
+const ImageBlock = ({ blockImage }: Props) => {
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
       <Image
-        src='/assets/image-block.png'
+        src={blockImage || ''}
         alt='image block'
         width={0}
         height={0}
