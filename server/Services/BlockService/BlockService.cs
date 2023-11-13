@@ -41,6 +41,12 @@ public class BlockService : IBlockService
         return blocks.Select(block => block.Adapt<GetBlockDto>())
                 .OrderBy(b => b.SortOrder).ToList();
     }
+    public async Task<List<GetBlockDto>> GetAllBlocksBySectionId(Guid sectionId)
+    {
+        var blocks = await _context.Blocks.Where(b => b.SectionId == sectionId).Include(block => block.BlockTypes).ToListAsync();
+        return blocks.Select(block => block.Adapt<GetBlockDto>())
+                .OrderBy(b => b.SortOrder).ToList();
+    }
 
     public async Task<ApiResponse<GetBlockDto>> GetBlockById(Guid id)
 

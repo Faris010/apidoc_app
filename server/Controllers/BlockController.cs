@@ -9,7 +9,7 @@ namespace server.Controllers;
 
 [Route("api/block/")]
 [ApiController]
-//[Authorize]
+[Authorize]
 [EnableCors("AllowSpecificOrigin")]
 public class BlockController : ControllerBase
 {
@@ -30,9 +30,11 @@ public class BlockController : ControllerBase
 
     [HttpGet]
     [Route("sectionId/{sectionId:guid}")]
+    [ProducesResponseType(typeof(GetBlockDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<List<GetBlockDto>>> GetBySectionId(Guid sectionId)
     {
-        return Ok(await _blockService.GetAllBlocksBySectionId(sectionId));
+        return await _blockService.GetAllBlocksBySectionId(sectionId);
     }
 
     [HttpGet]
