@@ -39,3 +39,16 @@ export type TBLock = {
   sectionId: string;
   blockTypeId: number;
 };
+
+export type TBlockType = {
+  id: number;
+  name: string;
+  description: string;
+};
+
+export type TFormik = {
+  name: string;
+  title: string;
+  projectId: string;
+  parentId: string | null;
+};

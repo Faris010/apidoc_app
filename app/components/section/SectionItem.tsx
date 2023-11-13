@@ -1,28 +1,38 @@
 import { useToggle } from '@/hooks/useToggle';
-import { TSection } from '@/types/types';
+import { TFormik, TSection } from '@/types/types';
 import { GenerateSlug } from '@/utils/GenerateSlug';
 import Image from 'next/image';
 import Link from 'next/link';
 import SectionMenuModal from '../modals/SectionMenuModal';
 import { useRef } from 'react';
 import useOnClickOutside from '@/hooks/useOnClickOutside';
+import { FormikProps } from 'formik';
+import CreateSectionInput from './CreateSectionInput';
 
 interface Props {
   section: TSection;
   sectionList: TSection[];
   depth: number;
-  // setSection: React.Dispatch<React.SetStateAction<TSection>>;
+  formik: FormikProps<TFormik>;
   setSectionList: React.Dispatch<React.SetStateAction<TSection[] | undefined>>;
-  setIsSectionFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsAddSectionOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isAddSectionOpen: boolean;
+  handleInputBlur: () => Promise<void>;
+  handleInputKeyPress: (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => Promise<void>;
 }
 
 export default function SectionItem({
   section,
   sectionList,
   depth,
-  setIsSectionFormOpen,
-  // setSection,
+  setIsAddSectionOpen,
+  formik,
   setSectionList,
+  isAddSectionOpen,
+  handleInputBlur,
+  handleInputKeyPress,
 }: Props) {
   const ref = useRef(null);
   const [isExpanded, setIsExpanded] = useToggle(false);
@@ -95,8 +105,9 @@ export default function SectionItem({
             </div>
             <div
               onClick={() => {
-                setIsSectionFormOpen(true);
-                // setSection((prev) => ({ ...prev, parentId: section.id }));
+                !isExpanded && setIsExpanded();
+                setIsAddSectionOpen(true);
+                formik.setFieldValue('parentId', section.id);
               }}
               className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'
             >
@@ -120,24 +131,49 @@ export default function SectionItem({
       )}
       {isExpanded &&
         (childrenSection.length > 0 ? (
-          childrenSection.map((sec) => (
-            <div key={sec.id} className={`pl-2`}>
-              <SectionItem
-                section={sec}
-                // setSection={setSection}
-                sectionList={sectionList}
-                depth={depth + 1}
-                setIsSectionFormOpen={setIsSectionFormOpen}
-                setSectionList={setSectionList}
-              />
-            </div>
-          ))
+          <>
+            {childrenSection.map((sec) => (
+              <div key={sec.id} className={`pl-2`}>
+                <SectionItem
+                  section={sec}
+                  formik={formik}
+                  sectionList={sectionList}
+                  depth={depth + 1}
+                  setIsAddSectionOpen={setIsAddSectionOpen}
+                  setSectionList={setSectionList}
+                  isAddSectionOpen={isAddSectionOpen}
+                  handleInputBlur={handleInputBlur}
+                  handleInputKeyPress={handleInputKeyPress}
+                />
+              </div>
+            ))}
+            <CreateSectionInput
+              isAddSectionOpen={isAddSectionOpen}
+              formik={formik}
+              section={section}
+              handleInputBlur={handleInputBlur}
+              handleInputKeyPress={handleInputKeyPress}
+            />
+          </>
         ) : (
-          <div
-            className={`py-1 pl-8 text-sm text-[#B4B4B3] font-medium truncate`}
-          >
-            No sections inside
-          </div>
+          <>
+            <div
+              className={`${
+                isAddSectionOpen &&
+                formik.values.parentId == section.id &&
+                'hidden'
+              } py-1 pl-8 text-sm text-[#B4B4B3] font-medium truncate`}
+            >
+              No sections inside
+            </div>
+            <CreateSectionInput
+              isAddSectionOpen={isAddSectionOpen}
+              formik={formik}
+              section={section}
+              handleInputBlur={handleInputBlur}
+              handleInputKeyPress={handleInputKeyPress}
+            />
+          </>
         ))}
     </div>
   );

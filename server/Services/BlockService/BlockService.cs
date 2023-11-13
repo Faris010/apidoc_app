@@ -43,6 +43,7 @@ public class BlockService : IBlockService
     }
 
     public async Task<ApiResponse<GetBlockDto>> GetBlockById(Guid id)
+
     {
         var dbBlock = await _context.Blocks
             .Where(block => block.Id == id)
