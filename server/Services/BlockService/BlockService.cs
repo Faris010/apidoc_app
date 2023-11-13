@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Dtos.BlockDtos;
 using server.Models;
+using server.Response;
 
 namespace server.Services.BlockService;
 
@@ -41,13 +42,32 @@ public class BlockService : IBlockService
                 .OrderBy(b => b.SortOrder).ToList();
     }
 
-    public async Task<GetBlockDto> GetBlockById(Guid id)
+    public async Task<ApiResponse<GetBlockDto>> GetBlockById(Guid id)
     {
-        var dbBlock = await _context.Blocks.Where(block => block.Id == id).Include(block => block.BlockTypes)
+        var dbBlock = await _context.Blocks
+            .Where(block => block.Id == id)
+            .Include(block => block.BlockTypes)
             .FirstOrDefaultAsync();
+
+        if (dbBlock == null)
+        {
+            return new ApiResponse<GetBlockDto>()
+            {
+                Success = false,
+                ErrorCode = "Bad Request",
+                Payload = null
+            };
+        }
+
         var block = dbBlock.Adapt<GetBlockDto>();
-        return block;
+        return new ApiResponse<GetBlockDto>()
+        {
+            Success = true,
+            Payload = block,
+            ErrorCode = null
+        };
     }
+
 
     public async Task UpdateBlock(UpdateBlockDto updatedBlock)
     {

@@ -15,6 +15,7 @@ public class DataContext : DbContext
     public DbSet<Block> Blocks => Set<Block>();
     public DbSet<BlockType> BlockTypes => Set<BlockType>();
 
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BlockType>().HasData(
@@ -22,6 +23,7 @@ public class DataContext : DbContext
             new BlockType() { Id = 2, Name = "Code-Block", Description = "Capture a code snipet" },
             new BlockType() { Id = 3, Name = "Image", Description = "Upload or embed with a link" }
         );
+
         base.OnModelCreating(modelBuilder);
     }
 

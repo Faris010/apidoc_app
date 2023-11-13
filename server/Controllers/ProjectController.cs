@@ -1,12 +1,16 @@
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.ProjectDtos;
+using server.Response;
 using server.Services.ProjectService;
 
 namespace server.Controllers
 {
     [Route("api/projects/")]
     [ApiController]
+    //[Authorize]
     [EnableCors("AllowSpecificOrigin")]
     public class ProjectController : ControllerBase
     {
@@ -18,16 +22,21 @@ namespace server.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(List<GetProjectDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<List<GetProjectDto>>> GetAll()
         {
-            return Ok(await _projectService.GetAllProjects());
+            return await _projectService.GetAllProjects();
         }
 
         [HttpGet]
         [Route("{id:guid}")]
+        [ProducesResponseType(typeof(ApiResponse<GetProjectDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<GetProjectDto>> GetById(Guid id)
         {
-            return Ok(await _projectService.GetProjectById(id));
+            var payload = await _projectService.GetProjectById(id);
+            return payload.Success ? Ok(payload) : BadRequest(payload);
         }
 
         [HttpPost]

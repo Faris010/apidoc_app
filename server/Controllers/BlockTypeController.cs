@@ -1,3 +1,5 @@
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using server.Models;
@@ -7,6 +9,7 @@ namespace server.Controllers;
 
 [Route("/api/blocktype/")]
 [ApiController]
+[Authorize]
 [EnableCors("AllowSpecificOrigin")]
 public class BlockTypeController : Controller
 {
@@ -18,6 +21,8 @@ public class BlockTypeController : Controller
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(List<BlockType>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<List<BlockType>> GetBlockTypesAsync()
     {
         return await _blockTypeService.GetBlockTypes();

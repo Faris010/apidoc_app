@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Dtos.SectionDtos;
 using server.Models;
+using server.Response;
 
 namespace server.Services.SectionService;
 
@@ -40,14 +41,31 @@ public class SectionService : ISectionService
         section.Adapt<GetSectionDto>()).ToListAsync();
     }
 
-    public async Task<GetSectionDto> GetSectionById(Guid id)
+    public async Task<ApiResponse<GetSectionDto>> GetSectionById(Guid id)
     {
         var dbSection = await _contex.Sections
-        .Include(section => section.Blocks)
-        .FirstOrDefaultAsync(section => section.Id == id);
+            .Include(section => section.Blocks)
+            .FirstOrDefaultAsync(section => section.Id == id);
+
+        if (dbSection == null)
+        {
+            return new ApiResponse<GetSectionDto>()
+            {
+                Success = false,
+                ErrorCode = "Bad Request",
+                Payload = null
+            };
+        }
+
         var section = dbSection.Adapt<GetSectionDto>();
-        return section;
+        return new ApiResponse<GetSectionDto>()
+        {
+            Success = true,
+            Payload = section,
+            ErrorCode = null
+        };
     }
+
 
     public async Task<List<GetSectionDto>> GetSectionByProjectId(Guid projectId)
     {
