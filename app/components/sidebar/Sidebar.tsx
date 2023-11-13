@@ -95,7 +95,6 @@ export default function Sidebar() {
 
   return (
     <div className='w-1/5 max-sm:w-2/3 p-1 space-y-4 bg-[#FBFBFA] border-r-[2px] border-[#E1E1E1] '>
-      {/* {console.log(formik.values)} */}
       {/* Project logo and name */}
       <div className='flex items-center px-2 py-1 space-x-2 hover:bg-[#EBEBEA] rounded cursor-pointer'>
         <div className='flex items-center justify-center'>
