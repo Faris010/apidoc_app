@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Dtos.ProjectDtos;
 using server.Models;
+using server.Response;
 
 namespace server.Services.ProjectService;
 
@@ -42,11 +43,30 @@ public class ProjectService : IProjectService
         .ToListAsync();
     }
 
-    public async Task<GetProjectDto> GetProjectById(Guid id)
+    public async Task<ApiResponse<GetProjectDto>> GetProjectById(Guid id)
     {
-        var dbProject = await _contex.Projects.Where(proj => proj.Id == id).Include(project => project.Sections).FirstOrDefaultAsync();
-        var project = dbProject.Adapt<GetProjectDto>();
-        return project;
+        var dbProject = await _contex.Projects
+        .Where(proj => proj.Id == id)
+        .Include(project => project.Sections)
+        .FirstOrDefaultAsync();
+
+    if (dbProject == null)
+    {
+        return new ApiResponse<GetProjectDto>()
+        {
+            Success = false,
+            ErrorCode = "Bad Request",
+            Payload = null  
+        };
+    }
+
+    var project = dbProject.Adapt<GetProjectDto>();
+    return new ApiResponse<GetProjectDto>()
+    {
+        Success = true,
+        Payload = project,
+        ErrorCode = null  
+    };
     }
 
     public async Task UpdateProject(UpdateProjectDto updatedProject)
@@ -56,4 +76,5 @@ public class ProjectService : IProjectService
         _contex.Update(project);
         await _contex.SaveChangesAsync();
     }
+
 }

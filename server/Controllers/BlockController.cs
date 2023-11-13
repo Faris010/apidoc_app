@@ -1,3 +1,5 @@
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.BlockDtos;
@@ -7,6 +9,7 @@ namespace server.Controllers;
 
 [Route("api/block/")]
 [ApiController]
+[Authorize]
 [EnableCors("AllowSpecificOrigin")]
 public class BlockController : ControllerBase
 {
@@ -18,30 +21,37 @@ public class BlockController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(List<GetBlockDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<List<GetBlockDto>>> GetAll()
     {
-        return Ok(await _blockService.GetAllBlocks());
+        return await _blockService.GetAllBlocks();
     }
 
     [HttpGet]
     [Route("sectionId/{sectionId:guid}")]
+    [ProducesResponseType(typeof(GetBlockDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<List<GetBlockDto>>> GetBySectionId(Guid sectionId)
     {
-        return Ok(await _blockService.GetAllBlocksBySectionId(sectionId));
+        return await _blockService.GetAllBlocksBySectionId(sectionId);
     }
 
     [HttpGet]
     [Route("{id:guid}")]
+    [ProducesResponseType(typeof(GetBlockDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<GetBlockDto>> GetById(Guid id)
     {
-        return Ok(await _blockService.GetBlockById(id));
+        var payload = await _blockService.GetBlockById(id);
+        return payload.Success ? Ok(payload) : BadRequest(payload);
     }
 
     [HttpPost]
     [Route("{sectionId:guid}")]
-    public async Task AddBlock([FromBody]AddBlockDto newBlock, Guid sectionId)
+    public async Task AddBlock([FromBody] AddBlockDto newBlock, Guid sectionId)
     {
-        await _blockService.AddBlock(newBlock,sectionId);
+        await _blockService.AddBlock(newBlock, sectionId);
     }
 
     [HttpDelete]

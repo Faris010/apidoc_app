@@ -1,3 +1,5 @@
+using System.Net;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.SectionDtos;
@@ -7,6 +9,7 @@ namespace server.Controllers;
 
 [Route("/api/section/")]
 [ApiController]
+[Authorize]
 [EnableCors("AllowSpecificOrigin")]
 public class SectionController : ControllerBase
 {
@@ -18,6 +21,8 @@ public class SectionController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(List<GetSectionDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<List<GetSectionDto>> GetAll()
     {
         return await _sectionService.GetAllSections();
@@ -25,16 +30,21 @@ public class SectionController : ControllerBase
 
     [HttpGet]
     [Route("{id:guid}")]
+    [ProducesResponseType(typeof(GetSectionDto), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<GetSectionDto>> GetById(Guid id)
     {
-        return Ok(await _sectionService.GetSectionById(id));
+        var payload = await _sectionService.GetSectionById(id);
+        return payload.Success ? Ok(payload) : BadRequest(payload);
     }
 
     [HttpGet]
     [Route("projectId/{projectId:guid}")]
-    public async Task<ActionResult<GetSectionDto>> GetByProjectId(Guid projectId)
+    [ProducesResponseType(typeof(List<GetSectionDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<List<GetSectionDto>>> GetByProjectId(Guid projectId)
     {
-        return Ok(await _sectionService.GetSectionByProjectId(projectId));
+        return await _sectionService.GetSectionByProjectId(projectId);
     }
 
     [HttpPost]

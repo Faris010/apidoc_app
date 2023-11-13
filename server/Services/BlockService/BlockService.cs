@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using server.Data;
 using server.Dtos.BlockDtos;
 using server.Models;
+using server.Response;
 
 namespace server.Services.BlockService;
 
@@ -40,7 +41,6 @@ public class BlockService : IBlockService
         return blocks.Select(block => block.Adapt<GetBlockDto>())
                 .OrderBy(b => b.SortOrder).ToList();
     }
-
     public async Task<List<GetBlockDto>> GetAllBlocksBySectionId(Guid sectionId)
     {
         var blocks = await _context.Blocks.Where(b => b.SectionId == sectionId).Include(block => block.BlockTypes).ToListAsync();
@@ -48,13 +48,33 @@ public class BlockService : IBlockService
                 .OrderBy(b => b.SortOrder).ToList();
     }
 
-    public async Task<GetBlockDto> GetBlockById(Guid id)
+    public async Task<ApiResponse<GetBlockDto>> GetBlockById(Guid id)
+
     {
-        var dbBlock = await _context.Blocks.Where(block => block.Id == id).Include(block => block.BlockTypes)
+        var dbBlock = await _context.Blocks
+            .Where(block => block.Id == id)
+            .Include(block => block.BlockTypes)
             .FirstOrDefaultAsync();
+
+        if (dbBlock == null)
+        {
+            return new ApiResponse<GetBlockDto>()
+            {
+                Success = false,
+                ErrorCode = "Bad Request",
+                Payload = null
+            };
+        }
+
         var block = dbBlock.Adapt<GetBlockDto>();
-        return block;
+        return new ApiResponse<GetBlockDto>()
+        {
+            Success = true,
+            Payload = block,
+            ErrorCode = null
+        };
     }
+
 
     public async Task UpdateBlock(UpdateBlockDto updatedBlock)
     {
