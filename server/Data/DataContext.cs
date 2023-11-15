@@ -15,20 +15,6 @@ public class DataContext : DbContext
     public DbSet<Block> Blocks => Set<Block>();
     public DbSet<BlockType> BlockTypes => Set<BlockType>();
 
-    public override int SaveChanges()
-    {
-        foreach (var entry in ChangeTracker.Entries())
-        {
-            if (entry.Entity is Project project && entry.State == EntityState.Deleted)
-            {
-                entry.State = EntityState.Modified;
-                project.IsDeleted = true;
-            }
-        }
-
-        return base.SaveChanges();
-    }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BlockType>().HasData(
