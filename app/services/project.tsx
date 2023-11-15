@@ -20,6 +20,6 @@ export async function deleteProject(id: string) {
 }
 
 export async function getProjectById(id: string) {
-  const response = await fetch(`http://localhost:5287/api/projects/${id}`);
-  return response.json();
+  const response = await api.get(`/api/projects/${id}`);
+  return response.data.payload;
 }

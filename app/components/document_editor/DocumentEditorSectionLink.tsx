@@ -15,7 +15,7 @@ export default function DocumentEditorSectionLink({ sectionId }: Props) {
     if (sectionId) {
       const res = await getSectionById(sectionId);
       setSectionLink((prev) => [res, ...prev]);
-      if (res.parentId == null) {
+      if (res.parentId == null || sectionLink[0].id == res.id) {
         return;
       } else {
         getSectionLink(res.parentId);
@@ -30,12 +30,13 @@ export default function DocumentEditorSectionLink({ sectionId }: Props) {
 
   return (
     <div className='flex items-center text-sm'>
+      {/* {console.log(sectionLink)} */}
       {sectionLink.length > 0 &&
         sectionLink.map((sec, i) => (
           <Link
             href={{
               query: {
-                section: GenerateSlug(sec.name.toLowerCase()),
+                section: GenerateSlug(sec?.name?.toLowerCase()),
                 sectionId: sec?.id,
               },
             }}

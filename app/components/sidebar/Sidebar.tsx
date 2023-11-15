@@ -47,7 +47,7 @@ export default function Sidebar() {
   const getProjectSections = async () => {
     try {
       const response = await getSectionByProjectId(id);
-      setSectionList(response.data);
+      setSectionList(response);
     } catch (error) {
       console.log(error);
     }
@@ -149,30 +149,6 @@ export default function Sidebar() {
         </div>
         {/* Add new section input */}
         {isAddSectionOpen && formik.values.parentId == null && (
-          // <div className='px-2 py-1 flex items-center space-x-1 cursor-pointer rounded hover:bg-[#EBEBEA]'>
-          //   <div>
-          //     <div className='w-5 h-5 p-1.5 hover:bg-[#DDDDDC] rounded'>
-          //       <Image
-          //         src='/assets/right-arrow.png'
-          //         alt='arrow icon'
-          //         height={14}
-          //         width={14}
-          //       />
-          //     </div>
-          //   </div>
-          //   <div className='w-full flex overflow-hidden'>
-          //     <input
-          //       ref={inputRef}
-          //       type='text'
-          //       name='name'
-          //       value={formik.values.name}
-          //       onChange={formik.handleChange}
-          //       onBlur={handleInputBlur}
-          //       onKeyDown={handleInputKeyPress}
-          //       className='w-full px-1 h-5 rounded outline-none text-sm'
-          //     />
-          //   </div>
-          // </div>
           <CreateSectionInput
             isAddSectionOpen={isAddSectionOpen}
             formik={formik}

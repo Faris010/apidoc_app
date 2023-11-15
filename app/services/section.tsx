@@ -7,14 +7,12 @@ export async function addSection(section: TSection, projectId: string) {
 
 export async function getSectionByProjectId(projectId: string) {
   const response = await api.get(`/api/section/projectId/${projectId}`);
-  return response;
+  return response.data;
 }
 
 export async function getSectionById(id: string | null) {
-  const response = await fetch(`http://localhost:5287/api/section/${id}`);
-  if (response.ok) {
-    return await response.json();
-  }
+  const response = await api.get(`/api/section/${id}`);
+  return response.data.payload;
 }
 
 export async function deleteSection(id: string) {
