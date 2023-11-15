@@ -10,7 +10,7 @@ namespace server.Controllers
 {
     [Route("api/projects/")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [EnableCors("AllowSpecificOrigin")]
     public class ProjectController : ControllerBase
     {
@@ -56,6 +56,13 @@ namespace server.Controllers
         public async Task UpdateProject(UpdateProjectDto updatedProject)
         {
             await _projectService.UpdateProject(updatedProject);
+        }
+
+        [HttpPost]
+        [Route("restore/{id:guid}")]
+        public async Task RestoreProject(Guid id)
+        {
+            await _projectService.RestoreProject(id);
         }
 
     }

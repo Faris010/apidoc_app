@@ -32,13 +32,21 @@ public class ProjectService : IProjectService
 
     public async Task DeleteProject(Guid id)
     {
-        await _contex.Projects.Where(p => p.Id == id).ExecuteDeleteAsync();
+        var project = await _contex.Projects.FindAsync(id);
+
+        if (project != null)
+        {
+            _contex.Projects.Attach(project);
+            project.IsDeleted = true;
+            await _contex.SaveChangesAsync();
+        }
     }
 
     public async Task<List<GetProjectDto>> GetAllProjects()
     {
         return await _contex.Projects
         .Include(project => project.Sections)
+        .Where(project => !project.IsDeleted)
         .Select(project => project.Adapt<GetProjectDto>())
         .ToListAsync();
     }
@@ -50,23 +58,23 @@ public class ProjectService : IProjectService
         .Include(project => project.Sections)
         .FirstOrDefaultAsync();
 
-    if (dbProject == null)
-    {
+        if (dbProject == null)
+        {
+            return new ApiResponse<GetProjectDto>()
+            {
+                Success = false,
+                ErrorCode = "Bad Request",
+                Payload = null
+            };
+        }
+
+        var project = dbProject.Adapt<GetProjectDto>();
         return new ApiResponse<GetProjectDto>()
         {
-            Success = false,
-            ErrorCode = "Bad Request",
-            Payload = null  
+            Success = true,
+            Payload = project,
+            ErrorCode = null
         };
-    }
-
-    var project = dbProject.Adapt<GetProjectDto>();
-    return new ApiResponse<GetProjectDto>()
-    {
-        Success = true,
-        Payload = project,
-        ErrorCode = null  
-    };
     }
 
     public async Task UpdateProject(UpdateProjectDto updatedProject)
@@ -75,6 +83,17 @@ public class ProjectService : IProjectService
         project.Slug = GenerateSlug(updatedProject.ProjectName);
         _contex.Update(project);
         await _contex.SaveChangesAsync();
+    }
+
+    public async Task RestoreProject(Guid id)
+    {
+        var project = await _contex.Projects.FindAsync(id);
+
+        if (project != null)
+        {
+            project.IsDeleted = false;
+            await _contex.SaveChangesAsync();
+        }
     }
 
 }
