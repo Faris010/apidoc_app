@@ -29,7 +29,7 @@ export default function Sidebar() {
     onSubmit: async (values) => {
       await addSection(values, id);
       const response = await getSectionByProjectId(id);
-      setSectionList(response.data);
+      setSectionList(response);
       setIsAddSectionOpen(false);
       formik.resetForm();
     },
