@@ -1,13 +1,16 @@
+'use client';
+
 import { useToggle } from '@/hooks/useToggle';
 import { TFormik, TSection } from '@/types/types';
 import { GenerateSlug } from '@/utils/GenerateSlug';
 import Image from 'next/image';
 import Link from 'next/link';
 import SectionMenuModal from '../modals/SectionMenuModal';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import useOnClickOutside from '@/hooks/useOnClickOutside';
 import { FormikProps } from 'formik';
 import CreateSectionInput from './CreateSectionInput';
+import { editSection } from '@/services/section';
 
 interface Props {
   section: TSection;
@@ -38,9 +41,49 @@ export default function SectionItem({
   const [isExpanded, setIsExpanded] = useToggle(false);
   const [isMouseOver, setIsMouseOver] = useToggle(false);
   const [isSectionMenuOpen, setIsSectionMenuOpen] = useToggle(false);
+  const [isRenameInputOpen, setIsRenameInputOpen] = useToggle(false);
+  const [isEnterKeyPressed, setIsEnterKeyPressed] = useState<boolean>(false);
+  const [sectionNameValue, setSectionNameValue] = useState<string>(
+    section.name
+  );
   useOnClickOutside(ref, setIsSectionMenuOpen);
 
   let childrenSection = sectionList.filter((sec) => sec.parentId == section.id);
+
+  const handleSectionRename = async () => {
+    const updatedSection = {
+      ...section,
+      name: sectionNameValue,
+    };
+    await editSection(updatedSection);
+    const updatedSectionIndex = sectionList.findIndex(
+      (s) => s.id == section.id
+    );
+    if (updatedSectionIndex !== -1) {
+      const updatedSectionList = [...sectionList];
+      updatedSectionList[updatedSectionIndex] = {
+        ...updatedSection,
+      };
+      setSectionList(updatedSectionList);
+    }
+    setIsRenameInputOpen();
+  };
+
+  const handleRenameInputBlur = async () => {
+    if (!isEnterKeyPressed) {
+      handleSectionRename();
+    }
+    setIsEnterKeyPressed(false);
+  };
+
+  const handleRenameInputKeyPress = async (
+    e: React.KeyboardEvent<HTMLInputElement>
+  ) => {
+    if (e.key === 'Enter') {
+      setIsEnterKeyPressed(true);
+      handleSectionRename();
+    }
+  };
 
   return (
     <div className='relative'>
@@ -72,7 +115,7 @@ export default function SectionItem({
               sectionId: section.id,
             },
           }}
-          className='w-full flex overflow-hidden'
+          className='w-full flex items-center overflow-hidden'
         >
           <div>
             <div className='w-5 h-5 flex items-center justify-center'>
@@ -84,10 +127,22 @@ export default function SectionItem({
               />
             </div>
           </div>
-          <div className='w-full ml-2 truncate'>
-            <p className='text-sm text-[#3E4248] font-medium truncate'>
-              {section.name}
-            </p>
+          <div className='w-full pr-1 ml-2 truncate'>
+            {!isRenameInputOpen ? (
+              <p className='text-sm text-[#3E4248] font-medium truncate'>
+                {section.name}
+              </p>
+            ) : (
+              <input
+                id='rename-input'
+                type='text'
+                onBlur={handleRenameInputBlur}
+                onKeyDown={handleRenameInputKeyPress}
+                value={sectionNameValue}
+                onChange={(e) => setSectionNameValue(e.target.value)}
+                className='w-full px-1 text-sm rounded overflow-hidden outline-none'
+              />
+            )}
           </div>
         </Link>
         {isMouseOver && (
@@ -126,6 +181,8 @@ export default function SectionItem({
           section={section}
           sectionList={sectionList}
           setSectionList={setSectionList}
+          setIsRenameInputOpen={setIsRenameInputOpen}
+          setIsSectionMenuOpen={setIsSectionMenuOpen}
           ref={ref}
         />
       )}

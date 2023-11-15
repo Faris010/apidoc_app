@@ -9,10 +9,21 @@ interface Props {
   section: TSection;
   sectionList: TSection[];
   setSectionList: React.Dispatch<React.SetStateAction<TSection[] | undefined>>;
+  setIsRenameInputOpen: () => void;
+  setIsSectionMenuOpen: () => void;
 }
 
 const SectionMenuModal = forwardRef<HTMLDivElement, Props>(
-  ({ section, sectionList, setSectionList }, ref) => {
+  (
+    {
+      section,
+      sectionList,
+      setSectionList,
+      setIsRenameInputOpen,
+      setIsSectionMenuOpen,
+    },
+    ref
+  ) => {
     const handleSectionDelete = async () => {
       if (section.id) {
         await deleteSection(section.id);
@@ -25,7 +36,13 @@ const SectionMenuModal = forwardRef<HTMLDivElement, Props>(
         ref={ref}
         className='absolute -right-28 p-1 z-10 bg-white rounded drop-shadow-lg'
       >
-        <div className='py-1 pl-3 pr-14 flex items-center space-x-2 cursor-pointer hover:bg-[#EBEBEA] rounded'>
+        <div
+          onClick={() => {
+            setIsRenameInputOpen();
+            setIsSectionMenuOpen();
+          }}
+          className='py-1 pl-3 pr-14 flex items-center space-x-2 cursor-pointer hover:bg-[#EBEBEA] rounded'
+        >
           <Image
             src='/assets/rename.png'
             alt='edit icon'
