@@ -10,4 +10,5 @@ public interface IProjectService
     Task AddProject(AddProjectDto newProject);
     Task UpdateProject(UpdateProjectDto updatedProject);
     Task DeleteProject(Guid id);
+    Task RestoreProject(Guid id);
 }

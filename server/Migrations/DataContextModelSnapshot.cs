@@ -49,7 +49,7 @@ namespace server.Migrations
 
                     b.HasIndex("SectionId");
 
-                    b.ToTable("Blocks", (string)null);
+                    b.ToTable("Blocks");
                 });
 
             modelBuilder.Entity("server.Models.BlockType", b =>
@@ -68,7 +68,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BlockTypes", (string)null);
+                    b.ToTable("BlockTypes");
 
                     b.HasData(
                         new
@@ -81,7 +81,7 @@ namespace server.Migrations
                         {
                             Id = 2,
                             Description = "Capture a code snipet",
-                            Name = "Code-Block"
+                            Name = "Code"
                         },
                         new
                         {
@@ -97,6 +97,9 @@ namespace server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Logo")
                         .IsRequired()
                         .HasColumnType("text");
@@ -111,7 +114,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects", (string)null);
+                    b.ToTable("Projects");
                 });
 
             modelBuilder.Entity("server.Models.Section", b =>
@@ -138,7 +141,7 @@ namespace server.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Sections", (string)null);
+                    b.ToTable("Sections");
                 });
 
             modelBuilder.Entity("server.Models.User", b =>
@@ -157,7 +160,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("server.Models.Block", b =>

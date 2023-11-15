@@ -15,7 +15,6 @@ public class DataContext : DbContext
     public DbSet<Block> Blocks => Set<Block>();
     public DbSet<BlockType> BlockTypes => Set<BlockType>();
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<BlockType>().HasData(

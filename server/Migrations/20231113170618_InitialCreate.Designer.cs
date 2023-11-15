@@ -12,8 +12,8 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231110125718_BlockTypeGet")]
-    partial class BlockTypeGet
+    [Migration("20231113170618_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -84,7 +84,7 @@ namespace server.Migrations
                         {
                             Id = 2,
                             Description = "Capture a code snipet",
-                            Name = "Code-Block"
+                            Name = "Code"
                         },
                         new
                         {
@@ -99,6 +99,9 @@ namespace server.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Logo")
                         .IsRequired()
