@@ -141,7 +141,12 @@ export default function DocumentEditor({ projectId }: { projectId: string }) {
                     ) : (
                       <>
                         {block.image != '' ? (
-                          <ImageBlock blockImage={block.image || null} />
+                          <ImageBlock
+                            blockImage={block.image || null}
+                            blockId={block.id}
+                            blockList={blockList}
+                            setBlockList={setBlockList}
+                          />
                         ) : (
                           <AddImageBlockModal
                             block={block}
