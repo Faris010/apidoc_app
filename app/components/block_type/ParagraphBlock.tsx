@@ -3,13 +3,17 @@
 import useDebounce from '@/hooks/useDebounce';
 import { editBlock } from '@/services/block';
 import { TBLock } from '@/types/types';
+import deleteBlock from '@/utils/HandleDeleteBlock';
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 
 interface Props {
   block: TBLock;
+  blockList: TBLock[];
+  setBlockList: React.Dispatch<React.SetStateAction<TBLock[]>>;
 }
 
-const ParagraphBlock = ({ block }: Props) => {
+const ParagraphBlock = ({ block, blockList, setBlockList }: Props) => {
   const [paragraphBlockValue, setParagraphBlockValue] = useState<string | null>(
     block?.content || null
   );
@@ -49,18 +53,38 @@ const ParagraphBlock = ({ block }: Props) => {
     setParagraphBlockValue(e.target.value);
   };
 
+  const handleDeleteBlock = () => {
+    if (block.id) {
+      deleteBlock(block.id);
+      const updatedBlockList = blockList.filter((b) => b.id !== block.id);
+      setBlockList(updatedBlockList);
+    }
+  };
+
   return (
-    <textarea
-      rows={1}
-      ref={paragraphBlockRef}
-      name='block'
-      value={paragraphBlockValue || ''}
-      onChange={handleParagraphBlockChange}
-      className={`${
-        block.blockTypeId != 1 && 'hidden'
-      } w-full rounded outline-none resize-none overflow-hidden text-[#3E4248]`}
-      placeholder='Enter some text'
-    />
+    <div className='relative w-full p-1 hover:bg-[#F6F8FA] rounded-md overflow-hidden group'>
+      <div onClick={handleDeleteBlock} className='absolute top-1 right-1'>
+        <Image
+          src='/assets/delete-grey.png'
+          alt='delete icon'
+          width={16}
+          height={16}
+          style={{ width: 'auto', height: 'auto' }}
+          className='hidden p-1 cursor-pointer rounded group-hover:block hover:bg-[#EBEBEA]'
+        />
+      </div>
+      <textarea
+        rows={1}
+        ref={paragraphBlockRef}
+        name='block'
+        value={paragraphBlockValue || ''}
+        onChange={handleParagraphBlockChange}
+        className={`${
+          block.blockTypeId != 1 && 'hidden'
+        } w-full px-1 pt-5 bg-transparent  rounded outline-none resize-none overflow-hidden text-[#3E4248]`}
+        placeholder='Enter some text'
+      />
+    </div>
   );
 };
 

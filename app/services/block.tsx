@@ -13,3 +13,7 @@ export async function addBlock(block: TBLock, sectionId: string) {
 export async function editBlock(block: TBLock) {
   await api.put('/api/block/', block);
 }
+
+export async function deleteBlockById(blockId: string) {
+  await api.delete(`/api/block/${blockId}`);
+}

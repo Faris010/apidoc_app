@@ -2,9 +2,7 @@
 
 import { getSectionById } from '@/services/section';
 import { TBLock, TSection } from '@/types/types';
-import { GenerateSlug } from '@/utils/GenerateSlug';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import BlockTypeModal from '../modals/BlockTypeModal';
@@ -129,9 +127,17 @@ export default function DocumentEditor({ projectId }: { projectId: string }) {
                     </div>
                     {/* Display block based on block type id */}
                     {block.blockTypeId == 1 ? (
-                      <ParagraphBlock block={block} />
+                      <ParagraphBlock
+                        block={block}
+                        blockList={blockList}
+                        setBlockList={setBlockList}
+                      />
                     ) : block.blockTypeId == 2 ? (
-                      <CodeBlock block={block} />
+                      <CodeBlock
+                        block={block}
+                        blockList={blockList}
+                        setBlockList={setBlockList}
+                      />
                     ) : (
                       <>
                         {block.image != '' ? (

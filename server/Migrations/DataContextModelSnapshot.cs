@@ -49,7 +49,7 @@ namespace server.Migrations
 
                     b.HasIndex("SectionId");
 
-                    b.ToTable("Blocks");
+                    b.ToTable("Blocks", (string)null);
                 });
 
             modelBuilder.Entity("server.Models.BlockType", b =>
@@ -68,7 +68,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BlockTypes");
+                    b.ToTable("BlockTypes", (string)null);
 
                     b.HasData(
                         new
@@ -114,7 +114,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Projects", (string)null);
                 });
 
             modelBuilder.Entity("server.Models.Section", b =>
@@ -141,7 +141,7 @@ namespace server.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("Sections");
+                    b.ToTable("Sections", (string)null);
                 });
 
             modelBuilder.Entity("server.Models.User", b =>
@@ -160,7 +160,7 @@ namespace server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("server.Models.Block", b =>
