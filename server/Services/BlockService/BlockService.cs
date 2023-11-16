@@ -26,13 +26,19 @@ public class BlockService : IBlockService
             block.SectionId = sectionId;
             await _context.Blocks.AddAsync(block);
             section.Blocks?.Add(block);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
         }
     }
 
     public async Task DeleteBlock(Guid id)
     {
-        await _context.Blocks.Where(b => b.Id == id).ExecuteDeleteAsync();
+        var block = await _context.Blocks.FindAsync(id);
+
+        if (block != null)
+        {
+            _context.Blocks.Remove(block);
+            await _context.SaveChangesAsync();
+        }
     }
 
     public async Task<List<GetBlockDto>> GetAllBlocks()
@@ -73,6 +79,27 @@ public class BlockService : IBlockService
             Payload = block,
             ErrorCode = null
         };
+    }
+
+    public async Task<List<GetBlockDto>> SearchBlocks(string searchTerm, Guid projectId)
+    {
+        var sectionIds = await _context.Sections
+            .Where(s => s.ProjectId == projectId) 
+            .Select(s => s.Id)
+            .ToListAsync();
+
+        var blocks = await _context.Blocks
+            .Where(b => sectionIds.Contains(b.SectionId))
+            .Include(block => block.BlockTypes)
+            .ToListAsync();
+
+        var filteredBlocks = blocks
+            .Where(b => b.Content.Contains(searchTerm))
+            .OrderBy(b => b.SortOrder)
+            .Select(b => b.Adapt<GetBlockDto>())
+            .ToList();
+
+        return filteredBlocks;
     }
 
 
