@@ -58,12 +58,5 @@ namespace server.Controllers
             await _projectService.UpdateProject(updatedProject);
         }
 
-        [HttpPost]
-        [Route("restore/{id:guid}")]
-        public async Task RestoreProject(Guid id)
-        {
-            await _projectService.RestoreProject(id);
-        }
-
     }
 }

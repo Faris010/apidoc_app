@@ -44,9 +44,9 @@ public class AuthController : ControllerBase
         user.Password = passwordHash;
 
         await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
         return Ok("Registration successful");
- 
+
     }
 
     [HttpPost]

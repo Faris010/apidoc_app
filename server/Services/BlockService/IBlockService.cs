@@ -11,4 +11,5 @@ public interface IBlockService
     Task AddBlock(AddBlockDto newBlock, Guid sectionId);
     Task UpdateBlock(UpdateBlockDto updatedBlock);
     Task DeleteBlock(Guid id);
+    Task<List<GetBlockDto>> SearchBlocks(string searchTerm, Guid projectId);
 }

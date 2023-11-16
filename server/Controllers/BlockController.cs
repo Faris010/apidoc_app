@@ -9,7 +9,7 @@ namespace server.Controllers;
 
 [Route("api/block/")]
 [ApiController]
-[Authorize]
+//[Authorize]
 [EnableCors("AllowSpecificOrigin")]
 public class BlockController : ControllerBase
 {
@@ -65,5 +65,18 @@ public class BlockController : ControllerBase
     public async Task UpdateBlock(UpdateBlockDto updateBlock)
     {
         await _blockService.UpdateBlock(updateBlock);
+    }
+
+    [HttpGet("search")]
+    public async Task<ActionResult<List<GetBlockDto>>> SearchBlocks([FromQuery] string searchTerm, Guid projectId)
+    {
+        var blocks = await _blockService.SearchBlocks(searchTerm, projectId);
+        
+        if (blocks == null || blocks.Count == 0)
+        {
+            return NotFound("No matching blocks found.");
+        }
+
+        return Ok(blocks);
     }
 }
