@@ -1,19 +1,16 @@
 'use client';
 
+import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
 import { getSectionById } from '@/services/section';
 import { TBLock, TSection } from '@/types/types';
-import Image from 'next/image';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState, useRef } from 'react';
-import BlockTypeModal from '../modals/BlockTypeModal';
-import ParagraphBlock from '../block_type/ParagraphBlock';
-import ImageBlock from '../block_type/ImageBlock';
-import CodeBlock from '../block_type/CodeBlock';
+import BlockTypeModal from '../modals/block_type_modals/BlockTypeModal';
 import { getSectionBlocks } from '@/services/block';
-import AddImageBlockModal from '../modals/AddImageBlockModal';
 import DocumentEditorTitle from './DocumentEditorTitle';
 import { getHighestSortOrderNumber } from '@/utils/GetHighestSortOrderNumber';
 import DocumentEditorSectionLink from './DocumentEditorSectionLink';
+import RenderBlockComponent from '../block/BlockRenderer/RenderBlockComponent';
 
 export default function DocumentEditor({ projectId }: { projectId: string }) {
   const router = useRouter();
@@ -99,7 +96,6 @@ export default function DocumentEditor({ projectId }: { projectId: string }) {
           <div className='space-y-6'>
             {sectionId ? (
               <>
-                {/* {console.log(blockList)} */}
                 {blockList.map((block) => (
                   <div key={block.id} className='h-full flex items-start group'>
                     <div className='hidden pr-2 group-hover:flex items-center group-hover:-ml-12'>
@@ -125,37 +121,12 @@ export default function DocumentEditor({ projectId }: { projectId: string }) {
                         />
                       </div>
                     </div>
-                    {/* Display block based on block type id */}
-                    {block.blockTypeId == 1 ? (
-                      <ParagraphBlock
-                        block={block}
-                        blockList={blockList}
-                        setBlockList={setBlockList}
-                      />
-                    ) : block.blockTypeId == 2 ? (
-                      <CodeBlock
-                        block={block}
-                        blockList={blockList}
-                        setBlockList={setBlockList}
-                      />
-                    ) : (
-                      <>
-                        {block.image != '' ? (
-                          <ImageBlock
-                            blockImage={block.image || null}
-                            blockId={block.id}
-                            blockList={blockList}
-                            setBlockList={setBlockList}
-                          />
-                        ) : (
-                          <AddImageBlockModal
-                            block={block}
-                            blockList={blockList}
-                            setBlockList={setBlockList}
-                          />
-                        )}
-                      </>
-                    )}
+                    {/* Render block based on block type id */}
+                    <RenderBlockComponent
+                      block={block}
+                      blockList={blockList}
+                      setBlockList={setBlockList}
+                    />
                   </div>
                 ))}
                 {/* New block placeholder */}
@@ -175,7 +146,6 @@ export default function DocumentEditor({ projectId }: { projectId: string }) {
                     sectionId={sectionId}
                     highestSortOrder={highestSortOrder}
                     setBlockList={setBlockList}
-                    blockRef={blockRef}
                     setIsBlockTypeModalOpen={setIsBlockTypeModalOpen}
                   />
                 )}
