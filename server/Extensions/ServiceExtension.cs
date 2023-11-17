@@ -1,7 +1,5 @@
 using server.Services.BlockService;
 using server.Services.BlockTypeSevice;
-
-//using server.Services.BlockTypeService;
 using server.Services.ProjectService;
 using server.Services.SectionService;
 
