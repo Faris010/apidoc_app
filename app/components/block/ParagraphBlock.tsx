@@ -62,17 +62,7 @@ const ParagraphBlock = ({ block, blockList, setBlockList }: Props) => {
   };
 
   return (
-    <div className='relative w-full p-1 hover:bg-[#F6F8FA] rounded-md overflow-hidden group'>
-      <div onClick={handleDeleteBlock} className='absolute top-1 right-1'>
-        <Image
-          src='/assets/delete-grey.png'
-          alt='delete icon'
-          width={16}
-          height={16}
-          style={{ width: 'auto', height: 'auto' }}
-          className='hidden p-1 cursor-pointer rounded group-hover:block hover:bg-[#EBEBEA]'
-        />
-      </div>
+    <div className='relative w-full p-1 flex rounded-md overflow-hidden group hover:bg-[#F6F8FA]'>
       <textarea
         rows={1}
         ref={paragraphBlockRef}
@@ -81,9 +71,19 @@ const ParagraphBlock = ({ block, blockList, setBlockList }: Props) => {
         onChange={handleParagraphBlockChange}
         className={`${
           block.blockTypeId != 1 && 'hidden'
-        } w-full px-1 pt-5 bg-transparent  rounded outline-none resize-none overflow-hidden text-[#3E4248]`}
+        } w-full pl-1 bg-transparent rounded outline-none resize-none overflow-hidden text-[#3E4248]`}
         placeholder='Enter some text'
       />
+      <div onClick={handleDeleteBlock}>
+        <Image
+          src='/assets/delete-grey.png'
+          alt='delete icon'
+          width={16}
+          height={16}
+          style={{ width: 'auto', height: 'auto' }}
+          className='opacity-0 p-1 cursor-pointer rounded group-hover:opacity-100 hover:bg-[#EBEBEA]'
+        />
+      </div>
     </div>
   );
 };

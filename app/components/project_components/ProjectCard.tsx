@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import OptionsMenu from '../modals/OptionsMenu';
+import ProjectOptionsMenu from '../modals/project_modals/ProjectOptionsMenu';
 import { useToggle } from '@/hooks/useToggle';
 import { TProject } from '@/types/types';
 import { useRef } from 'react';
@@ -76,7 +76,7 @@ export default function ProjectCard({
       </div>
       {/* Card menu */}
       {isMenuOpen && (
-        <OptionsMenu
+        <ProjectOptionsMenu
           ref={ref}
           project={project}
           setIsMenuOpen={setIsMenuOpen}

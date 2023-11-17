@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import { TBLock } from '@/types/types';
 import useDebounce from '@/hooks/useDebounce';
@@ -10,6 +10,7 @@ import useOnClickOutside from '@/hooks/useOnClickOutside';
 import { useToggle } from '@/hooks/useToggle';
 import { languageArray } from '@/const/LanguageList';
 import deleteBlock from '@/utils/HandleDeleteBlock';
+import LanguageMenuModal from '../modals/block_modals/LanguageMenuModal';
 
 interface Props {
   block: TBLock;
@@ -25,7 +26,8 @@ const CodeBlock = ({ block, blockList, setBlockList }: Props) => {
   const [selectedLanguageName, setSelectedLanguageName] = useState(
     languageArray[0].name
   );
-  //useOnClickOutside(_, setIsLanguageMenuOpen);
+  const languageMenuRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(languageMenuRef, setIsLanguageMenuOpen);
 
   const debouncedValue = useDebounce(codeBlockValue, 1500);
 
@@ -95,22 +97,6 @@ const CodeBlock = ({ block, blockList, setBlockList }: Props) => {
                 />
               </div>
             </div>
-            {isLanguageMenuOpen && (
-              <div className='absolute z-20 bg-white p-1 rounded drop-shadow-lg'>
-                {languageArray.map((lang, i) => (
-                  <div
-                    key={i}
-                    onClick={() => {
-                      setSelectedLanguageName(lang.name);
-                      setIsLanguageMenuOpen();
-                    }}
-                    className='px-1 rounded text-sm text-[#3E4248] hover:bg-[#EBEBEA]'
-                  >
-                    {lang.name}
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
           <div className='flex'>
             <div
@@ -150,6 +136,13 @@ const CodeBlock = ({ block, blockList, setBlockList }: Props) => {
           }}
         />
       </div>
+      {isLanguageMenuOpen && (
+        <LanguageMenuModal
+          ref={languageMenuRef}
+          setSelectedLanguageName={setSelectedLanguageName}
+          setIsLanguageMenuOpen={setIsLanguageMenuOpen}
+        />
+      )}
       {isPopupVisible && (
         <div
           className={`fixed z-50 px-3 py-3 bottom-0 left-1/2 -translate-x-1/2 bg-black text-white text-sm rounded-md transition-transform duration-300 ease-out transform ${

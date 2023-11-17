@@ -10,7 +10,7 @@ interface Props {
   setCurrentProject: React.Dispatch<React.SetStateAction<TProject>>;
 }
 
-const OptionsMenu = forwardRef<HTMLDivElement, Props>(
+const ProjectOptionsMenu = forwardRef<HTMLDivElement, Props>(
   (
     {
       project,
@@ -63,4 +63,4 @@ const OptionsMenu = forwardRef<HTMLDivElement, Props>(
   }
 );
 
-export default OptionsMenu;
+export default ProjectOptionsMenu;

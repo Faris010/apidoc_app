@@ -9,14 +9,12 @@ interface Props {
   highestSortOrder: number;
   setBlockList: React.Dispatch<React.SetStateAction<TBLock[]>>;
   setIsBlockTypeModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  blockRef: React.RefObject<HTMLTextAreaElement>;
 }
 
 export default function BlockTypeModal({
   sectionId,
   highestSortOrder,
   setBlockList,
-  blockRef,
   setIsBlockTypeModalOpen,
 }: Props) {
   const [blockTypeList, setBlockTypeList] = useState<TBlockType[]>([]);

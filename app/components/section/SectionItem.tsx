@@ -5,7 +5,7 @@ import { TFormik, TSection } from '@/types/types';
 import { GenerateSlug } from '@/utils/GenerateSlug';
 import Image from 'next/image';
 import Link from 'next/link';
-import SectionMenuModal from '../modals/SectionMenuModal';
+import SectionMenuModal from '../modals/section_modals/SectionMenuModal';
 import { useRef, useState } from 'react';
 import useOnClickOutside from '@/hooks/useOnClickOutside';
 import { FormikProps } from 'formik';
