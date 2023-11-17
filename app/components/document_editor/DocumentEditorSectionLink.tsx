@@ -15,7 +15,7 @@ export default function DocumentEditorSectionLink({ sectionId }: Props) {
     if (sectionId) {
       const res = await getSectionById(sectionId);
       setSectionLink((prev) => [res, ...prev]);
-      if (res.parentId == null || sectionLink[0].id == res.id) {
+      if (res.parentId == null) {
         return;
       } else {
         getSectionLink(res.parentId);
