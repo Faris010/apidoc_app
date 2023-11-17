@@ -45,7 +45,6 @@ public class ProjectService : IProjectService
     {
         return await _context.Projects
         .Include(project => project.Sections)
-        .Where(project => !project.IsDeleted)
         .Select(project => project.Adapt<GetProjectDto>())
         .ToListAsync();
     }

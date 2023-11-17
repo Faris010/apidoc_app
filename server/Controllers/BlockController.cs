@@ -67,16 +67,18 @@ public class BlockController : ControllerBase
         await _blockService.UpdateBlock(updateBlock);
     }
 
-    [HttpGet("search")]
+    [HttpGet("search/{projectId:guid}")]
+    [ProducesResponseType(typeof(List<GetBlockDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<List<GetBlockDto>>> SearchBlocks([FromQuery] string searchTerm, Guid projectId)
     {
         var blocks = await _blockService.SearchBlocks(searchTerm, projectId);
         
         if (blocks == null || blocks.Count == 0)
         {
-            return NotFound("No matching blocks found.");
+            return NotFound();
         }
 
-        return Ok(blocks);
+        return blocks;
     }
 }
