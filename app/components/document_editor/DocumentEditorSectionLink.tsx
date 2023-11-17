@@ -30,8 +30,7 @@ export default function DocumentEditorSectionLink({ sectionId }: Props) {
 
   return (
     <div className='flex items-center text-sm'>
-      {/* {console.log(sectionLink)} */}
-      {sectionLink.length > 0 &&
+      {sectionLink.length > 0 ? (
         sectionLink.map((sec, i) => (
           <Link
             href={{
@@ -45,7 +44,10 @@ export default function DocumentEditorSectionLink({ sectionId }: Props) {
             {sec.name}{' '}
             {i !== sectionLink.length - 1 && <span>&nbsp;/&nbsp;</span>}
           </Link>
-        ))}
+        ))
+      ) : (
+        <p>Untitled</p>
+      )}
     </div>
   );
 }
