@@ -58,15 +58,15 @@ export default function Sidebar() {
     getProjectSections();
   }, [id]);
 
-  useEffect(() => {
-    if (sectionList != undefined && sectionList.length > 0) {
-      router.push(
-        `?section=${GenerateSlug(sectionList[0]?.name)}&sectionId=${
-          sectionList[0]?.id
-        }`
-      );
-    }
-  }, [sectionList]);
+  // useEffect(() => {
+  //   if (sectionList != undefined && sectionList.length > 0) {
+  //     router.push(
+  //       `?section=${GenerateSlug(sectionList[0]?.name)}&sectionId=${
+  //         sectionList[0]?.id
+  //       }`
+  //     );
+  //   }
+  // }, [sectionList]);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEnterKeyPressed, setIsEnterKeyPressed] = useState(false);
