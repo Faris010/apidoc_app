@@ -9,7 +9,7 @@ namespace server.Controllers;
 
 [Route("api/block/")]
 [ApiController]
-//[Authorize]
+[Authorize]
 [EnableCors("AllowSpecificOrigin")]
 public class BlockController : ControllerBase
 {
