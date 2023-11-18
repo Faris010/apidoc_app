@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.SectionDtos;
+using server.Response;
 using server.Services.SectionService;
 
 namespace server.Controllers;
@@ -18,14 +19,6 @@ public class SectionController : ControllerBase
     public SectionController(ISectionService sectionService)
     {
         _sectionService = sectionService;
-    }
-
-    [HttpGet]
-    [ProducesResponseType(typeof(List<GetSectionDto>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
-    public async Task<List<GetSectionDto>> GetAll()
-    {
-        return await _sectionService.GetAllSections();
     }
 
     [HttpGet]

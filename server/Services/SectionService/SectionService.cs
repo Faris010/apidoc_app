@@ -41,12 +41,6 @@ public class SectionService : ISectionService
         }
     }
 
-    public async Task<List<GetSectionDto>> GetAllSections()
-    {
-        return await _context.Sections.Include(section => section.Blocks).Select(section =>
-        section.Adapt<GetSectionDto>()).ToListAsync();
-    }
-
     public async Task<ApiResponse<GetSectionDto>> GetSectionById(Guid id)
     {
         var dbSection = await _context.Sections

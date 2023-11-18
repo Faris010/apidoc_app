@@ -16,6 +16,13 @@ public class BlockService : IBlockService
         _context = context;
     }
 
+     public async Task<List<GetBlockDto>> GetAllBlocks()
+    {
+        var blocks = await _context.Blocks.Include(block => block.BlockTypes).ToListAsync();
+        return blocks.Select(block => block.Adapt<GetBlockDto>())
+                .OrderBy(b => b.SortOrder).ToList();
+    }
+
     public async Task AddBlock(AddBlockDto newBlock, Guid sectionId)
     {
         var block = newBlock.Adapt<Block>();
@@ -41,12 +48,6 @@ public class BlockService : IBlockService
         }
     }
 
-    public async Task<List<GetBlockDto>> GetAllBlocks()
-    {
-        var blocks = await _context.Blocks.Include(block => block.BlockTypes).ToListAsync();
-        return blocks.Select(block => block.Adapt<GetBlockDto>())
-                .OrderBy(b => b.SortOrder).ToList();
-    }
     public async Task<List<GetBlockDto>> GetAllBlocksBySectionId(Guid sectionId)
     {
         var blocks = await _context.Blocks.Where(b => b.SectionId == sectionId).Include(block => block.BlockTypes).ToListAsync();
@@ -103,10 +104,13 @@ public class BlockService : IBlockService
     }
 
 
-    public async Task UpdateBlock(UpdateBlockDto updatedBlock)
+    public async Task UpdateBlock(List<UpdateBlockDto> updatedBlocks)
     {
+        foreach(UpdateBlockDto updatedBlock in updatedBlocks)
+        {
         var block = updatedBlock.Adapt<Block>();
-        _context.Update(block);
+         _context.Update(block);
+        }
         await _context.SaveChangesAsync();
     }
 }

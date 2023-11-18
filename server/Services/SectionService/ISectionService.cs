@@ -5,7 +5,6 @@ namespace server.Services.SectionService;
 
 public interface ISectionService
 {
-    Task<List<GetSectionDto>> GetAllSections();
     Task<ApiResponse<GetSectionDto>> GetSectionById(Guid id);
     Task AddSection(AddSectionDto newSection, Guid projectId);
     Task<List<GetSectionDto>> GetSectionByProjectId(Guid projectId);

@@ -64,7 +64,7 @@ public class BlockController : ControllerBase
     }
 
     [HttpPut]
-    public async Task UpdateBlock(UpdateBlockDto updateBlock)
+    public async Task UpdateBlock([FromBody] List<UpdateBlockDto> updateBlock)
     {
         await _blockService.UpdateBlock(updateBlock);
     }
@@ -75,7 +75,7 @@ public class BlockController : ControllerBase
     public async Task<ActionResult<List<GetBlockDto>>> SearchBlocks([FromQuery] string searchTerm, Guid projectId)
     {
         var blocks = await _blockService.SearchBlocks(searchTerm, projectId);
-        
+
         if (blocks == null || blocks.Count == 0)
         {
             return NotFound();
