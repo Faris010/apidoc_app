@@ -11,8 +11,14 @@ import DocumentEditorTitle from './DocumentEditorTitle';
 import { getHighestSortOrderNumber } from '@/utils/GetHighestSortOrderNumber';
 import DocumentEditorSectionLink from './DocumentEditorSectionLink';
 import RenderBlockComponent from '../block/BlockRenderer/RenderBlockComponent';
+import DocumentViewerTitle from '../document_viewer/DocumentViewerTitle';
 
-export default function DocumentEditor({ projectId }: { projectId: string }) {
+interface Props {
+  projectId: string;
+  isViewer: boolean;
+}
+
+export default function DocumentEditor({ projectId, isViewer }: Props) {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -78,19 +84,26 @@ export default function DocumentEditor({ projectId }: { projectId: string }) {
         {/* Document link */}
         <DocumentEditorSectionLink sectionId={sectionId} />
 
-        <div className='p-1 rounded cursor-pointer hover:bg-[#EBEBEA] '>
-          <Image
-            src='/assets/more.png'
-            alt='more icon'
-            height={16}
-            width={16}
-          />
-        </div>
+        {!isViewer && (
+          <div className='p-1 rounded cursor-pointer hover:bg-[#EBEBEA] '>
+            <Image
+              src='/assets/more.png'
+              alt='more icon'
+              height={16}
+              width={16}
+            />
+          </div>
+        )}
       </div>
       <div className='w-full px-3 pt-20 pb-56 flex justify-center overflow-hidden'>
         <div className='w-2/3  flex-col'>
           {/* Document title */}
-          {section.title != '' && <DocumentEditorTitle section={section} />}
+          {section.title !== '' &&
+            (!isViewer ? (
+              <DocumentEditorTitle section={section} />
+            ) : (
+              <DocumentViewerTitle sectionTitle={section.title} />
+            ))}
 
           {/* Document body */}
           <div className='space-y-6'>
@@ -98,49 +111,54 @@ export default function DocumentEditor({ projectId }: { projectId: string }) {
               <>
                 {blockList.map((block) => (
                   <div key={block.id} className='h-full flex items-start group'>
-                    <div className='hidden pr-2 group-hover:flex items-center group-hover:-ml-12'>
-                      <div
-                        onClick={() => setIsBlockTypeModalOpen(true)}
-                        className='p-0.5 hover:bg-[#EBEBEA] rounded'
-                      >
-                        <Image
-                          src='/assets/add.png'
-                          alt='add icon'
-                          height={16}
-                          width={16}
-                          className='cursor-pointer'
-                        />
+                    {!isViewer && (
+                      <div className='hidden pr-2 group-hover:flex items-center group-hover:-ml-12'>
+                        <div
+                          onClick={() => setIsBlockTypeModalOpen(true)}
+                          className='p-0.5 hover:bg-[#EBEBEA] rounded'
+                        >
+                          <Image
+                            src='/assets/add.png'
+                            alt='add icon'
+                            height={16}
+                            width={16}
+                            className='cursor-pointer'
+                          />
+                        </div>
+                        <div className='p-0.5 hover:bg-[#EBEBEA] rounded'>
+                          <Image
+                            src='/assets/drag.png'
+                            alt='add icon'
+                            height={16}
+                            width={16}
+                            className='cursor-grab'
+                          />
+                        </div>
                       </div>
-                      <div className='p-0.5 hover:bg-[#EBEBEA] rounded'>
-                        <Image
-                          src='/assets/drag.png'
-                          alt='add icon'
-                          height={16}
-                          width={16}
-                          className='cursor-grab'
-                        />
-                      </div>
-                    </div>
+                    )}
                     {/* Render block based on block type id */}
                     <RenderBlockComponent
                       block={block}
                       blockList={blockList}
                       setBlockList={setBlockList}
+                      isViewer={isViewer}
                     />
                   </div>
                 ))}
                 {/* New block placeholder */}
-                <div>
-                  <textarea
-                    rows={1}
-                    ref={blockRef}
-                    name='block'
-                    value={blockTypeSearchFilter}
-                    onChange={handleBlockTextarea}
-                    className=' w-full rounded outline-none resize-none overflow-hidden text-[#3E4248]'
-                    placeholder="Type '/' for commands"
-                  />
-                </div>
+                {!isViewer && (
+                  <div>
+                    <textarea
+                      rows={1}
+                      ref={blockRef}
+                      name='block'
+                      value={blockTypeSearchFilter}
+                      onChange={handleBlockTextarea}
+                      className=' w-full rounded outline-none resize-none overflow-hidden text-[#3E4248]'
+                      placeholder="Type '/' for commands"
+                    />
+                  </div>
+                )}
                 {isBlockTypeModalOpen && (
                   <BlockTypeModal
                     sectionId={sectionId}
@@ -153,27 +171,29 @@ export default function DocumentEditor({ projectId }: { projectId: string }) {
             ) : (
               <>
                 {/* Create empty page button */}
-                <div
-                  // onClick={createEmptySection}
-                  className='px-2 py-1 flex items-center justify-between rounded cursor-pointer group text-[#9e9e9e] hover:bg-[#EBEBEA] hover:text-[#3E4248]'
-                >
-                  <div className='flex items-center space-x-2'>
+                {!isViewer && (
+                  <div
+                    // onClick={createEmptySection}
+                    className='px-2 py-1 flex items-center justify-between rounded cursor-pointer group text-[#9e9e9e] hover:bg-[#EBEBEA] hover:text-[#3E4248]'
+                  >
+                    <div className='flex items-center space-x-2'>
+                      <Image
+                        src='/assets/file.png'
+                        alt='document icon'
+                        height={24}
+                        width={24}
+                      />
+                      <p>Empty page</p>
+                    </div>
                     <Image
-                      src='/assets/file.png'
-                      alt='document icon'
+                      src='/assets/arrow-left.png'
+                      alt='arrow icon'
                       height={24}
                       width={24}
+                      className='hidden group-hover:block'
                     />
-                    <p>Empty page</p>
                   </div>
-                  <Image
-                    src='/assets/arrow-left.png'
-                    alt='arrow icon'
-                    height={24}
-                    width={24}
-                    className='hidden group-hover:block'
-                  />
-                </div>
+                )}
               </>
             )}
           </div>

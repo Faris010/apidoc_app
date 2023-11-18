@@ -24,6 +24,7 @@ interface Props {
   handleInputKeyPress: (
     e: React.KeyboardEvent<HTMLInputElement>
   ) => Promise<void>;
+  isViewer: boolean;
 }
 
 export default function SectionItem({
@@ -36,6 +37,7 @@ export default function SectionItem({
   isAddSectionOpen,
   handleInputBlur,
   handleInputKeyPress,
+  isViewer,
 }: Props) {
   const ref = useRef(null);
   const [isExpanded, setIsExpanded] = useToggle(false);
@@ -145,7 +147,7 @@ export default function SectionItem({
             )}
           </div>
         </Link>
-        {isMouseOver && (
+        {isMouseOver && !isViewer && (
           <div className='flex items-center space-x-1'>
             <div
               onClick={setIsSectionMenuOpen}
@@ -201,6 +203,7 @@ export default function SectionItem({
                   isAddSectionOpen={isAddSectionOpen}
                   handleInputBlur={handleInputBlur}
                   handleInputKeyPress={handleInputKeyPress}
+                  isViewer={isViewer}
                 />
               </div>
             ))}

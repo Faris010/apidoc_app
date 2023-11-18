@@ -8,9 +8,15 @@ interface Props {
   block: TBLock;
   blockList: TBLock[];
   setBlockList: React.Dispatch<React.SetStateAction<TBLock[]>>;
+  isViewer: boolean;
 }
 
-const RenderBlockComponent = ({ block, blockList, setBlockList }: Props) => {
+const RenderBlockComponent = ({
+  block,
+  blockList,
+  setBlockList,
+  isViewer,
+}: Props) => {
   const { id, image, blockTypeId } = block;
   return (
     <>
@@ -19,6 +25,7 @@ const RenderBlockComponent = ({ block, blockList, setBlockList }: Props) => {
           block={block}
           blockList={blockList}
           setBlockList={setBlockList}
+          isViewer={isViewer}
         />
       )}
       {blockTypeId === 2 && (
@@ -26,6 +33,7 @@ const RenderBlockComponent = ({ block, blockList, setBlockList }: Props) => {
           block={block}
           blockList={blockList}
           setBlockList={setBlockList}
+          isViewer={isViewer}
         />
       )}
       {blockTypeId === 3 && (
@@ -36,6 +44,7 @@ const RenderBlockComponent = ({ block, blockList, setBlockList }: Props) => {
               blockId={id || ''}
               blockList={blockList}
               setBlockList={setBlockList}
+              isViewer={isViewer}
             />
           ) : (
             <AddImageBlockModal

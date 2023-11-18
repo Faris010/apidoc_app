@@ -1,20 +1,23 @@
 'use client';
 
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { getProjectById } from '@/services/project';
 import { TProject, TSection } from '@/types/types';
-import Image from 'next/image';
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
 import SectionItem from '../section/SectionItem';
 import { addSection, getSectionByProjectId } from '@/services/section';
 import { GenerateSlug } from '@/utils/GenerateSlug';
 import { useFormik } from 'formik';
 import CreateSectionInput from '../section/CreateSectionInput';
 
-export default function Sidebar() {
+interface Props {
+  projectId: string;
+  isViewer: boolean;
+}
+
+export default function Sidebar({ projectId, isViewer }: Props) {
   const router = useRouter();
-  const params = useParams();
-  let id: string = params.projectId.toString();
 
   const [project, setProject] = useState<TProject>();
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
@@ -23,12 +26,12 @@ export default function Sidebar() {
     initialValues: {
       name: 'Untitled',
       title: 'Untitled',
-      projectId: id,
+      projectId: projectId,
       parentId: null,
     },
     onSubmit: async (values) => {
-      await addSection(values, id);
-      const response = await getSectionByProjectId(id);
+      await addSection(values, projectId);
+      const response = await getSectionByProjectId(projectId);
       setSectionList(response);
       setIsAddSectionOpen(false);
       formik.resetForm();
@@ -37,7 +40,7 @@ export default function Sidebar() {
 
   const getCurrentProject = async () => {
     try {
-      const response = await getProjectById(id);
+      const response = await getProjectById(projectId);
       setProject(response);
     } catch (error) {
       console.log(error);
@@ -46,7 +49,7 @@ export default function Sidebar() {
 
   const getProjectSections = async () => {
     try {
-      const response = await getSectionByProjectId(id);
+      const response = await getSectionByProjectId(projectId);
       setSectionList(response);
     } catch (error) {
       console.log(error);
@@ -56,7 +59,7 @@ export default function Sidebar() {
   useEffect(() => {
     getCurrentProject();
     getProjectSections();
-  }, [id]);
+  }, [projectId]);
 
   // useEffect(() => {
   //   if (sectionList != undefined && sectionList.length > 0) {
@@ -71,9 +74,9 @@ export default function Sidebar() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isEnterKeyPressed, setIsEnterKeyPressed] = useState(false);
 
-  useEffect(() => {
-    if (isAddSectionOpen && inputRef.current) inputRef.current.focus();
-  }, [isAddSectionOpen]);
+  // useEffect(() => {
+  //   if (isAddSectionOpen && inputRef.current) inputRef.current.focus();
+  // }, [isAddSectionOpen]);
 
   const handleInputBlur = async () => {
     if (!isEnterKeyPressed) {
@@ -144,11 +147,12 @@ export default function Sidebar() {
                   setSectionList={setSectionList}
                   handleInputBlur={handleInputBlur}
                   handleInputKeyPress={handleInputKeyPress}
+                  isViewer={isViewer}
                 />
               ))}
         </div>
         {/* Add new section input */}
-        {isAddSectionOpen && formik.values.parentId == null && (
+        {isAddSectionOpen && formik.values.parentId == null && !isViewer && (
           <CreateSectionInput
             isAddSectionOpen={isAddSectionOpen}
             formik={formik}
@@ -158,20 +162,22 @@ export default function Sidebar() {
           />
         )}
         {/* Add section button */}
-        <div
-          onClick={() => setIsAddSectionOpen(true)}
-          className='pl-3 pr-2 py-1 flex items-center space-x-3 cursor-pointer hover:bg-[#EBEBEA] rounded'
-        >
-          <div>
-            <Image
-              src='/assets/plus.png'
-              alt='arrow icon'
-              height={12}
-              width={12}
-            />
+        {!isViewer && (
+          <div
+            onClick={() => setIsAddSectionOpen(true)}
+            className='pl-3 pr-2 py-1 flex items-center space-x-3 cursor-pointer hover:bg-[#EBEBEA] rounded'
+          >
+            <div>
+              <Image
+                src='/assets/plus.png'
+                alt='arrow icon'
+                height={12}
+                width={12}
+              />
+            </div>
+            <p className='text-sm text-[#3E4248] font-medium'>Add section</p>
           </div>
-          <p className='text-sm text-[#3E4248] font-medium'>Add section</p>
-        </div>
+        )}
       </div>
     </div>
   );
