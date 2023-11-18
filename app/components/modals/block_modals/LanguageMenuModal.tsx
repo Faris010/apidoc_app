@@ -20,7 +20,7 @@ const LanguageMenuModal = forwardRef<HTMLDivElement, Props>(
               setSelectedLanguageName(lang.name);
               setIsLanguageMenuOpen();
             }}
-            className='px-1 rounded text-sm text-[#3E4248] hover:bg-[#EBEBEA]'
+            className='px-1 rounded text-sm text-[#3E4248] cursor-pointer hover:bg-[#EBEBEA]'
           >
             {lang.name}
           </div>
