@@ -29,6 +29,7 @@ public class BlockController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     [Route("sectionId/{sectionId:guid}")]
     [ProducesResponseType(typeof(GetBlockDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
@@ -38,6 +39,7 @@ public class BlockController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     [Route("{id:guid}")]
     [ProducesResponseType(typeof(GetBlockDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]

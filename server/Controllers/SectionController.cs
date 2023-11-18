@@ -30,6 +30,7 @@ public class SectionController : ControllerBase
 
     [HttpGet]
     [Route("{id:guid}")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(GetSectionDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<GetSectionDto>> GetById(Guid id)
@@ -40,6 +41,7 @@ public class SectionController : ControllerBase
 
     [HttpGet]
     [Route("projectId/{projectId:guid}")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(List<GetSectionDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<List<GetSectionDto>>> GetByProjectId(Guid projectId)

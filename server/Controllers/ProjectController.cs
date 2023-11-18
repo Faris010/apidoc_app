@@ -31,6 +31,7 @@ namespace server.Controllers
 
         [HttpGet]
         [Route("{id:guid}")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ApiResponse<GetProjectDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<GetProjectDto>> GetById(Guid id)
