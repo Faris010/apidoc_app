@@ -10,7 +10,7 @@ export async function addBlock(block: TBLock, sectionId: string) {
   await api.post(`/api/block/${sectionId}`, block);
 }
 
-export async function editBlock(block: TBLock) {
+export async function editBlock(block: TBLock[]) {
   await api.put('/api/block/', block);
 }
 

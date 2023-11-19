@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { getProjectById } from '@/services/project';
 import { TProject, TSection } from '@/types/types';
 import SectionItem from '../section/SectionItem';
@@ -18,6 +18,8 @@ interface Props {
 
 export default function Sidebar({ projectId, isViewer }: Props) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const sectionQuery = searchParams.get('section');
 
   const [project, setProject] = useState<TProject>();
   const [isAddSectionOpen, setIsAddSectionOpen] = useState(false);
@@ -61,22 +63,18 @@ export default function Sidebar({ projectId, isViewer }: Props) {
     getProjectSections();
   }, [projectId]);
 
-  // useEffect(() => {
-  //   if (sectionList != undefined && sectionList.length > 0) {
-  //     router.push(
-  //       `?section=${GenerateSlug(sectionList[0]?.name)}&sectionId=${
-  //         sectionList[0]?.id
-  //       }`
-  //     );
-  //   }
-  // }, [sectionList]);
+  useEffect(() => {
+    if (!sectionQuery && sectionList?.length) {
+      const firstSection = sectionList[0];
+      if (firstSection) {
+        const { name, id } = firstSection;
+        const sectionSlug = GenerateSlug(name);
+        router.replace(`?section=${sectionSlug}&sectionId=${id}`);
+      }
+    }
+  }, [sectionList, sectionQuery]);
 
-  const inputRef = useRef<HTMLInputElement>(null);
   const [isEnterKeyPressed, setIsEnterKeyPressed] = useState(false);
-
-  // useEffect(() => {
-  //   if (isAddSectionOpen && inputRef.current) inputRef.current.focus();
-  // }, [isAddSectionOpen]);
 
   const handleInputBlur = async () => {
     if (!isEnterKeyPressed) {
@@ -112,6 +110,20 @@ export default function Sidebar({ projectId, isViewer }: Props) {
         <p className='truncate font-semibold'>{project?.projectName}</p>
       </div>
 
+      <div
+        onClick={() => router.push('/')}
+        className='w-full px-4 py-1 flex items-center space-x-2 hover:bg-[#EBEBEA] cursor-pointer rounded'
+      >
+        <Image
+          src='/assets/home.png'
+          alt='home icon'
+          width={16}
+          height={16}
+          style={{ width: 'auto', height: 'auto' }}
+        />
+        <p className='text-sm text-[#3E4248] font-medium'>Home page</p>
+      </div>
+
       {/* Search bar */}
       <div className='mx-2 px-2.5 py-1 flex items-center space-x-2 bg-[#EBEBEA] rounded'>
         <div>
@@ -129,7 +141,7 @@ export default function Sidebar({ projectId, isViewer }: Props) {
         />
       </div>
       {/* Section list */}
-      <div className='pt-2'>
+      <div>
         <div>
           {sectionList &&
             sectionList?.length > 0 &&

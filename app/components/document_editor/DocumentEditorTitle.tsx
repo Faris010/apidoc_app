@@ -41,7 +41,6 @@ export default function DocumentEditorTitle({ section }: Props) {
   useEffect(() => {
     if (debouncedValue != '' && debouncedValue != section?.title) {
       updateTitle(debouncedValue);
-      console.log(debouncedValue);
     }
   }, [debouncedValue]);
 

@@ -34,14 +34,13 @@ const ParagraphBlockEditor = ({ block, blockList, setBlockList }: Props) => {
   const debouncedValue = useDebounce(paragraphBlockValue, 2000);
 
   const updateParagraph = async (updatedContent: string) => {
-    const updatedBlock = { ...block, content: updatedContent };
+    const updatedBlock = [{ ...block, content: updatedContent }];
     await editBlock(updatedBlock);
   };
 
   useEffect(() => {
     if (debouncedValue != null && debouncedValue != block?.content) {
       updateParagraph(debouncedValue);
-      console.log('Update');
     }
   }, [debouncedValue]);
 
