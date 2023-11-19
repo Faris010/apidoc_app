@@ -32,7 +32,7 @@ const CodeBlockEditor = ({ block, blockList, setBlockList }: Props) => {
   const debouncedValue = useDebounce(codeBlockValue, 1500);
 
   const updateCode = async (updatedContent: string) => {
-    const updatedBlock = { ...block, content: updatedContent };
+    const updatedBlock = [{ ...block, content: updatedContent }];
     await editBlock(updatedBlock);
   };
 

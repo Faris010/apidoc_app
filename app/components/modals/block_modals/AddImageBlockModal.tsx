@@ -27,14 +27,14 @@ const AddImageBlockModal = ({ block, blockList, setBlockList }: Props) => {
     if (fileRef.current?.files) {
       const file: File = fileRef.current.files[0];
       const imageUrl = await UploadImageToStorage(file);
-      const updatedBlock = { ...block, image: imageUrl };
+      const updatedBlock = [{ ...block, image: imageUrl }];
       await editBlock(updatedBlock);
       const updatedBlockIndex = blockList.findIndex(
-        (block) => block.id === updatedBlock.id
+        (block) => block.id === updatedBlock[0].id
       );
       if (updatedBlockIndex !== -1) {
         const updatedBlocks = [...blockList];
-        updatedBlocks[updatedBlockIndex] = updatedBlock;
+        updatedBlocks[updatedBlockIndex] = updatedBlock[0];
         setBlockList(updatedBlocks);
       }
     }
