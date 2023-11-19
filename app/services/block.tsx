@@ -3,7 +3,7 @@ import api from '@/utils/api';
 
 export async function getSectionBlocks(sectionId: string) {
   const response = await api.get(`/api/block/sectionId/${sectionId}`);
-  return response;
+  return response.data;
 }
 
 export async function addBlock(block: TBLock, sectionId: string) {

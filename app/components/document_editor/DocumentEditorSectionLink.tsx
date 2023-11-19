@@ -13,12 +13,13 @@ export default function DocumentEditorSectionLink({ sectionId }: Props) {
 
   const getSectionLink = async (sectionId: string | null) => {
     if (sectionId) {
-      const res = await getSectionById(sectionId);
-      setSectionLink((prev) => [res, ...prev]);
-      if (res.parentId == null) {
+      const response = await getSectionById(sectionId);
+      const { payload } = response;
+      setSectionLink((prev) => [payload, ...prev]);
+      if (payload.parentId == null) {
         return;
       } else {
-        getSectionLink(res.parentId);
+        getSectionLink(payload.parentId);
       }
     }
   };

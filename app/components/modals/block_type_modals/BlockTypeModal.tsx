@@ -38,7 +38,7 @@ export default function BlockTypeModal({
 
     await addBlock(newBlock, sectionId);
     const response = await getSectionBlocks(sectionId);
-    setBlockList(response.data);
+    setBlockList(response.payload);
     setIsBlockTypeModalOpen(false);
   };
 

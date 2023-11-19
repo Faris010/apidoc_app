@@ -12,7 +12,7 @@ export async function getSectionByProjectId(projectId: string) {
 
 export async function getSectionById(id: string | null) {
   const response = await api.get(`/api/section/${id}`);
-  return response.data.payload;
+  return response.data;
 }
 
 export async function deleteSection(id: string) {

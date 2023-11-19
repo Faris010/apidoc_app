@@ -42,9 +42,11 @@ export default function ProjectFormCreate({
           values.logo = imageUrl;
         }
         await addNewProject(values);
-        const allProjects = await getAllProjects();
-        setProjects(allProjects.data);
-        setIsProjectFormOpen();
+        const response = await getAllProjects();
+        if (response.success) {
+          setProjects(response.payload);
+          setIsProjectFormOpen();
+        }
       } catch (error) {
         setStatus('Something went wrong');
       }
