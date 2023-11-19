@@ -41,13 +41,24 @@ public class ProjectService : IProjectService
         }
     }
 
-    public async Task<List<GetProjectDto>> GetAllProjects()
+    public async Task<ApiResponse<List<GetProjectDto>>> GetAllProjects()
     {
-        return await _context.Projects
-        .Include(project => project.Sections)
-        .Select(project => project.Adapt<GetProjectDto>())
-        .ToListAsync();
+        var projects = await _context.Projects
+            .Include(project => project.Sections)
+            .ToListAsync();
+
+        var projectDtos = projects
+            .Select(project => project.Adapt<GetProjectDto>())
+            .ToList();
+
+        return new ApiResponse<List<GetProjectDto>>()
+        {
+            Success = true,
+            Payload = projectDtos,
+            ErrorCode = null
+        };
     }
+
 
     public async Task<ApiResponse<GetProjectDto>> GetProjectById(Guid id)
     {
@@ -83,4 +94,27 @@ public class ProjectService : IProjectService
         await _context.SaveChangesAsync();
     }
 
+    public async Task<ApiResponse<List<GetProjectDto>>> SearchProjects(string searchTerm, int pageNumber)
+    {
+        const int pageSize = 5;
+
+        var filteredProjectsQuery = _context.Projects
+            .Where(p => p.ProjectName.Contains(searchTerm))
+            .OrderBy(p => p.ProjectName)
+            .Select(p => p.Adapt<GetProjectDto>());
+
+        var totalItems = await filteredProjectsQuery.CountAsync();
+
+        var paginatedProjects = await filteredProjectsQuery
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new ApiResponse<List<GetProjectDto>>()
+        {
+            Success = true,
+            Payload = paginatedProjects,
+            ErrorCode = null
+        };
+    }
 }

@@ -47,16 +47,6 @@ public class SectionService : ISectionService
             .Include(section => section.Blocks)
             .FirstOrDefaultAsync(section => section.Id == id);
 
-        if (dbSection == null)
-        {
-            return new ApiResponse<GetSectionDto>()
-            {
-                Success = false,
-                ErrorCode = "Bad Request",
-                Payload = null
-            };
-        }
-
         var section = dbSection.Adapt<GetSectionDto>();
         return new ApiResponse<GetSectionDto>()
         {
@@ -67,12 +57,23 @@ public class SectionService : ISectionService
     }
 
 
-    public async Task<List<GetSectionDto>> GetSectionByProjectId(Guid projectId)
+    public async Task<ApiResponse<List<GetSectionDto>>> GetSectionByProjectId(Guid projectId)
     {
-        return await _context.Sections
-        .Where(s => s.ProjectId == projectId).Include(section => section.Blocks).Select(section =>
-        section.Adapt<GetSectionDto>())
-        .ToListAsync();
+        var sections = await _context.Sections
+            .Where(s => s.ProjectId == projectId)
+            .Include(section => section.Blocks)
+            .ToListAsync();
+
+        var sectionDtos = sections
+            .Select(section => section.Adapt<GetSectionDto>())
+            .ToList();
+
+        return new ApiResponse<List<GetSectionDto>>()
+        {
+            Success = true,
+            Payload = sectionDtos,
+            ErrorCode = null
+        };
     }
 
     public async Task UpdateSection(UpdateSectionDto updatedSection)

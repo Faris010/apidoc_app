@@ -3,13 +3,14 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using server.Dtos.BlockDtos;
+using server.Response;
 using server.Services.BlockService;
 
 namespace server.Controllers;
 
 [Route("api/block/")]
 [ApiController]
-[Authorize]
+//[Authorize]
 [EnableCors("AllowSpecificOrigin")]
 public class BlockController : ControllerBase
 {
@@ -23,7 +24,7 @@ public class BlockController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(List<GetBlockDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
-    public async Task<ActionResult<List<GetBlockDto>>> GetAll()
+    public async Task<ActionResult<ApiResponse<List<GetBlockDto>>>> GetAll()
     {
         return await _blockService.GetAllBlocks();
     }
@@ -33,7 +34,7 @@ public class BlockController : ControllerBase
     [Route("sectionId/{sectionId:guid}")]
     [ProducesResponseType(typeof(GetBlockDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
-    public async Task<ActionResult<List<GetBlockDto>>> GetBySectionId(Guid sectionId)
+    public async Task<ActionResult<ApiResponse<List<GetBlockDto>>>> GetBySectionId(Guid sectionId)
     {
         return await _blockService.GetAllBlocksBySectionId(sectionId);
     }
@@ -43,7 +44,7 @@ public class BlockController : ControllerBase
     [Route("{id:guid}")]
     [ProducesResponseType(typeof(GetBlockDto), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
-    public async Task<ActionResult<GetBlockDto>> GetById(Guid id)
+    public async Task<ActionResult<ApiResponse<GetBlockDto>>> GetById(Guid id)
     {
         var payload = await _blockService.GetBlockById(id);
         return payload.Success ? Ok(payload) : BadRequest(payload);
@@ -69,18 +70,13 @@ public class BlockController : ControllerBase
         await _blockService.UpdateBlock(updateBlock);
     }
 
-    [HttpGet("search/{projectId:guid}")]
+    [HttpGet("search/{projectId:guid}/{pageNumber:int}")]
     [ProducesResponseType(typeof(List<GetBlockDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
-    public async Task<ActionResult<List<GetBlockDto>>> SearchBlocks([FromQuery] string searchTerm, Guid projectId)
+    public async Task<ActionResult<ApiResponse<List<GetBlockDto>>>> SearchBlocks([FromQuery] string searchTerm, Guid projectId, int pageNumber = 1)
     {
-        var blocks = await _blockService.SearchBlocks(searchTerm, projectId);
 
-        if (blocks == null || blocks.Count == 0)
-        {
-            return NotFound();
-        }
-
+        var blocks = await _blockService.SearchBlocks(searchTerm, projectId, pageNumber);
         return blocks;
     }
 }

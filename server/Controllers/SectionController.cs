@@ -37,7 +37,7 @@ public class SectionController : ControllerBase
     [AllowAnonymous]
     [ProducesResponseType(typeof(List<GetSectionDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
-    public async Task<ActionResult<List<GetSectionDto>>> GetByProjectId(Guid projectId)
+    public async Task<ActionResult<ApiResponse<List<GetSectionDto>>>> GetByProjectId(Guid projectId)
     {
         return await _sectionService.GetSectionByProjectId(projectId);
     }

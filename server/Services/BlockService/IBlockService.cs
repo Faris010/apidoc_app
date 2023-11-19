@@ -5,11 +5,11 @@ namespace server.Services.BlockService;
 
 public interface IBlockService
 {
-    Task<List<GetBlockDto>> GetAllBlocks();
+    Task<ApiResponse<List<GetBlockDto>>> GetAllBlocks();
     Task<ApiResponse<GetBlockDto>> GetBlockById(Guid id);
-    Task<List<GetBlockDto>> GetAllBlocksBySectionId(Guid sectionId);
+    Task<ApiResponse<List<GetBlockDto>>> GetAllBlocksBySectionId(Guid sectionId);
     Task AddBlock(AddBlockDto newBlock, Guid sectionId);
     Task UpdateBlock(List<UpdateBlockDto> updatedBlock);
     Task DeleteBlock(Guid id);
-    Task<List<GetBlockDto>> SearchBlocks(string searchTerm, Guid projectId);
+    Task<ApiResponse<List<GetBlockDto>>> SearchBlocks(string searchTerm, Guid projectId, int pageNumber);
 }

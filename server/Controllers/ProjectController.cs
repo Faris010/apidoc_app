@@ -10,7 +10,7 @@ namespace server.Controllers
 {
     [Route("api/projects/")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [EnableCors("AllowSpecificOrigin")]
     public class ProjectController : ControllerBase
     {
@@ -24,7 +24,7 @@ namespace server.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(List<GetProjectDto>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<List<GetProjectDto>>> GetAll()
+        public async Task<ActionResult<ApiResponse<List<GetProjectDto>>>> GetAll()
         {
             return await _projectService.GetAllProjects();
         }
@@ -57,6 +57,16 @@ namespace server.Controllers
         public async Task UpdateProject(UpdateProjectDto updatedProject)
         {
             await _projectService.UpdateProject(updatedProject);
+        }
+
+        [HttpGet("search/{pageNumber:int}")]
+        [ProducesResponseType(typeof(List<GetProjectDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<ApiResponse<List<GetProjectDto>>>> SearchBlocks([FromQuery] string searchTerm, int pageNumber = 1)
+        {
+
+            var projects = await _projectService.SearchProjects(searchTerm, pageNumber);
+            return projects;
         }
 
     }

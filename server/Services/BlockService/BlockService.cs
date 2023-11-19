@@ -16,11 +16,21 @@ public class BlockService : IBlockService
         _context = context;
     }
 
-     public async Task<List<GetBlockDto>> GetAllBlocks()
+    public async Task<ApiResponse<List<GetBlockDto>>> GetAllBlocks()
     {
         var blocks = await _context.Blocks.Include(block => block.BlockTypes).ToListAsync();
-        return blocks.Select(block => block.Adapt<GetBlockDto>())
-                .OrderBy(b => b.SortOrder).ToList();
+
+        var blockDtos = blocks
+            .Select(block => block.Adapt<GetBlockDto>())
+            .OrderBy(b => b.SortOrder)
+            .ToList();
+
+        return new ApiResponse<List<GetBlockDto>>()
+        {
+            Success = true,
+            Payload = blockDtos,
+            ErrorCode = null
+        };
     }
 
     public async Task AddBlock(AddBlockDto newBlock, Guid sectionId)
@@ -48,11 +58,24 @@ public class BlockService : IBlockService
         }
     }
 
-    public async Task<List<GetBlockDto>> GetAllBlocksBySectionId(Guid sectionId)
+    public async Task<ApiResponse<List<GetBlockDto>>> GetAllBlocksBySectionId(Guid sectionId)
     {
-        var blocks = await _context.Blocks.Where(b => b.SectionId == sectionId).Include(block => block.BlockTypes).ToListAsync();
-        return blocks.Select(block => block.Adapt<GetBlockDto>())
-                .OrderBy(b => b.SortOrder).ToList();
+        var blocks = await _context.Blocks
+        .Where(b => b.SectionId == sectionId)
+        .Include(block => block.BlockTypes)
+        .ToListAsync();
+
+        var blockDtos = blocks
+            .Select(block => block.Adapt<GetBlockDto>())
+            .OrderBy(b => b.SortOrder)
+            .ToList();
+
+        return new ApiResponse<List<GetBlockDto>>()
+        {
+            Success = true,
+            Payload = blockDtos,
+            ErrorCode = null
+        };
     }
 
     public async Task<ApiResponse<GetBlockDto>> GetBlockById(Guid id)
@@ -63,16 +86,6 @@ public class BlockService : IBlockService
             .Include(block => block.BlockTypes)
             .FirstOrDefaultAsync();
 
-        if (dbBlock == null)
-        {
-            return new ApiResponse<GetBlockDto>()
-            {
-                Success = false,
-                ErrorCode = "Bad Request",
-                Payload = null
-            };
-        }
-
         var block = dbBlock.Adapt<GetBlockDto>();
         return new ApiResponse<GetBlockDto>()
         {
@@ -82,34 +95,47 @@ public class BlockService : IBlockService
         };
     }
 
-    public async Task<List<GetBlockDto>> SearchBlocks(string searchTerm, Guid projectId)
+    public async Task<ApiResponse<List<GetBlockDto>>> SearchBlocks(string searchTerm, Guid projectId, int pageNumber)
     {
+        const int pageSize = 5;
+
         var sectionIds = await _context.Sections
-            .Where(s => s.ProjectId == projectId) 
+            .Where(s => s.ProjectId == projectId)
             .Select(s => s.Id)
             .ToListAsync();
 
-        var blocks = await _context.Blocks
+        var blocksQuery = _context.Blocks
             .Where(b => sectionIds.Contains(b.SectionId))
-            .Include(block => block.BlockTypes)
-            .ToListAsync();
+            .Include(block => block.BlockTypes);
 
-        var filteredBlocks = blocks
+        var filteredBlocksQuery = blocksQuery
             .Where(b => b.Content.Contains(searchTerm))
             .OrderBy(b => b.SortOrder)
-            .Select(b => b.Adapt<GetBlockDto>())
-            .ToList();
+            .Select(b => b.Adapt<GetBlockDto>());
 
-        return filteredBlocks;
+        var totalItems = await filteredBlocksQuery.CountAsync();
+
+        var paginatedBlocks = await filteredBlocksQuery
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        return new ApiResponse<List<GetBlockDto>>()
+        {
+            Success = true,
+            Payload = paginatedBlocks,
+            ErrorCode = null
+        };
     }
+
 
 
     public async Task UpdateBlock(List<UpdateBlockDto> updatedBlocks)
     {
-        foreach(UpdateBlockDto updatedBlock in updatedBlocks)
+        foreach (UpdateBlockDto updatedBlock in updatedBlocks)
         {
-        var block = updatedBlock.Adapt<Block>();
-         _context.Update(block);
+            var block = updatedBlock.Adapt<Block>();
+            _context.Update(block);
         }
         await _context.SaveChangesAsync();
     }
