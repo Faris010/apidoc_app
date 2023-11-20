@@ -55,9 +55,11 @@ export default function ProjectCard({
           <div className='relative h-28 flex justify-center items-center'>
             <Image
               src={project.logo || '/assets/placeholder.png'}
-              alt='company logo'
-              fill
-              className='drop-shadow-lg'
+              alt='project logo'
+              width={0}
+              height={0}
+              sizes='100vw'
+              style={{ width: 'auto', height: '100%' }}
             />
           </div>
           <p className='text-center truncate font-semibold'>
