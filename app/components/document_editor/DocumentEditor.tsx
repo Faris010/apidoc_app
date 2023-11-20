@@ -1,17 +1,18 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import Image from 'next/image';
 import { getSectionById } from '@/services/section';
 import { TBLock, TSection } from '@/types/types';
 import { useRouter, useSearchParams } from 'next/navigation';
 import BlockTypeModal from '../modals/block_type_modals/BlockTypeModal';
-import { getSectionBlocks } from '@/services/block';
+import { editBlock, getSectionBlocks } from '@/services/block';
 import DocumentEditorTitle from './DocumentEditorTitle';
 import { getHighestSortOrderNumber } from '@/utils/GetHighestSortOrderNumber';
 import DocumentEditorSectionLink from './DocumentEditorSectionLink';
 import RenderBlockComponent from '../block/BlockRenderer/RenderBlockComponent';
 import DocumentViewerTitle from '../document_viewer/DocumentViewerTitle';
+import handleSortOrderUpdate from '@/utils/HandleOnDrop';
 
 interface Props {
   projectId: string;
@@ -29,6 +30,9 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
     useState<boolean>(false);
   const [blockList, setBlockList] = useState<TBLock[]>([]);
   const highestSortOrder = getHighestSortOrderNumber(blockList);
+  const memoizedBlocks = useMemo(() => blockList, [blockList]);
+
+  const [targetedBlockId, setTargetedBlockId] = useState<string>('');
 
   const [section, setSection] = useState<TSection>({
     name: '',
@@ -78,6 +82,33 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
     }
   };
 
+  const handleOnDragStart = (e: React.DragEvent, blockId: string) => {
+    if (!isViewer) {
+      e.dataTransfer.setData('blockId', blockId);
+    }
+  };
+
+  const handleOnDragOver = (e: React.DragEvent, blockId: string) => {
+    e.preventDefault();
+    if (blockId !== targetedBlockId) {
+      setTargetedBlockId(blockId);
+    }
+  };
+
+  const handleOnDrop = async (e: React.DragEvent, targetedBlockId: string) => {
+    const block = e.dataTransfer.getData('blockId');
+    const response = await handleSortOrderUpdate(
+      blockList,
+      block,
+      targetedBlockId
+    );
+    if (response.success) {
+      await editBlock(response.updatedBlockList!);
+      setBlockList(response.updatedBlockList!);
+    }
+    setTargetedBlockId('');
+  };
+
   return (
     <div className='w-4/5 bg-white'>
       <div className='w-full p-3 flex items-center justify-between border-b-[1px] border-[#E1E1E1]'>
@@ -98,7 +129,7 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
       <div className='w-full px-3 pt-20 pb-56 flex justify-center overflow-hidden'>
         <div className='w-2/3  flex-col'>
           {/* Document title */}
-          {section.title !== '' &&
+          {section?.title !== '' &&
             (!isViewer ? (
               <DocumentEditorTitle section={section} />
             ) : (
@@ -106,45 +137,63 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
             ))}
 
           {/* Document body */}
-          <div className='space-y-6'>
+          <div>
             {sectionId ? (
               <>
-                {blockList.map((block) => (
-                  <div key={block.id} className='h-full flex items-start group'>
+                {memoizedBlocks.map((block) => (
+                  <div key={block.id} className='w-full'>
+                    <div
+                      draggable={!isViewer}
+                      onDrop={(e) => handleOnDrop(e, block.id!)}
+                      onDragOver={(e) => handleOnDragOver(e, block.id!)}
+                      className='h-full py-2 flex items-start group'
+                    >
+                      {!isViewer && (
+                        <div className='hidden pr-2 group-hover:flex items-center group-hover:-ml-12'>
+                          <div
+                            onClick={() => setIsBlockTypeModalOpen(true)}
+                            className='p-0.5 hover:bg-[#EBEBEA] rounded'
+                          >
+                            <Image
+                              src='/assets/add.png'
+                              alt='add icon'
+                              height={16}
+                              width={16}
+                              className='cursor-pointer'
+                            />
+                          </div>
+                          <div
+                            onDragStart={(e) => handleOnDragStart(e, block.id!)}
+                            className='p-0.5 hover:bg-[#EBEBEA] rounded'
+                          >
+                            <Image
+                              src='/assets/drag.png'
+                              alt='add icon'
+                              height={16}
+                              width={16}
+                              className='cursor-grab'
+                            />
+                          </div>
+                        </div>
+                      )}
+                      {/* Render block based on block type id */}
+                      <RenderBlockComponent
+                        block={block}
+                        blockList={blockList}
+                        setBlockList={setBlockList}
+                        isViewer={isViewer}
+                      />
+                    </div>
                     {!isViewer && (
-                      <div className='hidden pr-2 group-hover:flex items-center group-hover:-ml-12'>
-                        <div
-                          onClick={() => setIsBlockTypeModalOpen(true)}
-                          className='p-0.5 hover:bg-[#EBEBEA] rounded'
-                        >
-                          <Image
-                            src='/assets/add.png'
-                            alt='add icon'
-                            height={16}
-                            width={16}
-                            className='cursor-pointer'
-                          />
-                        </div>
-                        <div className='p-0.5 hover:bg-[#EBEBEA] rounded'>
-                          <Image
-                            src='/assets/drag.png'
-                            alt='add icon'
-                            height={16}
-                            width={16}
-                            className='cursor-grab'
-                          />
-                        </div>
-                      </div>
+                      <div
+                        className={`w-full h-1 bg-blue-300 opacity-0 ${
+                          targetedBlockId == block.id && 'opacity-100'
+                        }`}
+                      ></div>
                     )}
-                    {/* Render block based on block type id */}
-                    <RenderBlockComponent
-                      block={block}
-                      blockList={blockList}
-                      setBlockList={setBlockList}
-                      isViewer={isViewer}
-                    />
                   </div>
                 ))}
+
                 {/* New block placeholder */}
                 {!isViewer && (
                   <div>
