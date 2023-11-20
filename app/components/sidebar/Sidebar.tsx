@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { getProjectById } from '@/services/project';
 import { TProject, TSection } from '@/types/types';
 import SectionItem from '../section/SectionItem';
@@ -18,6 +18,7 @@ interface Props {
 
 export default function Sidebar({ projectId, isViewer }: Props) {
   const router = useRouter();
+  const pathaname = usePathname();
   const searchParams = useSearchParams();
   const sectionQuery = searchParams.get('section');
 
@@ -64,13 +65,21 @@ export default function Sidebar({ projectId, isViewer }: Props) {
   }, [projectId]);
 
   useEffect(() => {
-    if (!sectionQuery && sectionList?.length) {
-      const firstSection = sectionList[0];
+    if (!sectionQuery && (sectionList ?? []).length > 0) {
+      let firstSection: TSection | null = null;
+
+      if (sectionList) {
+        firstSection = sectionList[0];
+      }
+
       if (firstSection) {
         const { name, id } = firstSection;
         const sectionSlug = GenerateSlug(name);
         router.replace(`?section=${sectionSlug}&sectionId=${id}`);
       }
+    }
+    if (sectionQuery && sectionList?.length == 0) {
+      router.replace(pathaname);
     }
   }, [sectionList, sectionQuery]);
 
@@ -93,6 +102,8 @@ export default function Sidebar({ projectId, isViewer }: Props) {
       //Open created section, add to route query section details
     }
   };
+
+  const memoizedSections = useMemo(() => sectionList, [sectionList]);
 
   return (
     <div className='w-1/5 max-sm:w-2/3 p-1 space-y-4 bg-[#FBFBFA] border-r-[2px] border-[#E1E1E1] '>
@@ -143,16 +154,16 @@ export default function Sidebar({ projectId, isViewer }: Props) {
       {/* Section list */}
       <div>
         <div>
-          {sectionList &&
-            sectionList?.length > 0 &&
-            sectionList
+          {memoizedSections &&
+            memoizedSections?.length > 0 &&
+            memoizedSections
               .filter((s) => s.id != null)
               .map((section: TSection) => (
                 <SectionItem
                   key={section.id}
                   section={section}
                   formik={formik}
-                  sectionList={sectionList}
+                  sectionList={memoizedSections}
                   depth={1}
                   setIsAddSectionOpen={setIsAddSectionOpen}
                   isAddSectionOpen={isAddSectionOpen}
