@@ -1,25 +1,33 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
 import Image from 'next/image';
+import { TBLock } from '@/types/types';
+import { languageArray } from '@/const/LanguageList';
 
 interface Props {
-  blockContent: string | null;
+  block: TBLock;
 }
 
-const CodeBlockViewer = ({ blockContent }: Props) => {
+const CodeBlockViewer = ({ block }: Props) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [languageName, setLanguageName] = useState<string>('');
 
   const handleCopyToClipboard = () => {
-    if (blockContent) {
-      navigator.clipboard.writeText(blockContent);
+    if (block.content) {
+      navigator.clipboard.writeText(block.content);
       setIsPopupVisible(true);
       setTimeout(() => {
         setIsPopupVisible(false);
       }, 2000);
     }
   };
+
+  useEffect(() => {
+    const language = languageArray.find((lang) => lang.label == block.language);
+    setLanguageName(language?.name!);
+  }, []);
 
   return (
     <>
@@ -28,7 +36,7 @@ const CodeBlockViewer = ({ blockContent }: Props) => {
         className='w-full overflow-hidden rounded bg-[#F6F8FA]'
       >
         <div className='p-1 flex justify-between'>
-          <p className='p-1 text-xs text-[#3E4248]'>JavaScript</p>
+          <p className='p-1 text-xs text-[#3E4248]'>{languageName}</p>
           <div
             className='p-1 cursor-pointer rounded hover:bg-[#EBEBEA]'
             onClick={handleCopyToClipboard}
@@ -44,8 +52,8 @@ const CodeBlockViewer = ({ blockContent }: Props) => {
         </div>
         <CodeEditor
           disabled
-          value={blockContent || ''}
-          language='js'
+          value={block.content || ''}
+          language={block.language}
           placeholder='Please enter code.'
           padding={15}
           style={{
