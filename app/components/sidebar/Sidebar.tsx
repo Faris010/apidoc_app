@@ -121,19 +121,21 @@ export default function Sidebar({ projectId, isViewer }: Props) {
         <p className='truncate font-semibold'>{project?.projectName}</p>
       </div>
 
-      <div
-        onClick={() => router.push('/')}
-        className='w-full px-4 py-1 flex items-center space-x-2 hover:bg-[#EBEBEA] cursor-pointer rounded'
-      >
-        <Image
-          src='/assets/home.png'
-          alt='home icon'
-          width={16}
-          height={16}
-          style={{ width: 'auto', height: 'auto' }}
-        />
-        <p className='text-sm text-[#3E4248] font-medium'>Home page</p>
-      </div>
+      {!isViewer && (
+        <div
+          onClick={() => router.push('/')}
+          className='w-full px-4 py-1 flex items-center space-x-2 hover:bg-[#EBEBEA] cursor-pointer rounded'
+        >
+          <Image
+            src='/assets/home.png'
+            alt='home icon'
+            width={16}
+            height={16}
+            style={{ width: 'auto', height: 'auto' }}
+          />
+          <p className='text-sm text-[#3E4248] font-medium'>Home page</p>
+        </div>
+      )}
 
       {/* Search bar */}
       <div className='mx-2 px-2.5 py-1 flex items-center space-x-2 bg-[#EBEBEA] rounded'>
