@@ -35,6 +35,7 @@ export type TBLock = {
   id?: string;
   content?: string | null;
   image?: string | null;
+  language: string;
   sortOrder: number;
   sectionId: string;
   blockTypeId: number;
@@ -51,4 +52,10 @@ export type TFormik = {
   title: string;
   projectId: string;
   parentId: string | null;
+};
+
+export type TLanguage = {
+  id: number;
+  name: string;
+  label: string;
 };
