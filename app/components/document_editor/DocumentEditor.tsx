@@ -38,14 +38,14 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
   const getSection = async () => {
     if (sectionId) {
       const response = await getSectionById(sectionId);
-      setSection(response);
+      setSection(response.payload);
     }
   };
 
   const getBlocksBySectionId = async () => {
     if (sectionId) {
-      const res = await getSectionBlocks(sectionId);
-      setBlockList(res.data);
+      const response = await getSectionBlocks(sectionId);
+      setBlockList(response.payload);
     }
   };
 

@@ -23,8 +23,8 @@ export default function ProjectListing() {
 
   const getProjects = async () => {
     const response = await getAllProjects();
-    if (response.status == 200) {
-      setProjects(response.data);
+    if (response.success) {
+      setProjects(response.payload);
     }
   };
 

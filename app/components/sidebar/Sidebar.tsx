@@ -34,7 +34,7 @@ export default function Sidebar({ projectId, isViewer }: Props) {
     onSubmit: async (values) => {
       await addSection(values, projectId);
       const response = await getSectionByProjectId(projectId);
-      setSectionList(response);
+      setSectionList(response.payload);
       setIsAddSectionOpen(false);
       formik.resetForm();
     },
@@ -43,7 +43,7 @@ export default function Sidebar({ projectId, isViewer }: Props) {
   const getCurrentProject = async () => {
     try {
       const response = await getProjectById(projectId);
-      setProject(response);
+      setProject(response.payload);
     } catch (error) {
       console.log(error);
     }
@@ -52,7 +52,7 @@ export default function Sidebar({ projectId, isViewer }: Props) {
   const getProjectSections = async () => {
     try {
       const response = await getSectionByProjectId(projectId);
-      setSectionList(response);
+      setSectionList(response.payload);
     } catch (error) {
       console.log(error);
     }

@@ -3,7 +3,7 @@ import api from '@/utils/api';
 
 export async function getAllProjects() {
   const response = await api.get('/api/projects/');
-  return response;
+  return response.data;
 }
 
 export async function addNewProject(projectData: TNewProject) {
@@ -21,5 +21,5 @@ export async function deleteProject(id: string) {
 
 export async function getProjectById(id: string) {
   const response = await api.get(`/api/projects/${id}`);
-  return response.data.payload;
+  return response.data;
 }
