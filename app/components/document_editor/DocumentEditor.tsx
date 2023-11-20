@@ -140,7 +140,7 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
           <div>
             {sectionId ? (
               <>
-                {memoizedBlocks.map((block) => (
+                {memoizedBlocks?.map((block) => (
                   <div key={block.id} className='w-full'>
                     <div
                       draggable={!isViewer}
