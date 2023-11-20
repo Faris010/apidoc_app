@@ -42,7 +42,7 @@ export default function DocumentEditorSectionLink({ sectionId }: Props) {
             }}
             key={i}
           >
-            {sec.name}{' '}
+            {sec?.name}{' '}
             {i !== sectionLink.length - 1 && <span>&nbsp;/&nbsp;</span>}
           </Link>
         ))

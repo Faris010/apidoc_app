@@ -43,6 +43,7 @@ const CodeBlockViewer = ({ blockContent }: Props) => {
           </div>
         </div>
         <CodeEditor
+          disabled
           value={blockContent || ''}
           language='js'
           placeholder='Please enter code.'
