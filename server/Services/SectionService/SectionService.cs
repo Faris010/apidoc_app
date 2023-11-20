@@ -32,20 +32,34 @@ public class SectionService : ISectionService
 
     public async Task DeleteSection(Guid id)
     {
-        var section = await _context.Sections.FindAsync(id);
+        var section = await _context.Sections
+            .Include(s => s.Blocks)
+            .FirstOrDefaultAsync(s => s.Id == id);
 
         if (section != null)
         {
+            _context.Blocks.RemoveRange(section.Blocks);
             _context.Sections.Remove(section);
             await _context.SaveChangesAsync();
         }
     }
+
 
     public async Task<ApiResponse<GetSectionDto>> GetSectionById(Guid id)
     {
         var dbSection = await _context.Sections
             .Include(section => section.Blocks)
             .FirstOrDefaultAsync(section => section.Id == id);
+
+        if (dbSection == null)
+        {
+            return new ApiResponse<GetSectionDto>()
+            {
+                Success = false,
+                ErrorCode = "Not Found",
+                Payload = null
+            };
+        }
 
         var section = dbSection.Adapt<GetSectionDto>();
         return new ApiResponse<GetSectionDto>()
@@ -63,6 +77,16 @@ public class SectionService : ISectionService
             .Where(s => s.ProjectId == projectId)
             .Include(section => section.Blocks)
             .ToListAsync();
+
+        if (sections == null || !sections.Any())
+        {
+            return new ApiResponse<List<GetSectionDto>>()
+            {
+                Success = false,
+                ErrorCode = "Not Found",
+                Payload = null
+            };
+        }
 
         var sectionDtos = sections
             .Select(section => section.Adapt<GetSectionDto>())

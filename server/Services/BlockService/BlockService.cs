@@ -65,6 +65,16 @@ public class BlockService : IBlockService
         .Include(block => block.BlockTypes)
         .ToListAsync();
 
+        if (blocks == null || !blocks.Any())
+        {
+            return new ApiResponse<List<GetBlockDto>>()
+            {
+                Success = false,
+                ErrorCode = "Not Found",
+                Payload = null
+            };
+        }
+
         var blockDtos = blocks
             .Select(block => block.Adapt<GetBlockDto>())
             .OrderBy(b => b.SortOrder)
@@ -85,6 +95,16 @@ public class BlockService : IBlockService
             .Where(block => block.Id == id)
             .Include(block => block.BlockTypes)
             .FirstOrDefaultAsync();
+
+        if (dbBlock == null)
+        {
+            return new ApiResponse<GetBlockDto>()
+            {
+                Success = false,
+                ErrorCode = "Not Found",
+                Payload = null
+            };
+        }
 
         var block = dbBlock.Adapt<GetBlockDto>();
         return new ApiResponse<GetBlockDto>()
