@@ -8,8 +8,10 @@ import { useEffect, useState, useMemo } from 'react';
 import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
 import ProjectFormEdit from '../forms/project_form/ProjectFormEdit';
 import { getAllProjects } from '@/services/project';
+import { useRouter } from 'next/navigation';
 
 export default function ProjectListing() {
+  const router = useRouter();
   const [isProjectFormOpen, setIsProjectFormOpen] = useToggle(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useToggle(false);
   const [isProjectFormEditOpen, setIsProjectFormEditOpen] = useToggle(false);
@@ -29,6 +31,13 @@ export default function ProjectListing() {
   };
 
   const memoizedProjects = useMemo(() => projects, [projects]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      router.replace('/login');
+    }
+  }, []);
 
   useEffect(() => {
     getProjects();

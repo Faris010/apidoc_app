@@ -41,6 +41,13 @@ export default function Sidebar({ projectId, isViewer }: Props) {
     },
   });
 
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      router.replace('/login');
+    }
+  }, []);
+
   const getCurrentProject = async () => {
     try {
       const response = await getProjectById(projectId);

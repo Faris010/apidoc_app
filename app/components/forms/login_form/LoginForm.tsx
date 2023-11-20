@@ -4,6 +4,7 @@ import { login } from '@/services/auth';
 import { useFormik } from 'formik';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function LoginForm() {
   const router = useRouter();
@@ -26,6 +27,13 @@ export default function LoginForm() {
       }
     },
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+      router.replace('/');
+    }
+  }, []);
 
   return (
     <form
