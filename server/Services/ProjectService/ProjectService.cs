@@ -5,6 +5,7 @@ using server.Dtos.ProjectDtos;
 using server.Models;
 using server.Response;
 
+
 namespace server.Services.ProjectService;
 
 public class ProjectService : IProjectService
@@ -32,14 +33,31 @@ public class ProjectService : IProjectService
 
     public async Task DeleteProject(Guid id)
     {
-        var project = await _context.Projects.FindAsync(id);
+        var project = await _context.Projects
+            .Include(p => p.Sections)
+            .ThenInclude(s => s.Blocks)
+            .FirstOrDefaultAsync(p => p.Id == id);
 
         if (project != null)
         {
+            if (project.Sections != null)
+            {
+                foreach (var section in project.Sections)
+                {
+                    if (section.Blocks != null)
+                    {
+                        _context.Blocks.RemoveRange(section.Blocks);
+                    }
+                }
+                _context.Sections.RemoveRange(project.Sections);
+            }
+
             _context.Projects.Remove(project);
+
             await _context.SaveChangesAsync();
         }
     }
+
 
     public async Task<ApiResponse<List<GetProjectDto>>> GetAllProjects()
     {
@@ -72,7 +90,7 @@ public class ProjectService : IProjectService
             return new ApiResponse<GetProjectDto>()
             {
                 Success = false,
-                ErrorCode = "Bad Request",
+                ErrorCode = "Not Found",
                 Payload = null
             };
         }
