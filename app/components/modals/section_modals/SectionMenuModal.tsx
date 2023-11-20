@@ -67,12 +67,12 @@ const SectionMenuModal = forwardRef<HTMLDivElement, Props>(
           className='py-1 px-3 flex items-center space-x-2 cursor-pointer hover:bg-[#EBEBEA] rounded'
         >
           <Image
-            src='/assets/delete-grey.png'
+            src='/assets/delete-red.png'
             alt='edit icon'
             height={16}
             width={16}
           />
-          <p className='text-sm'>Delete</p>
+          <p className='text-sm text-red-600'>Delete</p>
         </div>
       </div>
     );
