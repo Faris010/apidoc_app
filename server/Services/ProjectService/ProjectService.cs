@@ -140,34 +140,41 @@ public class ProjectService : IProjectService
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ApiResponse<List<GetProjectDto>>> SearchProjects(string searchTerm, int pageNumber)
+    public async Task<ApiResponse<object>> SearchProjects(string searchTerm, int pageNumber)
     {
         const int pageSize = 8;
 
-        var filteredProjectsQuery = _context.Projects
-            .Where(p => p.ProjectName.Contains(searchTerm))
-            .OrderBy(p => p.ProjectName)
-            .Select(p => p.Adapt<GetProjectDto>());
-
-        var totalItems = await filteredProjectsQuery.CountAsync();
-
-        var paginatedProjects = await filteredProjectsQuery
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
+        var projects = await _context.Projects
+            .Where(p => !p.IsDeleted)
             .ToListAsync();
 
-        return new ApiResponse<List<GetProjectDto>>()
+        var filteredProjects = projects
+            .Where(p => p.ProjectName.IndexOf(searchTerm, StringComparison.OrdinalIgnoreCase) >= 0)
+            .OrderBy(p => p.ProjectName)
+            .Select(p => p.Adapt<GetProjectDto>())
+            .ToList();
+
+        var totalItems = filteredProjects.Count();
+
+        var paginatedProjects = filteredProjects
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        var response = new
+        {
+            paginatedProjects,
+            TotalItems = totalItems
+        };
+
+        return new ApiResponse<object>()
         {
             Success = true,
-            Payload = paginatedProjects,
+            Payload = response,
             ErrorCode = null
         };
     }
-}
 
-internal class PaginationMeta
-{
-    public int TotalItems { get; set; }
-    public int PageNumber { get; set; }
-    public int PageSize { get; set; }
+
+
 }

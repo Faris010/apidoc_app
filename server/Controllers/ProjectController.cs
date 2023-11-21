@@ -69,13 +69,11 @@ namespace server.Controllers
         }
 
         [HttpGet("search/{pageNumber:int}")]
-        [ProducesResponseType(typeof(List<GetProjectDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ApiResponse<object>), (int)HttpStatusCode.OK)] // Adjust the type to ApiResponse<object>
         [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<ApiResponse<List<GetProjectDto>>>> SearchBlocks([FromQuery] string searchTerm, int pageNumber = 1)
+        public async Task<ActionResult<ApiResponse<object>>> SearchProjects([FromQuery] string searchTerm, int pageNumber)
         {
-
-            var projects = await _projectService.SearchProjects(searchTerm, pageNumber);
-            return projects;
+            return await _projectService.SearchProjects(searchTerm, pageNumber);
         }
 
     }
