@@ -77,6 +77,34 @@ public class ProjectService : IProjectService
         };
     }
 
+    public async Task<ApiResponse<List<GetProjectDto>>> GetAllProjectsPagination(int pageNumber)
+    {
+        const int pageSize = 8;
+
+        var totalProjects = await _context.Projects.CountAsync();
+
+        var projects = await _context.Projects
+            .Include(project => project.Sections)
+            .OrderBy(project => project.Id)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+
+        var projectDtos = projects
+            .Select(project => project.Adapt<GetProjectDto>())
+            .ToList();
+
+        var response = new ApiResponse<List<GetProjectDto>>()
+        {
+            Success = true,
+            Payload = projectDtos,
+            ErrorCode = null,
+        };
+
+        return response;
+    }
+
+
 
     public async Task<ApiResponse<GetProjectDto>> GetProjectById(Guid id)
     {
@@ -114,7 +142,7 @@ public class ProjectService : IProjectService
 
     public async Task<ApiResponse<List<GetProjectDto>>> SearchProjects(string searchTerm, int pageNumber)
     {
-        const int pageSize = 5;
+        const int pageSize = 8;
 
         var filteredProjectsQuery = _context.Projects
             .Where(p => p.ProjectName.Contains(searchTerm))
@@ -135,4 +163,11 @@ public class ProjectService : IProjectService
             ErrorCode = null
         };
     }
+}
+
+internal class PaginationMeta
+{
+    public int TotalItems { get; set; }
+    public int PageNumber { get; set; }
+    public int PageSize { get; set; }
 }

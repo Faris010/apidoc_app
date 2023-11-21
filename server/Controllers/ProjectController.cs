@@ -10,7 +10,7 @@ namespace server.Controllers
 {
     [Route("api/projects/")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [EnableCors("AllowSpecificOrigin")]
     public class ProjectController : ControllerBase
     {
@@ -28,6 +28,15 @@ namespace server.Controllers
         {
             return await _projectService.GetAllProjects();
         }
+
+        [HttpGet("{pageNumber}")]
+        [ProducesResponseType(typeof(ApiResponse<List<GetProjectDto>>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<ApiResponse<List<GetProjectDto>>>> GetAll(int pageNumber = 1)
+        {
+            return await _projectService.GetAllProjectsPagination(pageNumber);
+        }
+
 
         [HttpGet]
         [Route("{id:guid}")]
