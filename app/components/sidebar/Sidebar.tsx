@@ -50,7 +50,7 @@ export default function Sidebar({
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
-    if (!token) {
+    if (!token && !isViewer) {
       router.replace('/login');
     }
   }, []);
