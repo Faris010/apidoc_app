@@ -11,6 +11,7 @@ import useOnClickOutside from '@/hooks/useOnClickOutside';
 import { FormikProps } from 'formik';
 import CreateSectionInput from './CreateSectionInput';
 import { editSection } from '@/services/section';
+import { useSearchParams } from 'next/navigation';
 
 interface Props {
   section: TSection;
@@ -40,6 +41,7 @@ export default function SectionItem({
   isViewer,
 }: Props) {
   const ref = useRef(null);
+  const sectionIdQuery = useSearchParams().get('sectionId');
   const [isExpanded, setIsExpanded] = useToggle(false);
   const [isMouseOver, setIsMouseOver] = useToggle(false);
   const [isSectionMenuOpen, setIsSectionMenuOpen] = useToggle(false);
@@ -88,13 +90,17 @@ export default function SectionItem({
   };
 
   return (
-    <div className='relative'>
+    <div className='relative py-[1px]'>
       <div
         onMouseEnter={setIsMouseOver}
         onMouseLeave={setIsMouseOver}
         className={`relative ${
           section.parentId != null && depth == 1 && 'hidden'
-        } px-2 py-1 flex items-center cursor-pointer rounded hover:bg-[#EBEBEA]`}
+        } px-2 py-1 flex items-center ${
+          sectionIdQuery == section.id
+            ? 'bg-[#F1F1F0] hover:bg-[#E2E2E1]'
+            : 'hover:bg-[#EBEBEA]'
+        } cursor-pointer rounded `}
       >
         <div>
           <div
