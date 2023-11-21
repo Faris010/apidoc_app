@@ -4,6 +4,7 @@ import useOnClickOutside from '@/hooks/useOnClickOutside';
 import { useToggle } from '@/hooks/useToggle';
 import { editBlock } from '@/services/block';
 import { TBLock } from '@/types/types';
+import deleteBlock from '@/utils/HandleDeleteBlock';
 import { UploadImageToStorage } from '@/utils/UploadImageToStorage';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
@@ -40,8 +41,16 @@ const AddImageBlockModal = ({ block, blockList, setBlockList }: Props) => {
     }
   };
 
+  const handleDeleteBlock = () => {
+    if (block.id) {
+      deleteBlock(block.id);
+      const updatedBlockList = blockList.filter((b) => b.id !== block.id);
+      setBlockList(updatedBlockList);
+    }
+  };
+
   return (
-    <div className='w-full flex flex-col items-center justify-center'>
+    <div className='relative w-full flex flex-col items-center justify-center'>
       <div
         onClick={setIsImageUploadModalOpen}
         className='w-full py-4 px-4 bg-[#F2F1EE] rounded-md cursor-pointer'
@@ -113,6 +122,19 @@ const AddImageBlockModal = ({ block, blockList, setBlockList }: Props) => {
           </div>
         </div>
       )}
+      <div
+        onClick={handleDeleteBlock}
+        className='absolute top-1 right-1 p-1 opacity-0 group-hover:opacity-100 bg-black bg-opacity-75 rounded'
+      >
+        <Image
+          src='/assets/delete-white.png'
+          alt='icon'
+          width={16}
+          height={16}
+          style={{ width: 'auto', height: 'auto' }}
+          className='cursor-pointer'
+        />
+      </div>
     </div>
   );
 };
