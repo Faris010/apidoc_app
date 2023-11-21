@@ -130,17 +130,18 @@ export default function Sidebar({
   return (
     <div className='w-1/5 max-sm:w-2/3 p-1 space-y-4 bg-[#FBFBFA] border-r-[2px] border-[#E1E1E1] '>
       {/* Project logo and name */}
-      <div className='flex items-center px-2 py-1 space-x-2 hover:bg-[#EBEBEA] rounded cursor-pointer'>
-        <div className='flex items-center justify-center'>
+      <div className='p-2 flex flex-col items-center space-y-2'>
+        <div className='relative h-24'>
           <Image
             src={project?.logo || '/assets/placeholder.png'}
             alt='Project logo'
-            height={20}
-            width={20}
-            style={{ width: 'auto', height: 'auto' }}
+            width={0}
+            height={0}
+            sizes='100vw'
+            style={{ width: 'auto', height: '100%' }}
           />
         </div>
-        <p className='truncate font-semibold'>{project?.projectName}</p>
+        <p className='text-center font-semibold'>{project?.projectName}</p>
       </div>
 
       {!isViewer && (
