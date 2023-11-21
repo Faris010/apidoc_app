@@ -15,6 +15,7 @@ import {
 import { useRouter } from 'next/navigation';
 import useDebounce from '@/hooks/useDebounce';
 import Pagination from '../pagination/Pagination';
+import Image from 'next/image';
 
 interface Props {
   projectSearchFilter: string;
@@ -102,23 +103,38 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
             </div>
           </div>
           <div className='h-[1px] bg-[#B4B4B3] w-full'></div>
-          <div className='grid grid-cols-4 max-sm:grid-cols-1 max-lg:grid-cols-2 max-xl:grid-cols-3 gap-6'>
-            {memoizedProjects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                project={project}
-                setIsProjectFormOpen={setIsProjectFormEditOpen}
-                setCurrentProject={setCurrentProject}
-                setIsDeleteModalOpen={setIsDeleteModalOpen}
-              />
-            ))}
-          </div>
+          {memoizedProjects.length > 0 ? (
+            <div className='grid grid-cols-4 max-sm:grid-cols-1 max-lg:grid-cols-2 max-xl:grid-cols-3 gap-6'>
+              {memoizedProjects.map((project) => (
+                <ProjectCard
+                  key={project.id}
+                  project={project}
+                  setIsProjectFormOpen={setIsProjectFormEditOpen}
+                  setCurrentProject={setCurrentProject}
+                  setIsDeleteModalOpen={setIsDeleteModalOpen}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className='h-full flex flex-col items-center justify-center space-y-3'>
+              <div className='relative w-60 h-60'>
+                <Image
+                  src='/assets/empty.png'
+                  fill
+                  className='grayscale'
+                  alt='Empty'
+                />
+              </div>
+              <div className='text-sm font-semibold'>No projects found</div>
+            </div>
+          )}
         </div>
         <div className='flex items-center justify-end py-6'>
           {memoizedProjects.length > 0 && (
             <Pagination
               totalPages={pageArray}
               setCurrentPage={setCurrentPage}
+              currentPage={currentPage}
             />
           )}
         </div>
