@@ -15,7 +15,7 @@ const CodeBlock = ({ block, blockList, setBlockList, isViewer }: Props) => {
   return (
     <>
       {isViewer ? (
-        <CodeBlockViewer blockContent={block.content || null} />
+        <CodeBlockViewer block={block} />
       ) : (
         <CodeBlockEditor
           block={block}

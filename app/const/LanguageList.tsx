@@ -1,4 +1,6 @@
-export const languageArray = [
+import { TLanguage } from '@/types/types';
+
+export const languageArray: TLanguage[] = [
   {
     id: 1,
     name: 'JavaScript',

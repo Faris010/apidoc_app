@@ -1,7 +1,7 @@
 import { TBLock } from '@/types/types';
 
 export function getHighestSortOrderNumber(blockList: TBLock[]): number {
-  if (blockList.length === 0) {
+  if ((blockList ?? []).length === 0) {
     return 0;
   }
 

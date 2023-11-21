@@ -31,6 +31,7 @@ export default function BlockTypeModal({
     const newBlock: TBLock = {
       content: blockTypeId === 3 ? null : '',
       image: blockTypeId === 3 ? '' : null,
+      language: 'js',
       sortOrder: highestSortOrder + 1,
       sectionId: sectionId,
       blockTypeId: blockTypeId,

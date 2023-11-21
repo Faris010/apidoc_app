@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import CodeEditor from '@uiw/react-textarea-code-editor';
-import { TBLock } from '@/types/types';
+import { TBLock, TLanguage } from '@/types/types';
 import useDebounce from '@/hooks/useDebounce';
 import { editBlock } from '@/services/block';
 import Image from 'next/image';
@@ -23,9 +23,11 @@ const CodeBlockEditor = ({ block, blockList, setBlockList }: Props) => {
     block?.content || null
   );
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useToggle(false);
-  const [selectedLanguageName, setSelectedLanguageName] = useState(
-    languageArray[0].name
-  );
+  const [selectedLanguage, setSelectedLanguage] = useState<TLanguage>({
+    id: 0,
+    name: '',
+    label: block.language,
+  });
   const languageMenuRef = useRef<HTMLDivElement>(null);
   useOnClickOutside(languageMenuRef, setIsLanguageMenuOpen);
 
@@ -46,13 +48,13 @@ const CodeBlockEditor = ({ block, blockList, setBlockList }: Props) => {
     setCodeBlockValue(e.target.value);
   };
 
-  const selectedLanguage = languageArray.find(
-    (lang) => lang.name === selectedLanguageName
+  const selectedLang = languageArray.find(
+    (lang) => lang.label === selectedLanguage.label
   );
 
-  const selectedLanguageLabel = selectedLanguage
-    ? selectedLanguage.label
-    : 'js';
+  useEffect(() => {
+    setSelectedLanguage(selectedLang!);
+  }, [selectedLanguage]);
 
   const [isPopupVisible, setIsPopupVisible] = useState(false);
 
@@ -86,7 +88,7 @@ const CodeBlockEditor = ({ block, blockList, setBlockList }: Props) => {
               onClick={setIsLanguageMenuOpen}
               className='w-full p-1 flex items-center rounded space-x-2 hover:bg-[#EBEBEA]'
             >
-              <p className='text-xs text-[#3E4248]'>{selectedLanguageName}</p>
+              <p className='text-xs text-[#3E4248]'>{selectedLanguage?.name}</p>
               <div>
                 <Image
                   src='/assets/right-arrow.png'
@@ -125,7 +127,7 @@ const CodeBlockEditor = ({ block, blockList, setBlockList }: Props) => {
         </div>
         <CodeEditor
           value={codeBlockValue || ''}
-          language={selectedLanguageLabel}
+          language={selectedLanguage?.label}
           placeholder='Please enter code.'
           onChange={handleCodeBlockChange}
           padding={15}
@@ -139,7 +141,9 @@ const CodeBlockEditor = ({ block, blockList, setBlockList }: Props) => {
       {isLanguageMenuOpen && (
         <LanguageMenuModal
           ref={languageMenuRef}
-          setSelectedLanguageName={setSelectedLanguageName}
+          block={block}
+          selectedLanguage={selectedLanguage!}
+          setSelectedLanguage={setSelectedLanguage}
           setIsLanguageMenuOpen={setIsLanguageMenuOpen}
         />
       )}

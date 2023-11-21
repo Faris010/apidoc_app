@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -87,6 +87,7 @@ namespace server.Migrations
                     Content = table.Column<string>(type: "text", nullable: true),
                     Image = table.Column<string>(type: "text", nullable: true),
                     SortOrder = table.Column<int>(type: "integer", nullable: false),
+                    Language = table.Column<string>(type: "text", nullable: true),
                     SectionId = table.Column<Guid>(type: "uuid", nullable: false),
                     BlockTypeId = table.Column<int>(type: "integer", nullable: false),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false)

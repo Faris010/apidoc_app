@@ -31,7 +31,7 @@ const ParagraphBlockEditor = ({ block, blockList, setBlockList }: Props) => {
     }
   }, []);
 
-  const debouncedValue = useDebounce(paragraphBlockValue, 2000);
+  const debouncedValue = useDebounce(paragraphBlockValue, 1500);
 
   const updateParagraph = async (updatedContent: string) => {
     const updatedBlock = [{ ...block, content: updatedContent }];

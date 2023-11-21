@@ -1,8 +1,9 @@
 'use client';
 
-import { deleteSection } from '@/services/section';
 import { TSection } from '@/types/types';
+import handleSectionDelete from '@/utils/HandleSectionDelete';
 import Image from 'next/image';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { forwardRef } from 'react';
 
 interface Props {
@@ -24,11 +25,21 @@ const SectionMenuModal = forwardRef<HTMLDivElement, Props>(
     },
     ref
   ) => {
-    const handleSectionDelete = async () => {
-      if (section.id) {
-        await deleteSection(section.id);
-        let updatedSectionList = sectionList.filter((s) => s.id != section.id);
-        setSectionList(updatedSectionList);
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const sectionId = searchParams.get('sectionId');
+
+    const handleSectionDeleteMain = async () => {
+      const response = await handleSectionDelete(
+        section,
+        sectionList,
+        sectionId!,
+        router,
+        pathname
+      );
+      if (response.success) {
+        setSectionList(response.updatedSectionList!);
       }
     };
     return (
@@ -52,16 +63,16 @@ const SectionMenuModal = forwardRef<HTMLDivElement, Props>(
           <p className='text-sm'>Rename</p>
         </div>
         <div
-          onClick={handleSectionDelete}
+          onClick={handleSectionDeleteMain}
           className='py-1 px-3 flex items-center space-x-2 cursor-pointer hover:bg-[#EBEBEA] rounded'
         >
           <Image
-            src='/assets/delete-grey.png'
+            src='/assets/delete-red.png'
             alt='edit icon'
             height={16}
             width={16}
           />
-          <p className='text-sm'>Delete</p>
+          <p className='text-sm text-red-600'>Delete</p>
         </div>
       </div>
     );
