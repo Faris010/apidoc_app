@@ -14,9 +14,16 @@ import CreateSectionInput from '../section/CreateSectionInput';
 interface Props {
   projectId: string;
   isViewer: boolean;
+  setBlockSearchFilter: React.Dispatch<React.SetStateAction<string>>;
+  blockSearchFilter: string;
 }
 
-export default function Sidebar({ projectId, isViewer }: Props) {
+export default function Sidebar({
+  projectId,
+  isViewer,
+  setBlockSearchFilter,
+  blockSearchFilter,
+}: Props) {
   const router = useRouter();
   const pathaname = usePathname();
   const searchParams = useSearchParams();
@@ -72,7 +79,11 @@ export default function Sidebar({ projectId, isViewer }: Props) {
   }, [projectId]);
 
   useEffect(() => {
-    if (!sectionQuery && (sectionList ?? []).length > 0) {
+    if (
+      !sectionQuery &&
+      (sectionList ?? []).length > 0 &&
+      blockSearchFilter == ''
+    ) {
       let firstSection: TSection | null = null;
 
       if (sectionList) {
@@ -85,10 +96,10 @@ export default function Sidebar({ projectId, isViewer }: Props) {
         router.replace(`?section=${sectionSlug}&sectionId=${id}`);
       }
     }
-    if (sectionQuery && sectionList?.length == 0) {
+    if (sectionQuery && sectionList?.length == 0 && blockSearchFilter == '') {
       router.replace(pathaname);
     }
-  }, [sectionList, sectionQuery]);
+  }, [sectionList, sectionQuery, blockSearchFilter]);
 
   const [isEnterKeyPressed, setIsEnterKeyPressed] = useState(false);
 
@@ -111,6 +122,10 @@ export default function Sidebar({ projectId, isViewer }: Props) {
   };
 
   const memoizedSections = useMemo(() => sectionList, [sectionList]);
+
+  const handleBlockSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBlockSearchFilter(e.target.value);
+  };
 
   return (
     <div className='w-1/5 max-sm:w-2/3 p-1 space-y-4 bg-[#FBFBFA] border-r-[2px] border-[#E1E1E1] '>
@@ -157,6 +172,7 @@ export default function Sidebar({ projectId, isViewer }: Props) {
         <input
           type='text'
           placeholder='Search...'
+          onChange={handleBlockSearch}
           className='w-full outline-none bg-transparent text-sm '
         />
       </div>

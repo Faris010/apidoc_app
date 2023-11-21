@@ -6,6 +6,17 @@ export async function getSectionBlocks(sectionId: string) {
   return response.data;
 }
 
+export async function getSearchedBlocks(
+  projectId: string,
+  pageNumber: number,
+  searchFilter: string
+) {
+  const response = await api.get(
+    `/api/block/search/${projectId}/${pageNumber}?searchTerm=${searchFilter}`
+  );
+  return response.data;
+}
+
 export async function addBlock(block: TBLock, sectionId: string) {
   await api.post(`/api/block/${sectionId}`, block);
 }
