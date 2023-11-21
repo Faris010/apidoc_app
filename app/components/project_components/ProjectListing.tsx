@@ -56,10 +56,6 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
     }
   };
 
-  useEffect(() => {
-    getTotalPages(null);
-  }, [projects]);
-
   const getProjects = async () => {
     if (debouncedValue != '') {
       const response = await getProjectsBySearchFilter(
@@ -67,15 +63,15 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
         debouncedValue
       );
       if (response.success) {
-        setProjects(response.payload);
+        setProjects(response.payload.paginatedProjects);
       }
-      getTotalPages(response.payload.length);
+      getTotalPages(response.payload.totalItems);
     } else {
       const response = await getProjectsPagination(currentPage);
       if (response.success) {
         setProjects(response.payload);
       }
-      //getTotalPages(null);
+      getTotalPages(null);
     }
   };
 
@@ -119,15 +115,21 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
           </div>
         </div>
         <div className='flex items-center justify-end py-6'>
-          <Pagination totalPages={pageArray} setCurrentPage={setCurrentPage} />
+          {memoizedProjects.length > 0 && (
+            <Pagination
+              totalPages={pageArray}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
         </div>
       </div>
       {isDeleteModalOpen && (
         <DeleteConfirmationModal
-          projects={projects}
           setProjects={setProjects}
           currentProject={currentProject}
           setIsDeleteModalOpen={setIsDeleteModalOpen}
+          currentPage={currentPage}
+          debouncedValue={debouncedValue}
         />
       )}
       {isProjectFormOpen && (
