@@ -5,17 +5,23 @@ import FormActionButtons from '../forms_action_buttons/FormActionButtons';
 import Image from 'next/image';
 import { formatFileSize } from '@/utils/FormatFileSize';
 import { TImage, TProject } from '@/types/types';
-import { addNewProject, getAllProjects } from '@/services/project';
+import {
+  addNewProject,
+  getAllProjects,
+  getProjectsPagination,
+} from '@/services/project';
 import ErrorNotification from './project_form_components/ErrorNotification';
 import { useFormik } from 'formik';
 import { UploadImageToStorage } from '@/utils/UploadImageToStorage';
 
 interface Props {
+  currentPage: number;
   setProjects: React.Dispatch<React.SetStateAction<TProject[]>>;
   setIsProjectFormOpen: () => void;
 }
 
 export default function ProjectFormCreate({
+  currentPage,
   setProjects,
   setIsProjectFormOpen,
 }: Props) {
@@ -42,7 +48,7 @@ export default function ProjectFormCreate({
           values.logo = imageUrl;
         }
         await addNewProject(values);
-        const response = await getAllProjects();
+        const response = await getProjectsPagination(currentPage);
         if (response.success) {
           setProjects(response.payload);
           setIsProjectFormOpen();
