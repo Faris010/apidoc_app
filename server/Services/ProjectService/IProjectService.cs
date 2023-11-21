@@ -10,6 +10,6 @@ public interface IProjectService
     Task AddProject(AddProjectDto newProject);
     Task UpdateProject(UpdateProjectDto updatedProject);
     Task DeleteProject(Guid id);
-    Task<ApiResponse<List<GetProjectDto>>> SearchProjects(string searchTerm, int pageNumber);
+    Task<ApiResponse<object>> SearchProjects(string searchTerm, int pageNumber);
     Task<ApiResponse<List<GetProjectDto>>> GetAllProjectsPagination(int pageNumber);
 }

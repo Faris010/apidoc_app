@@ -129,7 +129,7 @@ public class BlockService : IBlockService
             .Include(block => block.BlockTypes);
 
         var filteredBlocksQuery = blocksQuery
-            .Where(b => b.Content.Contains(searchTerm))
+            .Where(b => EF.Functions.ILike(b.Content, $"%{searchTerm}%"))
             .OrderBy(b => b.SortOrder)
             .Select(b => b.Adapt<GetBlockDto>());
 
@@ -147,6 +147,7 @@ public class BlockService : IBlockService
             ErrorCode = null
         };
     }
+
 
 
 
