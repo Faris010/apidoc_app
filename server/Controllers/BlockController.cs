@@ -69,14 +69,4 @@ public class BlockController : ControllerBase
     {
         await _blockService.UpdateBlock(updateBlock);
     }
-
-    [HttpGet("search/{projectId:guid}/{pageNumber:int}")]
-    [ProducesResponseType(typeof(List<GetBlockDto>), (int)HttpStatusCode.OK)]
-    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
-    public async Task<ActionResult<ApiResponse<List<GetBlockDto>>>> SearchBlocks([FromQuery] string searchTerm, Guid projectId, int pageNumber = 1)
-    {
-
-        var blocks = await _blockService.SearchBlocks(searchTerm, projectId, pageNumber);
-        return blocks;
-    }
 }

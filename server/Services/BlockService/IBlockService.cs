@@ -11,5 +11,4 @@ public interface IBlockService
     Task AddBlock(AddBlockDto newBlock, Guid sectionId);
     Task UpdateBlock(List<UpdateBlockDto> updatedBlock);
     Task DeleteBlock(Guid id);
-    Task<ApiResponse<List<GetBlockDto>>> SearchBlocks(string searchTerm, Guid projectId, int pageNumber);
 }

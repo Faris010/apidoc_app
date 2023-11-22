@@ -1,6 +1,7 @@
 using Mapster;
 using Microsoft.EntityFrameworkCore;
 using server.Data;
+using server.Dtos.BlockDtos;
 using server.Dtos.SectionDtos;
 using server.Models;
 using server.Response;
@@ -99,6 +100,52 @@ public class SectionService : ISectionService
             ErrorCode = null
         };
     }
+
+    public async Task<ApiResponse<List<GetSectionDto>>> SearchSections(string searchTerm, Guid projectId, int pageNumber)
+    {
+        const int pageSize = 5;
+
+        var sectionsQuery = _context.Sections
+            .Include(s => s.Blocks)
+            .Where(s => s.ProjectId == projectId && EF.Functions.ILike(s.Title, $"%{searchTerm}%"));
+
+        var totalItemsSections = await sectionsQuery.CountAsync();
+
+        var paginatedSections = await sectionsQuery
+            .OrderBy(s => s.Title)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(s => new GetSectionDto
+            {
+                Id = s.Id,
+                Title = s.Title,
+                ProjectId = s.ProjectId,
+                Blocks = s.Blocks
+                    .Where(b => EF.Functions.ILike(b.Content, $"%{searchTerm}%"))
+                    .OrderBy(b => b.SortOrder)
+                    .Select(b => new Block
+                    {
+                        Id = b.Id,
+                        Content = b.Content,
+                        Image = b.Image,
+                        SortOrder = b.SortOrder,
+                        SectionId = b.SectionId,
+                        BlockTypeId = b.BlockTypeId // Ensure BlockTypeId is assigned
+                                                    // Add other necessary properties
+                    })
+                    .ToList()
+            })
+            .ToListAsync();
+
+        return new ApiResponse<List<GetSectionDto>>()
+        {
+            Success = true,
+            Payload = paginatedSections,
+            ErrorCode = null
+        };
+    }
+
+
 
     public async Task UpdateSection(UpdateSectionDto updatedSection)
     {

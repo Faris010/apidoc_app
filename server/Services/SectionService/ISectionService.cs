@@ -10,4 +10,5 @@ public interface ISectionService
     Task<ApiResponse<List<GetSectionDto>>> GetSectionByProjectId(Guid projectId);
     Task UpdateSection(UpdateSectionDto updatedSection);
     Task DeleteSection(Guid id);
+    Task<ApiResponse<List<GetSectionDto>>> SearchSections(string searchTerm, Guid projectId, int pageNumber);
 }

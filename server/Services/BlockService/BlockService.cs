@@ -115,42 +115,6 @@ public class BlockService : IBlockService
         };
     }
 
-    public async Task<ApiResponse<List<GetBlockDto>>> SearchBlocks(string searchTerm, Guid projectId, int pageNumber)
-    {
-        const int pageSize = 5;
-
-        var sectionIds = await _context.Sections
-            .Where(s => s.ProjectId == projectId)
-            .Select(s => s.Id)
-            .ToListAsync();
-
-        var blocksQuery = _context.Blocks
-            .Where(b => sectionIds.Contains(b.SectionId))
-            .Include(block => block.BlockTypes);
-
-        var filteredBlocksQuery = blocksQuery
-            .Where(b => EF.Functions.ILike(b.Content, $"%{searchTerm}%"))
-            .OrderBy(b => b.SortOrder)
-            .Select(b => b.Adapt<GetBlockDto>());
-
-        var totalItems = await filteredBlocksQuery.CountAsync();
-
-        var paginatedBlocks = await filteredBlocksQuery
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-
-        return new ApiResponse<List<GetBlockDto>>()
-        {
-            Success = true,
-            Payload = paginatedBlocks,
-            ErrorCode = null
-        };
-    }
-
-
-
-
     public async Task UpdateBlock(List<UpdateBlockDto> updatedBlocks)
     {
         foreach (UpdateBlockDto updatedBlock in updatedBlocks)

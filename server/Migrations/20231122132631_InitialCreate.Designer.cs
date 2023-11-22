@@ -12,8 +12,8 @@ using server.Data;
 namespace server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20231120220755_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20231122132631_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -167,6 +167,9 @@ namespace server.Migrations
 
                     b.Property<string>("Password")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("RefreshToken")
                         .HasColumnType("text");
 
                     b.Property<string>("Username")

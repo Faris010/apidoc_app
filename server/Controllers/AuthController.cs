@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -49,6 +50,14 @@ public class AuthController : ControllerBase
 
     }
 
+    private string CreateRefreshToken()
+    {
+        byte[] randomNumber = new byte[32];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
+    }
+
     [HttpPost]
     [Route("login")]
     public async Task<ActionResult> Login(UserDto request)
@@ -66,9 +75,28 @@ public class AuthController : ControllerBase
         }
 
         string token = CreateToken(dbUser);
+        string refreshToken = CreateRefreshToken();
+
+        dbUser.RefreshToken = refreshToken;
+        await _context.SaveChangesAsync();
+
+        return Ok(new { AccessToken = token, RefreshToken = refreshToken });
+    }
+
+    [HttpPost]
+    [Route("refresh-token")]
+    public async Task<ActionResult> RefreshToken(string refreshToken)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+        if (user == null)
+        {
+            return BadRequest("Invalid refresh token");
+        }
+
+        string token = CreateToken(user);
 
         return Ok(token);
-
     }
 
     private string CreateToken(User user)
