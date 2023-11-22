@@ -115,7 +115,6 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
           <div className='w-full px-3 pt-20 pb-56 flex justify-center overflow-hidden'>
             <div className='w-2/3 flex-col'>
               {/* Document title */}
-
               {isViewer ? (
                 <DocumentViewerTitle sectionTitle={section.title} />
               ) : (

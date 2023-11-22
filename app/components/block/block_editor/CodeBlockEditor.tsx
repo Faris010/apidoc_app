@@ -12,6 +12,7 @@ import { languageArray } from '@/const/LanguageList';
 import deleteBlock from '@/utils/HandleDeleteBlock';
 import LanguageMenuModal from '@/components/modals/block_modals/LanguageMenuModal';
 import CopiedNotificationPopup from '@/components/popup/CopiedNotificationPopup';
+import UpdateBlockPopup from '@/components/popup/UpdateBlockPopup';
 
 interface Props {
   block: TBLock;
@@ -24,6 +25,7 @@ const CodeBlockEditor = ({ block, blockList, setBlockList }: Props) => {
     block?.content || null
   );
   const [isLanguageMenuOpen, setIsLanguageMenuOpen] = useToggle(false);
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
   const [selectedLanguage, setSelectedLanguage] = useState<TLanguage>({
     id: 0,
     name: '',
@@ -40,9 +42,21 @@ const CodeBlockEditor = ({ block, blockList, setBlockList }: Props) => {
   };
 
   useEffect(() => {
+    let timeoutId: any;
+
     if (debouncedValue != null && debouncedValue != block?.content) {
       updateCode(debouncedValue);
+      setIsUpdated(true);
+      timeoutId = setTimeout(() => {
+        setIsUpdated(false);
+      }, 2000);
     }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [debouncedValue]);
 
   const handleCodeBlockChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -154,6 +168,7 @@ const CodeBlockEditor = ({ block, blockList, setBlockList }: Props) => {
           isPopupVisible={isPopupVisible}
         />
       )}
+      {isUpdated && <UpdateBlockPopup text={'Code block'} />}
     </>
   );
 };

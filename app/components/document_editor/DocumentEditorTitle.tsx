@@ -4,6 +4,7 @@ import useDebounce from '@/hooks/useDebounce';
 import { editSection } from '@/services/section';
 import { TSection } from '@/types/types';
 import { useEffect, useRef, useState } from 'react';
+import UpdateBlockPopup from '../popup/UpdateBlockPopup';
 
 interface Props {
   section: TSection;
@@ -11,6 +12,7 @@ interface Props {
 
 export default function DocumentEditorTitle({ section }: Props) {
   const titleRef = useRef<HTMLTextAreaElement>(null);
+  const [isUpdated, setIsUpdated] = useState<boolean>(false);
   const [sectionTitleValue, setSectionTitleValue] = useState<string>(
     section?.title || ''
   );
@@ -39,9 +41,21 @@ export default function DocumentEditorTitle({ section }: Props) {
   };
 
   useEffect(() => {
+    let timeoutId: any;
+
     if (debouncedValue != '' && debouncedValue != section?.title) {
       updateTitle(debouncedValue);
+      setIsUpdated(true);
+      timeoutId = setTimeout(() => {
+        setIsUpdated(false);
+      }, 2000);
     }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [debouncedValue]);
 
   const handleTitleTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -50,16 +64,19 @@ export default function DocumentEditorTitle({ section }: Props) {
     setSectionTitleValue(e.target.value);
   };
   return (
-    <div className='pb-4 text-4xl font-bold'>
-      <textarea
-        rows={1}
-        ref={titleRef}
-        name='title'
-        value={sectionTitleValue}
-        placeholder='Untitled'
-        onChange={handleTitleTextarea}
-        className='w-full resize-none overflow-hidden outline-none '
-      />
-    </div>
+    <>
+      <div className='pb-4 text-4xl font-bold'>
+        <textarea
+          rows={1}
+          ref={titleRef}
+          name='title'
+          value={sectionTitleValue}
+          placeholder='Untitled'
+          onChange={handleTitleTextarea}
+          className='w-full resize-none overflow-hidden outline-none '
+        />
+      </div>
+      {isUpdated && <UpdateBlockPopup text={'Title'} />}
+    </>
   );
 }
