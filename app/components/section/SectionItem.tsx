@@ -26,6 +26,7 @@ interface Props {
     e: React.KeyboardEvent<HTMLInputElement>
   ) => Promise<void>;
   isViewer: boolean;
+  setBlockSearchFilter: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function SectionItem({
@@ -39,6 +40,7 @@ export default function SectionItem({
   handleInputBlur,
   handleInputKeyPress,
   isViewer,
+  setBlockSearchFilter,
 }: Props) {
   const ref = useRef(null);
   const sectionIdQuery = useSearchParams().get('sectionId');
@@ -123,6 +125,7 @@ export default function SectionItem({
               sectionId: section.id,
             },
           }}
+          onClick={() => setBlockSearchFilter('')}
           className='w-full flex items-center overflow-hidden'
         >
           <div>
@@ -218,6 +221,7 @@ export default function SectionItem({
                   handleInputBlur={handleInputBlur}
                   handleInputKeyPress={handleInputKeyPress}
                   isViewer={isViewer}
+                  setBlockSearchFilter={setBlockSearchFilter}
                 />
               </div>
             ))}

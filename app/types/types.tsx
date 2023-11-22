@@ -29,6 +29,7 @@ export type TSection = {
   title: string;
   projectId?: string;
   parentId?: string | null;
+  blocks?: TBLock[];
 };
 
 export type TBLock = {

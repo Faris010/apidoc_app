@@ -13,7 +13,6 @@ const Pagination = ({ totalPages, setCurrentPage, currentPage }: Props) => {
   const params = useSearchParams();
   const pageQuery = params.get('page');
   const handlePageQuery = (pageNumber: number) => {
-    router.push(`?page=${pageNumber}`);
     setCurrentPage(pageNumber);
   };
 

@@ -25,6 +25,7 @@ export default function ProjectPage({ params }: RootProps) {
         <DocumentSearch
           blockSearchFilter={blockSearchFilter}
           projectId={params.projectId}
+          setBlockSearchFilter={setBlockSearchFilter}
         />
       ) : (
         <DocumentEditor projectId={params.projectId} isViewer={false} />

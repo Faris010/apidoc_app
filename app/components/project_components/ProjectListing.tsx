@@ -21,6 +21,8 @@ interface Props {
   projectSearchFilter: string;
 }
 
+const PAGE_SIZE = 8;
+
 export default function ProjectListing({ projectSearchFilter }: Props) {
   const router = useRouter();
   const [isProjectFormOpen, setIsProjectFormOpen] = useToggle(false);
@@ -41,14 +43,14 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
   const getTotalPages = async (pages: number | null) => {
     if (pages == null) {
       const response = await getAllProjects();
-      const totalNumberOfPages = Math.ceil(response.payload.length / 8);
+      const totalNumberOfPages = Math.ceil(response.payload.length / PAGE_SIZE);
       const arr = Array.from(
         { length: totalNumberOfPages },
         (_, index) => index + 1
       );
       setPageArray(arr);
     } else {
-      const totalNumberOfPages = Math.ceil(pages / 8);
+      const totalNumberOfPages = Math.ceil(pages / PAGE_SIZE);
       const arr = Array.from(
         { length: totalNumberOfPages },
         (_, index) => index + 1
@@ -59,6 +61,7 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
 
   const getProjects = async () => {
     if (debouncedValue != '') {
+      router.push(`?search=${debouncedValue}&page=${currentPage}`);
       const response = await getProjectsBySearchFilter(
         currentPage,
         debouncedValue
@@ -68,6 +71,7 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
       }
       getTotalPages(response.payload.totalItems);
     } else {
+      router.replace(`?page=${currentPage}`);
       const response = await getProjectsPagination(currentPage);
       if (response.success) {
         setProjects(response.payload);

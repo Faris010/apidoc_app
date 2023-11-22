@@ -86,7 +86,7 @@ export default function Sidebar({
         firstSection = sectionList[0];
       }
 
-      if (firstSection) {
+      if (firstSection && !sectionQuery) {
         const { name, id } = firstSection;
         const sectionSlug = GenerateSlug(name);
         router.replace(`?section=${sectionSlug}&sectionId=${id}`);
@@ -95,7 +95,7 @@ export default function Sidebar({
     if (sectionQuery && sectionList?.length == 0 && blockSearchFilter == '') {
       router.replace(pathaname);
     }
-  }, [sectionList, sectionQuery, blockSearchFilter]);
+  }, [sectionList, sectionQuery]);
 
   const [isEnterKeyPressed, setIsEnterKeyPressed] = useState(false);
 
@@ -193,6 +193,7 @@ export default function Sidebar({
                   handleInputBlur={handleInputBlur}
                   handleInputKeyPress={handleInputKeyPress}
                   isViewer={isViewer}
+                  setBlockSearchFilter={setBlockSearchFilter}
                 />
               ))}
         </div>

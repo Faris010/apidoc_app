@@ -15,6 +15,17 @@ export async function getSectionById(id: string | null) {
   return response.data;
 }
 
+export async function getSearchedSections(
+  projectId: string,
+  pageNumber: number,
+  searchFilter: string
+) {
+  const response = await api.get(
+    `/api/section/search/${projectId}/${pageNumber}?searchTerm=${searchFilter}`
+  );
+  return response.data;
+}
+
 export async function deleteSection(id: string) {
   await api.delete(`/api/section/${id}`);
 }
