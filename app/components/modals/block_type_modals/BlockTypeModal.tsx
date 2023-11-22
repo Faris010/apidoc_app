@@ -9,6 +9,7 @@ interface Props {
   highestSortOrder: number;
   setBlockList: React.Dispatch<React.SetStateAction<TBLock[]>>;
   setIsBlockTypeModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setBlockTypeSearchFilter: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export default function BlockTypeModal({
@@ -16,6 +17,7 @@ export default function BlockTypeModal({
   highestSortOrder,
   setBlockList,
   setIsBlockTypeModalOpen,
+  setBlockTypeSearchFilter,
 }: Props) {
   const [blockTypeList, setBlockTypeList] = useState<TBlockType[]>([]);
 
@@ -40,6 +42,7 @@ export default function BlockTypeModal({
     await addBlock(newBlock, sectionId);
     const response = await getSectionBlocks(sectionId);
     setBlockList(response.payload);
+    setBlockTypeSearchFilter('');
     setIsBlockTypeModalOpen(false);
   };
 

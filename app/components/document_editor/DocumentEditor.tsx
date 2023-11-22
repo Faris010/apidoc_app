@@ -57,28 +57,33 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
   //   await addSection(section, projectId);
   //   router.refresh();
   // };
-  //const [prevTitle, setPrevTitle] = useState<string>('');
 
   useEffect(() => {
     getSection();
     getBlocksBySectionId();
   }, [sectionId]);
 
-  const blockRef = useRef<HTMLTextAreaElement>(null);
+  const newBlockRef = useRef<HTMLTextAreaElement | null>(null);
 
   const [blockTypeSearchFilter, setBlockTypeSearchFilter] =
     useState<string>('');
 
   const handleBlockTextarea = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    if (blockRef.current) {
+    if (newBlockRef.current) {
       setBlockTypeSearchFilter(e.target.value);
-      blockRef.current.style.height = 'auto';
-      blockRef.current.style.height = `${e.target.scrollHeight}px`;
+      newBlockRef.current.style.height = 'auto';
+      newBlockRef.current.style.height = `${e.target.scrollHeight}px`;
       if (e.target.value[e.target.value.length - 1] == '/') {
         setIsBlockTypeModalOpen(true);
       } else {
         setIsBlockTypeModalOpen(false);
       }
+    }
+  };
+
+  const handleChangeRef = (refValue: string) => {
+    if (newBlockRef.current) {
+      newBlockRef.current.value = refValue;
     }
   };
 
@@ -199,7 +204,7 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
                   <div>
                     <textarea
                       rows={1}
-                      ref={blockRef}
+                      ref={newBlockRef}
                       name='block'
                       value={blockTypeSearchFilter}
                       onChange={handleBlockTextarea}
@@ -214,6 +219,7 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
                     highestSortOrder={highestSortOrder}
                     setBlockList={setBlockList}
                     setIsBlockTypeModalOpen={setIsBlockTypeModalOpen}
+                    setBlockTypeSearchFilter={setBlockTypeSearchFilter}
                   />
                 )}
               </>
