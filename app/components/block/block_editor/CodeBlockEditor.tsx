@@ -11,6 +11,7 @@ import { useToggle } from '@/hooks/useToggle';
 import { languageArray } from '@/const/LanguageList';
 import deleteBlock from '@/utils/HandleDeleteBlock';
 import LanguageMenuModal from '@/components/modals/block_modals/LanguageMenuModal';
+import CopiedNotificationPopup from '@/components/popup/CopiedNotificationPopup';
 
 interface Props {
   block: TBLock;
@@ -148,13 +149,10 @@ const CodeBlockEditor = ({ block, blockList, setBlockList }: Props) => {
         />
       )}
       {isPopupVisible && (
-        <div
-          className={`fixed z-50 px-3 py-3 bottom-0 left-1/2 -translate-x-1/2 bg-black text-white text-sm rounded-md transition-transform duration-300 ease-out transform ${
-            isPopupVisible && '-translate-y-1/2'
-          }`}
-        >
-          Copied to clipboard
-        </div>
+        <CopiedNotificationPopup
+          text={'Copied to clipboard'}
+          isPopupVisible={isPopupVisible}
+        />
       )}
     </>
   );

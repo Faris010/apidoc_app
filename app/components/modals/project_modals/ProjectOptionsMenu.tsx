@@ -8,6 +8,7 @@ interface Props {
   setIsProjectFormOpen: () => void;
   setIsDeleteModalOpen: () => void;
   setCurrentProject: React.Dispatch<React.SetStateAction<TProject>>;
+  setIsPopupVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ProjectOptionsMenu = forwardRef<HTMLDivElement, Props>(
@@ -18,9 +19,19 @@ const ProjectOptionsMenu = forwardRef<HTMLDivElement, Props>(
       setCurrentProject,
       setIsProjectFormOpen,
       setIsDeleteModalOpen,
+      setIsPopupVisible,
     },
     ref
   ) => {
+    const handleCopyLink = () => {
+      navigator.clipboard.writeText(`${window.location.origin}/${project.id}`);
+      setIsPopupVisible(true);
+      setIsMenuOpen();
+      setTimeout(() => {
+        setIsPopupVisible(false);
+      }, 2000);
+    };
+
     return (
       <div
         ref={ref}
@@ -41,6 +52,19 @@ const ProjectOptionsMenu = forwardRef<HTMLDivElement, Props>(
             width={16}
           />
           <p className='text-sm'>Edit</p>
+        </div>
+        <div
+          onClick={handleCopyLink}
+          className='w-full py-1 px-3 flex items-center space-x-2 rounded cursor-pointer hover:bg-slate-200'
+        >
+          <Image
+            src='/assets/link.png'
+            alt='link icon'
+            width={16}
+            height={16}
+            style={{ width: 'auto', height: 'auto' }}
+          />
+          <p className='text-sm'>Copy link</p>
         </div>
         <div
           onClick={() => {
