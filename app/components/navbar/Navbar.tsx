@@ -1,14 +1,27 @@
 'use client';
 
+import useDebounce from '@/hooks/useDebounce';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-export default function Navbar() {
+interface Props {
+  setProjectSearchFilter: React.Dispatch<React.SetStateAction<string>>;
+  projectSearchFilter: string;
+}
+
+export default function Navbar({
+  setProjectSearchFilter,
+  projectSearchFilter,
+}: Props) {
   const router = useRouter();
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     router.push('/login');
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProjectSearchFilter(e.target.value);
   };
 
   return (
@@ -25,6 +38,7 @@ export default function Navbar() {
           id='search'
           type='text'
           placeholder='Search Projects...'
+          onChange={handleSearch}
           className='w-full outline-none bg-transparent'
         />
       </div>

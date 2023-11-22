@@ -1,27 +1,37 @@
-import { deleteProject } from '@/services/project';
+import {
+  deleteProject,
+  getProjectsBySearchFilter,
+  getProjectsPagination,
+} from '@/services/project';
 import { TProject } from '@/types/types';
 import Image from 'next/image';
 
 interface Props {
-  projects: TProject[];
   currentProject: TProject | null;
   setIsDeleteModalOpen: () => void;
   setProjects: React.Dispatch<React.SetStateAction<TProject[]>>;
+  currentPage: number;
+  debouncedValue: string;
 }
 
 export default function DeleteConfirmationModal({
-  projects,
   setProjects,
   currentProject,
   setIsDeleteModalOpen,
+  currentPage,
+  debouncedValue,
 }: Props) {
   const handleDeleteProject = async () => {
     if (currentProject && currentProject.id) {
       await deleteProject(currentProject.id);
-      const filteredProjects = projects.filter(
-        (project) => project.id !== currentProject.id
-      );
-      setProjects(filteredProjects);
+      let response;
+      if (debouncedValue != '') {
+        response = await getProjectsBySearchFilter(currentPage, debouncedValue);
+        setProjects(response.payload.paginatedProjects);
+      } else {
+        response = await getProjectsPagination(currentPage);
+        setProjects(response.payload);
+      }
       setIsDeleteModalOpen();
     }
   };

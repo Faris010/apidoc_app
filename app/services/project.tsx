@@ -6,6 +6,21 @@ export async function getAllProjects() {
   return response.data;
 }
 
+export async function getProjectsPagination(pageNumber: number) {
+  const response = await api.get(`/api/projects/${pageNumber}`);
+  return response.data;
+}
+
+export async function getProjectsBySearchFilter(
+  pageNumber: number,
+  searchFilter: string
+) {
+  const response = await api.get(
+    `/api/projects/search/${pageNumber}?searchTerm=${searchFilter}`
+  );
+  return response.data;
+}
+
 export async function addNewProject(projectData: TNewProject) {
   const response = await api.post('/api/projects/', projectData);
   return response;
