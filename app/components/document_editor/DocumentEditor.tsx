@@ -9,10 +9,10 @@ import BlockTypeModal from '../modals/block_type_modals/BlockTypeModal';
 import { editBlock, getSectionBlocks } from '@/services/block';
 import DocumentEditorTitle from './DocumentEditorTitle';
 import { getHighestSortOrderNumber } from '@/utils/GetHighestSortOrderNumber';
-import DocumentEditorSectionLink from './DocumentEditorSectionLink';
 import RenderBlockComponent from '../block/BlockRenderer/RenderBlockComponent';
 import DocumentViewerTitle from '../document_viewer/DocumentViewerTitle';
 import handleSortOrderUpdate from '@/utils/HandleOnDrop';
+import DocumentEditorSectionBreadcrumb from './DocumentEditorSectionBreadcrumb';
 
 interface Props {
   projectId: string;
@@ -28,16 +28,16 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
 
   const [isBlockTypeModalOpen, setIsBlockTypeModalOpen] =
     useState<boolean>(false);
-  const [blockList, setBlockList] = useState<TBLock[]>([]);
-  const highestSortOrder = getHighestSortOrderNumber(blockList);
-  const memoizedBlocks = useMemo(() => blockList, [blockList]);
-
   const [targetedBlockId, setTargetedBlockId] = useState<string>('');
 
+  const [blockList, setBlockList] = useState<TBLock[]>([]);
   const [section, setSection] = useState<TSection>({
     name: '',
     title: '',
   });
+
+  const memoizedBlocks = useMemo(() => blockList, [blockList]);
+  const highestSortOrder = getHighestSortOrderNumber(blockList);
 
   const getSection = async () => {
     if (sectionId) {
@@ -53,15 +53,10 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
     }
   };
 
-  // const createEmptySection = async () => {
-  //   await addSection(section, projectId);
-  //   router.refresh();
-  // };
-
   useEffect(() => {
     getSection();
     getBlocksBySectionId();
-  }, [sectionId]);
+  }, [sectionId, router]);
 
   const newBlockRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -73,17 +68,11 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
       setBlockTypeSearchFilter(e.target.value);
       newBlockRef.current.style.height = 'auto';
       newBlockRef.current.style.height = `${e.target.scrollHeight}px`;
-      if (e.target.value[e.target.value.length - 1] == '/') {
+      if (e.target.value.endsWith('/')) {
         setIsBlockTypeModalOpen(true);
       } else {
         setIsBlockTypeModalOpen(false);
       }
-    }
-  };
-
-  const handleChangeRef = (refValue: string) => {
-    if (newBlockRef.current) {
-      newBlockRef.current.value = refValue;
     }
   };
 
@@ -116,35 +105,25 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
 
   return (
     <div className='w-4/5 bg-white'>
-      <div className='w-full p-3 flex items-center justify-between border-b-[1px] border-[#E1E1E1]'>
-        {/* Document link */}
-        <DocumentEditorSectionLink sectionId={sectionId} />
-
-        {!isViewer && (
-          <div className='p-1 rounded cursor-pointer hover:bg-[#EBEBEA] '>
-            <Image
-              src='/assets/more.png'
-              alt='more icon'
-              height={16}
-              width={16}
-            />
+      {sectionId ? (
+        <>
+          {/* Document breadcrumb */}
+          <div className='w-full p-3 flex items-center justify-start border-b-[1px] border-[#E1E1E1]'>
+            <DocumentEditorSectionBreadcrumb sectionId={sectionId} />
           </div>
-        )}
-      </div>
-      <div className='w-full px-3 pt-20 pb-56 flex justify-center overflow-hidden'>
-        <div className='w-2/3 flex-col'>
-          {/* Document title */}
 
-          {isViewer ? (
-            <DocumentViewerTitle sectionTitle={section.title} />
-          ) : (
-            <DocumentEditorTitle section={section} />
-          )}
+          <div className='w-full px-3 pt-20 pb-56 flex justify-center overflow-hidden'>
+            <div className='w-2/3 flex-col'>
+              {/* Document title */}
 
-          {/* Document body */}
-          <div>
-            {sectionId ? (
-              <>
+              {isViewer ? (
+                <DocumentViewerTitle sectionTitle={section.title} />
+              ) : (
+                <DocumentEditorTitle section={section} />
+              )}
+
+              {/* Document body */}
+              <div>
                 {memoizedBlocks?.map((block) => (
                   <div key={block.id} className='w-full'>
                     <div
@@ -222,38 +201,23 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
                     setBlockTypeSearchFilter={setBlockTypeSearchFilter}
                   />
                 )}
-              </>
-            ) : (
-              <>
-                {/* Create empty page button */}
-                {!isViewer && (
-                  <div
-                    // onClick={createEmptySection}
-                    className='px-2 py-1 flex items-center justify-between rounded cursor-pointer group text-[#9e9e9e] hover:bg-[#EBEBEA] hover:text-[#3E4248]'
-                  >
-                    <div className='flex items-center space-x-2'>
-                      <Image
-                        src='/assets/file.png'
-                        alt='document icon'
-                        height={24}
-                        width={24}
-                      />
-                      <p>Empty page</p>
-                    </div>
-                    <Image
-                      src='/assets/arrow-left.png'
-                      alt='arrow icon'
-                      height={24}
-                      width={24}
-                      className='hidden group-hover:block'
-                    />
-                  </div>
-                )}
-              </>
-            )}
+              </div>
+            </div>
           </div>
+        </>
+      ) : (
+        <div className='h-full flex flex-col items-center justify-center space-y-3'>
+          <div className='relative w-60 h-60'>
+            <Image
+              src='/assets/empty.png'
+              fill
+              className='grayscale'
+              alt='Empty'
+            />
+          </div>
+          <div className='text-sm font-semibold'>No sections found</div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

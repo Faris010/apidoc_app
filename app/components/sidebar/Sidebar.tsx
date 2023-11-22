@@ -56,20 +56,16 @@ export default function Sidebar({
   }, []);
 
   const getCurrentProject = async () => {
-    try {
-      const response = await getProjectById(projectId);
+    const response = await getProjectById(projectId);
+    if (response.success) {
       setProject(response.payload);
-    } catch (error) {
-      console.log(error);
     }
   };
 
   const getProjectSections = async () => {
-    try {
-      const response = await getSectionByProjectId(projectId);
+    const response = await getSectionByProjectId(projectId);
+    if (response.success) {
       setSectionList(response.payload);
-    } catch (error) {
-      console.log(error);
     }
   };
 

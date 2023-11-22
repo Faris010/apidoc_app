@@ -157,7 +157,11 @@ export default function SectionItem({
           <div className='flex items-center space-x-1'>
             <div
               onClick={setIsSectionMenuOpen}
-              className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'
+              className={`w-5 h-5 p-1 flex items-center justify-center rounded ${
+                sectionIdQuery == section.id
+                  ? 'hover:bg-[#D4D4D3]'
+                  : 'hover:bg-[#DDDDDC]'
+              }`}
             >
               <Image
                 src='/assets/more.png'
@@ -172,7 +176,11 @@ export default function SectionItem({
                 setIsAddSectionOpen(true);
                 formik.setFieldValue('parentId', section.id);
               }}
-              className='w-5 h-5 p-1 flex items-center justify-center hover:bg-[#DDDDDC] rounded'
+              className={`w-5 h-5 p-1 flex items-center justify-center rounded ${
+                sectionIdQuery == section.id
+                  ? 'hover:bg-[#D4D4D3]'
+                  : 'hover:bg-[#DDDDDC]'
+              }`}
             >
               <Image
                 src='/assets/plus.png'

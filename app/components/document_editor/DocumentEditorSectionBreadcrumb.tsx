@@ -8,7 +8,7 @@ interface Props {
   sectionId: string | null;
 }
 
-export default function DocumentEditorSectionLink({ sectionId }: Props) {
+export default function DocumentEditorSectionBreadcrumb({ sectionId }: Props) {
   const [sectionLink, setSectionLink] = useState<TSection[]>([]);
 
   const getSectionLink = async (sectionId: string | null) => {
@@ -40,7 +40,7 @@ export default function DocumentEditorSectionLink({ sectionId }: Props) {
                 sectionId: sec?.id,
               },
             }}
-            key={i}
+            key={sec.id}
           >
             {sec?.name}{' '}
             {i !== sectionLink.length - 1 && <span>&nbsp;/&nbsp;</span>}
