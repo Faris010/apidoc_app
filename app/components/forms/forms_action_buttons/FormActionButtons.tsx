@@ -22,7 +22,7 @@ export default function FormActionButtons({
       <button
         type='submit'
         disabled={isProjectLoading}
-        className='w-1/2 py-2 bg-gray-900 rounded-md text-white'
+        className='w-1/2 py-2 bg-gray-900 rounded-md text-white hover:bg-gray-800'
       >
         Save
       </button>
