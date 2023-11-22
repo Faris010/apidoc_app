@@ -10,7 +10,7 @@ namespace server.Controllers;
 
 [Route("/api/section/")]
 [ApiController]
-[Authorize]
+//[Authorize]
 [EnableCors("AllowSpecificOrigin")]
 public class SectionController : ControllerBase
 {
@@ -60,5 +60,15 @@ public class SectionController : ControllerBase
     public async Task UpdateSection([FromBody] UpdateSectionDto updatedSecion)
     {
         await _sectionService.UpdateSection(updatedSecion);
+    }
+
+    [HttpGet("search/{projectId:guid}/{pageNumber:int}")]
+    [ProducesResponseType(typeof(List<GetSectionDto>), (int)HttpStatusCode.OK)]
+    [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
+    public async Task<ActionResult<ApiResponse<object>>> SearchSections([FromQuery] string searchTerm, Guid projectId, int pageNumber)
+    {
+
+        var sections = await _sectionService.SearchSections(searchTerm, projectId, pageNumber);
+        return sections;
     }
 }

@@ -107,4 +107,41 @@ public class SectionService : ISectionService
         await _context.SaveChangesAsync();
 
     }
+
+    public async Task<ApiResponse<object>> SearchSections(string searchTerm, Guid projectId, int pageNumber)
+    {
+        const int pageSize = 5;
+
+        var sectionIds = await _context.Sections
+            .Where(s => s.ProjectId == projectId)
+            .Select(s => s.Id)
+            .ToListAsync();
+
+        var matchingSections = await _context.Sections
+            .Where(s => s.Title.ToLower().Contains(searchTerm.ToLower()) || s.Blocks.Any(b => b.Content.ToLower().Contains(searchTerm.ToLower())))
+            .Where(s => sectionIds.Contains(s.Id))
+            .Include(s => s.Blocks)
+            .Select(s => s.Adapt<GetSectionDto>())
+            .ToListAsync();
+
+        var totalItems = matchingSections.Count;
+
+        var paginatedSections = matchingSections
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+            var response = new
+                {
+                    paginatedSections,
+                    TotalItems = totalItems
+                };
+
+        return new ApiResponse<object>()
+        {
+            Success = true,
+            Payload = response,
+            ErrorCode = null
+        };
+    }
 }
