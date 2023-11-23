@@ -38,7 +38,7 @@ export default function DeleteConfirmationModal({
 
   return (
     <div className='fixed w-full h-full flex items-center justify-center bg-black bg-opacity-50'>
-      <div className='w-1/4 p-6 space-y-6 bg-white rounded-lg'>
+      <div className='w-1/4 max-md:w-3/4 p-6 space-y-6 bg-white rounded-lg'>
         <div className='flex items-center justify-center'>
           <div className='p-2 bg-red-200 rounded-full'>
             <Image

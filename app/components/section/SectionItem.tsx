@@ -27,6 +27,7 @@ interface Props {
   ) => Promise<void>;
   isViewer: boolean;
   setBlockSearchFilter: React.Dispatch<React.SetStateAction<string>>;
+  setIsSidebarOpenOnMobile: () => void;
 }
 
 export default function SectionItem({
@@ -41,6 +42,7 @@ export default function SectionItem({
   handleInputKeyPress,
   isViewer,
   setBlockSearchFilter,
+  setIsSidebarOpenOnMobile,
 }: Props) {
   const ref = useRef(null);
   const sectionIdQuery = useSearchParams().get('sectionId');
@@ -125,7 +127,10 @@ export default function SectionItem({
               sectionId: section.id,
             },
           }}
-          onClick={() => setBlockSearchFilter('')}
+          onClick={() => {
+            setBlockSearchFilter('');
+            setIsSidebarOpenOnMobile();
+          }}
           className='w-full flex items-center overflow-hidden'
         >
           <div>
@@ -222,6 +227,7 @@ export default function SectionItem({
                   handleInputKeyPress={handleInputKeyPress}
                   isViewer={isViewer}
                   setBlockSearchFilter={setBlockSearchFilter}
+                  setIsSidebarOpenOnMobile={setIsSidebarOpenOnMobile}
                 />
               </div>
             ))}

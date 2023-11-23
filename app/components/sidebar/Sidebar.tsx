@@ -16,6 +16,8 @@ interface Props {
   isViewer: boolean;
   setBlockSearchFilter: React.Dispatch<React.SetStateAction<string>>;
   blockSearchFilter: string;
+  isSidebarOpenOnMobile: boolean;
+  setIsSidebarOpenOnMobile: () => void;
 }
 
 export default function Sidebar({
@@ -23,6 +25,8 @@ export default function Sidebar({
   isViewer,
   setBlockSearchFilter,
   blockSearchFilter,
+  isSidebarOpenOnMobile,
+  setIsSidebarOpenOnMobile,
 }: Props) {
   const router = useRouter();
   const pathaname = usePathname();
@@ -124,7 +128,11 @@ export default function Sidebar({
   };
 
   return (
-    <div className='w-1/5 max-sm:w-2/3 p-1 space-y-4 bg-[#FBFBFA] border-r-[2px] border-[#E1E1E1] '>
+    <div
+      className={`${
+        !isSidebarOpenOnMobile && 'max-md:hidden'
+      } w-1/5 max-lg:w-1/4 max-md:w-1/2 max-sm:w-full max-md:fixed max-md:right-0 max-md:z-40 max-md:h-full p-1 max-md:pt-6 space-y-4 bg-[#FBFBFA] border-r-[2px] border-[#E1E1E1]`}
+    >
       {/* Project logo and name */}
       <div className='p-2 flex flex-col items-center space-y-2'>
         <div className='relative h-24'>
@@ -150,7 +158,6 @@ export default function Sidebar({
             alt='home icon'
             width={16}
             height={16}
-            style={{ width: 'auto', height: 'auto' }}
           />
           <p className='text-sm text-[#3E4248] font-medium'>Home page</p>
         </div>
@@ -194,6 +201,7 @@ export default function Sidebar({
                   handleInputKeyPress={handleInputKeyPress}
                   isViewer={isViewer}
                   setBlockSearchFilter={setBlockSearchFilter}
+                  setIsSidebarOpenOnMobile={setIsSidebarOpenOnMobile}
                 />
               ))}
         </div>

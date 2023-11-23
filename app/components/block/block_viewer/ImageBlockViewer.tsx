@@ -13,7 +13,8 @@ const ImageBlockViewer = ({ blockImage }: Props) => {
         width={0}
         height={0}
         sizes='100vw'
-        style={{ width: 'auto', height: '100%' }}
+        style={{ height: '100%' }}
+        className='w-auto max-md:w-full'
       />
     </div>
   );

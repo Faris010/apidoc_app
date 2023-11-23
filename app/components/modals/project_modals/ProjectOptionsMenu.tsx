@@ -62,7 +62,6 @@ const ProjectOptionsMenu = forwardRef<HTMLDivElement, Props>(
             alt='link icon'
             width={16}
             height={16}
-            style={{ width: 'auto', height: 'auto' }}
           />
           <p className='text-sm'>Copy link</p>
         </div>

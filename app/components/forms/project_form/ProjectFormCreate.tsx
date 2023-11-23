@@ -83,7 +83,7 @@ export default function ProjectFormCreate({
     <div className='fixed w-full h-full z-20 flex items-center justify-center bg-black bg-opacity-50'>
       <form
         onSubmit={formik.handleSubmit}
-        className='w-1/3 max-sm:h-full max-sm:w-full max-md:w-2/3 max-lg:w-1/2 overflow-y-auto bg-white rounded-lg space-y-7 px-10 py-6'
+        className='w-1/3 max-sm:w-full max-md:w-2/3 max-lg:w-1/2 max-md:flex max-md:flex-col max-md:justify-center overflow-y-auto bg-white rounded-lg space-y-7 px-10 py-6'
       >
         {/* Form header */}
         <div className='flex items-center justify-between'>

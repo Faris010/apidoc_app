@@ -17,9 +17,16 @@ import DocumentEditorSectionBreadcrumb from './DocumentEditorSectionBreadcrumb';
 interface Props {
   projectId: string;
   isViewer: boolean;
+  setIsSidebarOpenOnMobile: () => void;
+  isSidebarOpenOnMobile: boolean;
 }
 
-export default function DocumentEditor({ projectId, isViewer }: Props) {
+export default function DocumentEditor({
+  projectId,
+  isViewer,
+  setIsSidebarOpenOnMobile,
+  isSidebarOpenOnMobile,
+}: Props) {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -104,12 +111,37 @@ export default function DocumentEditor({ projectId, isViewer }: Props) {
   };
 
   return (
-    <div className='w-4/5 bg-white'>
+    <div className='w-4/5 max-lg:w-full bg-white'>
       {sectionId ? (
         <>
           {/* Document breadcrumb */}
-          <div className='w-full p-3 flex items-center justify-start border-b-[1px] border-[#E1E1E1]'>
+          <div className='w-full p-3 flex items-center justify-start max-md:justify-between border-b-[1px] border-[#E1E1E1]'>
             <DocumentEditorSectionBreadcrumb sectionId={sectionId} />
+            <div
+              onClick={setIsSidebarOpenOnMobile}
+              className='hidden max-md:flex z-50 flex-col items-center space-y-1'
+            >
+              {!isSidebarOpenOnMobile ? (
+                <>
+                  <div className={`h-0.5 w-6 bg-gray-600 rounded-lg`}></div>
+                  <div className={`h-0.5 w-6 bg-gray-600 rounded-lg`}></div>
+                  <div className={`h-0.5 w-6 bg-gray-600 rounded-lg`}></div>
+                </>
+              ) : (
+                <svg
+                  className='h-8 w-8 text-gray-600'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  stroke='currentColor'
+                  strokeWidth='2'
+                  strokeLinecap='round'
+                  strokeLinejoin='round'
+                >
+                  <line x1='18' y1='6' x2='6' y2='18' />
+                  <line x1='6' y1='6' x2='18' y2='18' />
+                </svg>
+              )}
+            </div>
           </div>
 
           <div className='w-full px-3 pt-20 pb-56 flex justify-center overflow-hidden'>

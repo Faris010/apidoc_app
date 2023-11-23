@@ -80,21 +80,21 @@ public class AuthController : ControllerBase
         return Ok(new { AccessToken = token, RefreshToken = refreshToken });
     }
 
-    [HttpPost]
-    [Route("refresh-token")]
-    public async Task<ActionResult> RefreshToken(string refreshToken)
-    {
-        // var user = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+    // [HttpPost]
+    // [Route("refresh-token")]
+    // public async Task<ActionResult> RefreshToken(string refreshToken)
+    // {
+    //     var user = await _context.Users.FirstOrDefaultAsync();
 
-        // if (user == null)
-        // {
-        //     return BadRequest("Invalid refresh token");
-        // }
+    //     if (user == null)
+    //     {
+    //         return BadRequest("Invalid refresh token");
+    //     }
 
-        // string token = CreateToken(user);
+    //     string token = CreateToken(user);
 
-        // return Ok(token);
-    }
+    //     return Ok(token);
+    // }
 
     private string CreateToken(User user)
     {
