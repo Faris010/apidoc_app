@@ -17,4 +17,24 @@ instance.interceptors.request.use(
   }
 );
 
+axios.interceptors.response.use(null, (error) => {
+  if (error.response && error.response.status === 401) {
+    axios
+      .post('/api/auth/refresh-token', {
+        refreshToken: localStorage.getItem('refreshToken'),
+      })
+      .then((response) => {
+        localStorage.setItem('accessToken', response.data.accessToken);
+        localStorage.setItem('refreshToken', response.data.refreshToken);
+        return axios.request(error.config);
+      })
+      .catch((error) => {
+        alert('Your session has expired. Please log in again.');
+        window.location.href = '/login';
+      });
+  }
+
+  return Promise.reject(error);
+});
+
 export default instance;

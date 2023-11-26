@@ -77,24 +77,25 @@ public class AuthController : ControllerBase
         string token = CreateToken(dbUser);
         string refreshToken = CreateRefreshToken();
 
-        return Ok(new { AccessToken = token, RefreshToken = refreshToken });
+        return Ok(new { AccessToken = token, RefreshToken = refreshToken, Username = dbUser.Username });
     }
 
-    // [HttpPost]
-    // [Route("refresh-token")]
-    // public async Task<ActionResult> RefreshToken(string refreshToken)
-    // {
-    //     var user = await _context.Users.FirstOrDefaultAsync();
+    [HttpPost]
+    [Route("refresh-token")]
+    public async Task<ActionResult> RefreshToken(string refreshToken, string username)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Username == username);
 
-    //     if (user == null)
-    //     {
-    //         return BadRequest("Invalid refresh token");
-    //     }
+        if (user == null)
+        {
+            return BadRequest("Invalid refresh token");
+        }
 
-    //     string token = CreateToken(user);
+        string token = CreateToken(user);
+        string newRefreshToken = CreateRefreshToken();
 
-    //     return Ok(token);
-    // }
+        return Ok(new { AccessToken = token, RefreshToken = newRefreshToken });
+    }
 
     private string CreateToken(User user)
     {

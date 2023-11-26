@@ -4,7 +4,7 @@ import { TProject } from '@/types/types';
 import ProjectCard from './ProjectCard';
 import ProjectFormCreate from '../forms/project_form/ProjectFormCreate';
 import { useToggle } from '@/hooks/useToggle';
-import { useEffect, useState, useMemo, useCallback } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import DeleteConfirmationModal from '../modals/DeleteConfirmationModal';
 import ProjectFormEdit from '../forms/project_form/ProjectFormEdit';
 import {
@@ -61,20 +61,20 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
 
   const getProjects = async () => {
     if (debouncedValue != '') {
-      router.push(`?search=${debouncedValue}&page=${currentPage}`);
       const response = await getProjectsBySearchFilter(
         currentPage,
         debouncedValue
       );
       if (response.success) {
         setProjects(response.payload.paginatedProjects);
+        router.push(`?search=${debouncedValue}&page=${currentPage}`);
       }
       getTotalPages(response.payload.totalItems);
     } else {
-      router.replace(`?page=${currentPage}`);
       const response = await getProjectsPagination(currentPage);
       if (response.success) {
         setProjects(response.payload);
+        router.replace(`?page=${currentPage}`);
       }
       getTotalPages(null);
     }
