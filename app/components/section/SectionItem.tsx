@@ -47,7 +47,6 @@ export default function SectionItem({
   const ref = useRef(null);
   const sectionIdQuery = useSearchParams().get('sectionId');
   const [isExpanded, setIsExpanded] = useToggle(false);
-  const [isMouseOver, setIsMouseOver] = useToggle(false);
   const [isSectionMenuOpen, setIsSectionMenuOpen] = useToggle(false);
   const [isRenameInputOpen, setIsRenameInputOpen] = useToggle(false);
   const [isEnterKeyPressed, setIsEnterKeyPressed] = useState<boolean>(false);
@@ -96,15 +95,13 @@ export default function SectionItem({
   return (
     <div className='relative py-[1px]'>
       <div
-        onMouseEnter={setIsMouseOver}
-        onMouseLeave={setIsMouseOver}
         className={`relative ${
           section.parentId != null && depth == 1 && 'hidden'
         } px-2 py-1 flex items-center ${
           sectionIdQuery == section.id
             ? 'bg-[#F1F1F0] hover:bg-[#E2E2E1]'
             : 'hover:bg-[#EBEBEA]'
-        } cursor-pointer rounded `}
+        } cursor-pointer rounded group`}
       >
         <div>
           <div
@@ -161,8 +158,8 @@ export default function SectionItem({
             )}
           </div>
         </Link>
-        {isMouseOver && !isViewer && (
-          <div className='flex items-center space-x-1'>
+        {!isViewer && (
+          <div className='flex items-center space-x-1 opacity-0 group-hover:opacity-100'>
             <div
               onClick={setIsSectionMenuOpen}
               className={`w-5 h-5 p-1 flex items-center justify-center rounded ${
