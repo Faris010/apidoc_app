@@ -10,7 +10,7 @@ namespace server.Controllers
 {
     [Route("api/projects/")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     [EnableCors("AllowSpecificOrigin")]
     public class ProjectController : ControllerBase
     {
