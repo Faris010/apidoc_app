@@ -32,14 +32,18 @@ public class SectionService : ISectionService
 
     public async Task DeleteSection(Guid id)
     {
-        var section = await _context.Sections
+        var sections = await _context.Sections
             .Include(s => s.Blocks)
-            .FirstOrDefaultAsync(s => s.Id == id);
+            .Where(s => s.Id == id || s.ParentId == id)
+            .ToListAsync();
 
-        if (section != null)
+        if (sections != null && sections.Any())
         {
-            _context.Blocks.RemoveRange(section.Blocks);
-            _context.Sections.Remove(section);
+            foreach (var section in sections)
+            {
+                _context.Blocks.RemoveRange(section.Blocks);
+                _context.Sections.Remove(section);
+            }
             await _context.SaveChangesAsync();
         }
     }
@@ -131,11 +135,11 @@ public class SectionService : ISectionService
             .Take(pageSize)
             .ToList();
 
-            var response = new
-                {
-                    paginatedSections,
-                    TotalItems = totalItems
-                };
+        var response = new
+        {
+            paginatedSections,
+            TotalItems = totalItems
+        };
 
         return new ApiResponse<object>()
         {
