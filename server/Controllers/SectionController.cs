@@ -10,7 +10,7 @@ namespace server.Controllers;
 
 [Route("/api/section/")]
 [ApiController]
-[Authorize]
+//[Authorize]
 [EnableCors("AllowSpecificOrigin")]
 public class SectionController : ControllerBase
 {
