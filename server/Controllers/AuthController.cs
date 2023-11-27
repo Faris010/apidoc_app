@@ -105,6 +105,7 @@ public class AuthController : ControllerBase
         return Ok(new { AccessToken = token, RefreshToken = newRefreshToken });
     }
 
+
     private string CreateToken(User user)
     {
         List<Claim> claims = new List<Claim>{
@@ -118,7 +119,6 @@ public class AuthController : ControllerBase
 
         var token = new JwtSecurityToken(
             claims: claims,
-            // expires: DateTime.Now.AddMinutes(1),
             expires: DateTime.Now.AddDays(1),
             signingCredentials: creds
         );
