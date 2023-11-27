@@ -32,21 +32,48 @@ public class SectionService : ISectionService
 
     public async Task DeleteSection(Guid id)
     {
-        var sections = await _context.Sections
+        var sectionsToDelete = await _context.Sections
             .Include(s => s.Blocks)
             .Where(s => s.Id == id || s.ParentId == id)
             .ToListAsync();
 
-        if (sections != null && sections.Any())
+        if (sectionsToDelete == null || !sectionsToDelete.Any())
         {
+            return;
+        }
+
+        async Task RecursiveDelete(Guid parentId)
+        {
+            var sections = await _context.Sections
+                .Include(s => s.Blocks)
+                .Where(s => s.ParentId == parentId)
+                .ToListAsync();
+
+            if (sections == null || !sections.Any())
+            {
+                return;
+            }
+
             foreach (var section in sections)
             {
+                await RecursiveDelete(section.Id);
+
                 _context.Blocks.RemoveRange(section.Blocks);
                 _context.Sections.Remove(section);
             }
-            await _context.SaveChangesAsync();
         }
+
+        foreach (var section in sectionsToDelete)
+        {
+            await RecursiveDelete(section.Id);
+
+            _context.Blocks.RemoveRange(section.Blocks);
+            _context.Sections.Remove(section);
+        }
+
+        await _context.SaveChangesAsync();
     }
+
 
 
     public async Task<ApiResponse<GetSectionDto>> GetSectionById(Guid id)
