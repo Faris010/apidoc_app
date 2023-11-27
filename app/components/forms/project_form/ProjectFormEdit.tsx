@@ -163,38 +163,36 @@ export default function ProjectFormEdit({
           />
         </div>
         {/* Image Preview */}
-        {currentProject?.logo != '' && (
-          <div className='space-y-2'>
-            <p className='px-1 text-sm font-semibold'>Image Preview</p>
-            <div className='p-2 flex items-start justify-between space-x-2 bg-slate-300 bg-opacity-50 rounded-md'>
-              <div className='w-full h-28 flex items-center space-x-2 overflow-hidden'>
-                <Image
-                  src={
-                    uploadedImage.imageUrl != ''
-                      ? (uploadedImage.imageUrl as string)
-                      : currentProject?.logo || '/assets/placeholder.png'
-                  }
-                  alt='uploaded image'
-                  style={{ width: 'auto', height: '100%' }}
-                  height={112}
-                  width={112}
-                />
-                {uploadedImage.name != '' && (
-                  <div className='w-full truncate'>
-                    <p className='truncate font-semibold'>
-                      {uploadedImage.name}
-                    </p>
-                    <div className='flex items-center space-x-1 text-sm text-[#444444]'>
-                      <p className='uppercase'>{uploadedImage.extension}</p>
-                      <p>&#x2022;</p>
-                      <p>{uploadedImage.size}</p>
-                    </div>
+
+        <div className='space-y-2'>
+          <p className='px-1 text-sm font-semibold'>Image Preview</p>
+          <div className='p-2 flex items-start justify-between space-x-2 bg-slate-300 bg-opacity-50 rounded-md'>
+            <div className='w-full h-28 flex items-center space-x-2 overflow-hidden'>
+              <Image
+                src={
+                  uploadedImage.imageUrl != ''
+                    ? (uploadedImage.imageUrl as string)
+                    : currentProject?.logo || '/assets/placeholder.png'
+                }
+                alt='uploaded image'
+                style={{ width: 'auto', height: '100%' }}
+                height={112}
+                width={112}
+              />
+              {uploadedImage.name != '' && (
+                <div className='w-full truncate'>
+                  <p className='truncate font-semibold'>{uploadedImage.name}</p>
+                  <div className='flex items-center space-x-1 text-sm text-[#444444]'>
+                    <p className='uppercase'>{uploadedImage.extension}</p>
+                    <p>&#x2022;</p>
+                    <p>{uploadedImage.size}</p>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
-        )}
+        </div>
+
         {/* Form action buttons */}
         <FormActionButtons
           setIsFormOpen={setIsProjectFormEditOpen}

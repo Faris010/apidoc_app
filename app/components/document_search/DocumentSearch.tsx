@@ -67,7 +67,7 @@ export default function DocumentSearch({
   }, [debouncedValue, currentPage]);
 
   return (
-    <div className='w-full flex flex-col max-md:p-3'>
+    <div className='w-4/5 max-md:w-full flex flex-col max-md:p-3'>
       <div
         onClick={setIsSidebarOpenOnMobile}
         className='hidden max-md:flex z-50 flex-col items-end space-y-1'

@@ -63,6 +63,7 @@ public class SectionController : ControllerBase
     }
 
     [HttpGet("search/{projectId:guid}/{pageNumber:int}")]
+    [AllowAnonymous]
     [ProducesResponseType(typeof(List<GetSectionDto>), (int)HttpStatusCode.OK)]
     [ProducesResponseType(typeof(EmptyResult), (int)HttpStatusCode.NotFound)]
     public async Task<ActionResult<ApiResponse<object>>> SearchSections([FromQuery] string searchTerm, Guid projectId, int pageNumber)

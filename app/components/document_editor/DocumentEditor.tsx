@@ -246,7 +246,10 @@ export default function DocumentEditor({
               alt='Empty'
             />
           </div>
-          <div className='text-sm font-semibold'>No sections found</div>
+          <div className='text-sm font-semibold text-center'>
+            No sections found. <br />
+            Begin your project by adding a section.
+          </div>
         </div>
       )}
     </div>

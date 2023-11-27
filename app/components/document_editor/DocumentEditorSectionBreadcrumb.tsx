@@ -11,26 +11,26 @@ interface Props {
 export default function DocumentEditorSectionBreadcrumb({ sectionId }: Props) {
   const [sectionLink, setSectionLink] = useState<TSection[]>([]);
 
-  let prevId = '';
+  // let prevId = '';
   const getSectionLink = async (sectionId: string | null) => {
     if (sectionId) {
       const response = await getSectionById(sectionId);
       const { payload } = response;
-      if (payload.id !== prevId) {
-        prevId = payload.id;
-        setSectionLink((prev) => [payload, ...prev]);
-        if (payload.parentId == null) {
-          return;
-        } else {
-          getSectionLink(payload.parentId);
-        }
+      // if (payload.id !== prevId) {
+      //   prevId = payload.id;
+      setSectionLink((prev) => [payload, ...prev]);
+      if (payload.parentId == null) {
+        return;
+      } else {
+        getSectionLink(payload.parentId);
       }
+      // }
     }
   };
 
   useEffect(() => {
     setSectionLink([]);
-    prevId = '';
+    // prevId = '';
     getSectionLink(sectionId);
   }, [sectionId]);
 

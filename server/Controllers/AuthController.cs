@@ -82,8 +82,16 @@ public class AuthController : ControllerBase
 
     [HttpPost]
     [Route("refresh-token")]
-    public async Task<ActionResult> RefreshToken([FromBody] string refreshToken, string username)
+    public async Task<ActionResult> RefreshToken([FromBody] dynamic requestData)
     {
+        string? refreshToken = requestData.refreshToken;
+        string? username = requestData.username;
+
+        if (string.IsNullOrEmpty(refreshToken) || string.IsNullOrEmpty(username))
+        {
+            return BadRequest("Invalid input data");
+        }
+
         var user = await _context.Users.FirstOrDefaultAsync(user => user.Username == username);
 
         if (user == null)
@@ -110,8 +118,8 @@ public class AuthController : ControllerBase
 
         var token = new JwtSecurityToken(
             claims: claims,
-            expires: DateTime.Now.AddMinutes(5),
-            // expires: DateTime.Now.AddDays(1),
+            // expires: DateTime.Now.AddMinutes(1),
+            expires: DateTime.Now.AddDays(1),
             signingCredentials: creds
         );
 
