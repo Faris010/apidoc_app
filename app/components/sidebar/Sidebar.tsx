@@ -81,22 +81,20 @@ export default function Sidebar({
   useEffect(() => {
     if (
       !sectionQuery &&
-      (sectionList ?? []).length > 0 &&
-      blockSearchFilter == ''
+      sectionList &&
+      sectionList?.length > 0 &&
+      blockSearchFilter === ''
     ) {
-      let firstSection: TSection | null = null;
+      const firstSection = sectionList?.find((sec) => sec.parentId === null);
 
-      if (sectionList) {
-        firstSection = sectionList[0];
-      }
-
-      if (firstSection && !sectionQuery) {
+      if (firstSection) {
         const { name, id } = firstSection;
         const sectionSlug = GenerateSlug(name);
         router.replace(`?section=${sectionSlug}&sectionId=${id}`);
       }
     }
-    if (sectionQuery && sectionList?.length == 0 && blockSearchFilter == '') {
+
+    if (sectionQuery && sectionList?.length === 0 && blockSearchFilter === '') {
       router.replace(pathaname);
     }
   }, [sectionList, sectionQuery]);

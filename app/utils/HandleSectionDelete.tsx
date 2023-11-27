@@ -17,11 +17,9 @@ const handleSectionDelete = async (
     if (deletedSectionIndex !== -1) {
       await deleteSection(section.id);
       const updatedSectionList = sectionList.filter((s) => s.id != section.id);
-      const sectionListWithoutParent = updatedSectionList.filter(
-        (s) => s.parentId === null
-      );
       if (section.id === sectionId) {
         if (sectionList[deletedSectionIndex].parentId !== null) {
+          console.log('Deleted sec with parent and redirect to parent sec');
           const parentSection = sectionList.find(
             (s) => s.id === section.parentId
           );
@@ -29,13 +27,7 @@ const handleSectionDelete = async (
             `?section=${parentSection?.name}&sectionId=${parentSection?.id}`
           );
         } else {
-          if (sectionListWithoutParent.length > 0) {
-            router.replace(
-              `?section=${sectionListWithoutParent[0].name}&sectionId=${sectionListWithoutParent[0].id}`
-            );
-          } else {
-            router.replace(pathname);
-          }
+          router.replace(pathname);
         }
       }
       return { success: true, updatedSectionList: updatedSectionList };
