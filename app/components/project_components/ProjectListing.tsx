@@ -39,9 +39,10 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
   const debouncedValue = useDebounce(projectSearchFilter, 300);
 
   const [projects, setProjects] = useState<TProject[]>([]);
+  const [numberOfProjects, setNumberOfProjects] = useState<number | null>(null);
 
-  const getTotalPages = async (pages: number | null) => {
-    if (pages == null) {
+  const getTotalPages = async () => {
+    if (numberOfProjects == null) {
       const response = await getAllProjects();
       const totalNumberOfPages = Math.ceil(response.payload.length / PAGE_SIZE);
       const arr = Array.from(
@@ -50,7 +51,7 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
       );
       setPageArray(arr);
     } else {
-      const totalNumberOfPages = Math.ceil(pages / PAGE_SIZE);
+      const totalNumberOfPages = Math.ceil(numberOfProjects / PAGE_SIZE);
       const arr = Array.from(
         { length: totalNumberOfPages },
         (_, index) => index + 1
@@ -69,14 +70,14 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
         setProjects(response.payload.paginatedProjects);
         router.push(`?search=${debouncedValue}&page=${currentPage}`);
       }
-      getTotalPages(response.payload.totalItems);
+      setNumberOfProjects(response.payload.totalItems);
     } else {
       const response = await getProjectsPagination(currentPage);
       if (response.success) {
         setProjects(response.payload);
         router.replace(`?page=${currentPage}`);
       }
-      getTotalPages(null);
+      setNumberOfProjects(null);
     }
   };
 
@@ -92,6 +93,10 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
   useEffect(() => {
     getProjects();
   }, [debouncedValue, currentPage]);
+
+  useEffect(() => {
+    getTotalPages();
+  }, [projects]);
 
   return (
     <>
