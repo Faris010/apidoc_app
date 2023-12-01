@@ -30,6 +30,7 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
   const [isProjectFormEditOpen, setIsProjectFormEditOpen] = useToggle(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageArray, setPageArray] = useState<number[]>([]);
+  const [numberOfProjects, setNumberOfProjects] = useState<number | null>(null);
 
   const [currentProject, setCurrentProject] = useState<TProject>({
     projectName: '',
@@ -39,7 +40,6 @@ export default function ProjectListing({ projectSearchFilter }: Props) {
   const debouncedValue = useDebounce(projectSearchFilter, 300);
 
   const [projects, setProjects] = useState<TProject[]>([]);
-  const [numberOfProjects, setNumberOfProjects] = useState<number | null>(null);
 
   const getTotalPages = async () => {
     if (numberOfProjects == null) {

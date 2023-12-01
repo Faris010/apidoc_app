@@ -21,22 +21,23 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(null, async (error) => {
   const token = localStorage.getItem('refreshToken');
   const user = localStorage.getItem('username');
+
   if (error.response && error.response.status === 401) {
-    await api
-      .post(`/api/auth/refresh-token`, {
+    try {
+      const response = await api.post(`/api/auth/refresh-token`, {
         refreshToken: token,
         username: user,
-      })
-      .then((response) => {
-        localStorage.setItem('accessToken', response.data.accessToken);
-        localStorage.setItem('refreshToken', response.data.refreshToken);
-        return axios.request(error.config);
-      })
-      .catch((error) => {
-        // alert('Your session has expired. Please log in again.');
-        // window.location.href = '/login';
       });
+
+      localStorage.setItem('accessToken', response.data.accessToken);
+      localStorage.setItem('refreshToken', response.data.refreshToken);
+
+      return api.request(error.config);
+    } catch (refreshError) {
+      console.error('Token refresh error:', refreshError);
+    }
   }
+
   return Promise.reject(error);
 });
 
